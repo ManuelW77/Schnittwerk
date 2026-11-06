@@ -16,7 +16,7 @@ Native macOS-App zum Schneiden auf dem **Silhouette Cameo 4** – ein schlanker 
 Languages: English, Deutsch.
 
 ## Build
-Requirements: macOS 14+, Xcode, [XcodeGen](https://github.com/yonaskolb/XcodeGen), libusb (`brew install xcodegen libusb`).
+Requirements: macOS 26+ on Apple silicon, Xcode, [XcodeGen](https://github.com/yonaskolb/XcodeGen), libusb (`brew install xcodegen libusb`).
 libusb is linked statically, so the built app runs without Homebrew.
 
 ```bash
