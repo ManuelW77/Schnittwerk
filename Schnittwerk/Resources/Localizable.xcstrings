@@ -101,6 +101,26 @@
         }
       }
     },
+    "Built-in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitgeliefert"
+          }
+        }
+      }
+    },
+    "Built-in values are starting points. Always do a test cut on new material." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die mitgelieferten Werte sind Startwerte. Bei neuem Material immer zuerst einen Testschnitt machen."
+          }
+        }
+      }
+    },
     "Busy" : {
       "localizations" : {
         "de" : {
@@ -191,6 +211,26 @@
         }
       }
     },
+    "Changed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geändert"
+          }
+        }
+      }
+    },
+    "Changes are saved right away. Open projects keep their values until you pick the profile again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Änderungen werden sofort gespeichert. Offene Projekte behalten ihre Werte, bis du das Profil dort erneut auswählst."
+          }
+        }
+      }
+    },
     "Check connection" : {
       "localizations" : {
         "de" : {
@@ -241,6 +281,16 @@
         }
       }
     },
+    "Copy of built-in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopie einer Vorgabe"
+          }
+        }
+      }
+    },
     "Custom" : {
       "localizations" : {
         "de" : {
@@ -287,6 +337,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schneiden ein/aus"
+          }
+        }
+      }
+    },
+    "Cut profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofil"
+          }
+        }
+      }
+    },
+    "Cut profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofile"
           }
         }
       }
@@ -361,6 +431,36 @@
         }
       }
     },
+    "Delete profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil löschen"
+          }
+        }
+      }
+    },
+    "Delete the profile “%@”?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil „%@“ löschen?"
+          }
+        }
+      }
+    },
+    "Delete…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen…"
+          }
+        }
+      }
+    },
     "Done. Unload the mat with the button on the plotter." : {
       "localizations" : {
         "de" : {
@@ -407,6 +507,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Text bearbeiten"
+          }
+        }
+      }
+    },
+    "Empty profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leeres Profil"
           }
         }
       }
@@ -591,6 +701,16 @@
         }
       }
     },
+    "Manage all cut profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Schnittprofile verwalten"
+          }
+        }
+      }
+    },
     "Mat" : {
       "localizations" : {
         "de" : {
@@ -691,12 +811,32 @@
         }
       }
     },
+    "My profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Profile"
+          }
+        }
+      }
+    },
     "Name" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Name"
+          }
+        }
+      }
+    },
+    "New profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Profil"
           }
         }
       }
@@ -727,6 +867,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Noch keine Objekte"
+          }
+        }
+      }
+    },
+    "No own profiles yet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine eigenen Profile"
           }
         }
       }
@@ -831,12 +981,22 @@
         }
       }
     },
-    "Preset" : {
+    "Profile" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vorgabe"
+            "value" : "Profil"
+          }
+        }
+      }
+    },
+    "Projects that use it keep their values." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projekte, die es nutzen, behalten ihre Werte."
           }
         }
       }
@@ -867,6 +1027,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Umbenennen"
+          }
+        }
+      }
+    },
+    "Rename or delete this profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil umbenennen oder löschen"
+          }
+        }
+      }
+    },
+    "Rename profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil umbenennen"
+          }
+        }
+      }
+    },
+    "Rename…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umbenennen…"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurücksetzen"
           }
         }
       }
@@ -911,6 +1111,56 @@
         }
       }
     },
+    "Save" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sichern"
+          }
+        }
+      }
+    },
+    "Save as new profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als neues Profil sichern"
+          }
+        }
+      }
+    },
+    "Save as new profile…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als neues Profil sichern…"
+          }
+        }
+      }
+    },
+    "Save to profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ins Profil übernehmen"
+          }
+        }
+      }
+    },
+    "Saves the current values into “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übernimmt die aktuellen Werte in „%@“"
+          }
+        }
+      }
+    },
     "Saves the plotter commands as a text file, to check them without a plotter" : {
       "localizations" : {
         "de" : {
@@ -921,8 +1171,28 @@
         }
       }
     },
+    "Saves tool, blade depth, force, speed and passes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesichert werden Werkzeug, Klingentiefe, Druck, Geschwindigkeit und Durchgänge."
+          }
+        }
+      }
+    },
     "Schnittwerk" : {
       "shouldTranslate" : false
+    },
+    "Select a profile or create one with +." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle ein Profil aus oder lege mit + ein neues an."
+          }
+        }
+      }
     },
     "Select an object on the mat, or import a file." : {
       "localizations" : {
@@ -1190,6 +1460,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Y"
+          }
+        }
+      }
+    },
+    "Your cut profiles could not be loaded: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Schnittprofile konnten nicht geladen werden: %@"
+          }
+        }
+      }
+    },
+    "Your cut profiles could not be saved: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Schnittprofile konnten nicht gesichert werden: %@"
           }
         }
       }

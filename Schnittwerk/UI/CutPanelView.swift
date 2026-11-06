@@ -8,15 +8,50 @@ struct CutPanelView: View {
     @ObservedObject var document: CutDocument
     @ObservedObject private var plotter = PlotterController.shared
     @Environment(\.undoManager) private var undoManager
+    @ObservedObject private var store = ProfileStore.shared
     @State private var confirmOutside = false
+    @State private var askNewName = false
+    @State private var newName = ""
+    @State private var askRename = false
+    @State private var renameText = ""
+    @State private var confirmDelete = false
 
     private var settings: CutSettings { document.data.settings }
 
-    private func set(_ edit: @escaping (inout CutSettings) -> Void, markCustom: Bool = true) {
+    /// Changes the values; the chosen profile stays selected and is
+    /// shown as "changed" until it is saved or reset.
+    private func set(_ edit: @escaping (inout CutSettings) -> Void) {
         document.update(String(localized: "Change cut settings"), undoManager: undoManager) { data in
             edit(&data.settings)
-            if markCustom { data.settings.materialID = nil }
         }
+    }
+
+    private var builtIn: MaterialPreset? { MaterialPreset.all.first { $0.id == settings.materialID } }
+    private var ownProfile: CutProfile? { store.profile(settingsID: settings.materialID) }
+
+    private var pickerValue: String {
+        if builtIn != nil || ownProfile != nil { return settings.materialID ?? "custom" }
+        return "custom"
+    }
+
+    private var isModified: Bool {
+        if let p = ownProfile { return !p.matches(settings) }
+        if let p = builtIn { return !p.matches(settings) }
+        return false
+    }
+
+    private func select(_ id: String) {
+        if let p = MaterialPreset.all.first(where: { $0.id == id }) {
+            set { p.apply(to: &$0) }
+        } else if let p = store.profile(settingsID: id) {
+            set { p.apply(to: &$0) }
+        }
+    }
+
+    private func saveAsNewProfile() {
+        let suggested = ownProfile?.name ?? builtIn?.title ?? String(localized: "New profile")
+        let profile = store.add(CutProfile(name: newName.isEmpty ? suggested : newName, settings: settings))
+        set { $0.materialID = profile.settingsID }
     }
 
     private func intBinding(_ keyPath: WritableKeyPath<CutSettings, Int>) -> Binding<Int> {
@@ -32,20 +67,69 @@ struct CutPanelView: View {
 
     var body: some View {
         Form {
-            Section("Material") {
-                Picker("Preset", selection: Binding(
-                    get: { settings.materialID ?? "custom" },
-                    set: { id in
-                        guard let preset = MaterialPreset.all.first(where: { $0.id == id }) else { return }
-                        set({ preset.apply(to: &$0) }, markCustom: false)
+            Section("Cut profile") {
+                Picker("Profile", selection: Binding(get: { pickerValue }, set: select)) {
+                    Section("Built-in") {
+                        ForEach(MaterialPreset.all) { Text($0.title).tag($0.id) }
                     }
-                )) {
-                    ForEach(MaterialPreset.all) { Text($0.title).tag($0.id) }
-                    if settings.materialID == nil {
+                    if !store.profiles.isEmpty {
+                        Section("My profiles") {
+                            ForEach(store.profiles) { Text(verbatim: $0.name).tag($0.settingsID) }
+                        }
+                    }
+                    if pickerValue == "custom" {
                         Text("Custom").tag("custom")
                     }
                 }
-                Text("Starting values. Always do a test cut on new material.")
+
+                if isModified {
+                    HStack {
+                        Label("Changed", systemImage: "pencil")
+                            .foregroundStyle(.orange)
+                        Spacer()
+                        Button("Reset") { select(pickerValue) }
+                        if let p = ownProfile {
+                            Button("Save to profile") {
+                                var updated = CutProfile(name: p.name, settings: settings)
+                                updated.id = p.id
+                                store.update(updated)
+                            }
+                            .help("Saves the current values into “\(p.name)”")
+                        }
+                    }
+                }
+
+                HStack {
+                    Button("Save as new profile…") {
+                        newName = ""
+                        askNewName = true
+                    }
+                    Spacer()
+                    if let p = ownProfile {
+                        Menu {
+                            Button("Rename…") {
+                                renameText = p.name
+                                askRename = true
+                            }
+                            Button("Delete…", role: .destructive) { confirmDelete = true }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                        }
+                        .menuStyle(.borderlessButton)
+                        .fixedSize()
+                        .help("Rename or delete this profile")
+                    }
+                    SettingsLink {
+                        Image(systemName: "list.bullet.rectangle")
+                    }
+                    .help("Manage all cut profiles")
+                }
+
+                if let error = store.lastError {
+                    Label(error, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.red)
+                }
+                Text("Built-in values are starting points. Always do a test cut on new material.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -120,6 +204,33 @@ struct CutPanelView: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("Lines outside the mat are moved to its edge.")
+        }
+        .alert("Save as new profile", isPresented: $askNewName) {
+            TextField("Name", text: $newName)
+            Button("Save", action: saveAsNewProfile)
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Saves tool, blade depth, force, speed and passes.")
+        }
+        .alert("Rename profile", isPresented: $askRename) {
+            TextField("Name", text: $renameText)
+            Button("Rename") {
+                guard var p = ownProfile else { return }
+                p.name = store.uniqueName(renameText.trimmingCharacters(in: .whitespaces), excluding: p.id)
+                store.update(p)
+            }
+            Button("Cancel", role: .cancel) {}
+        }
+        .confirmationDialog("Delete the profile “\(ownProfile?.name ?? "")”?", isPresented: $confirmDelete) {
+            Button("Delete", role: .destructive) {
+                guard let p = ownProfile else { return }
+                store.delete(id: p.id)
+                // The values stay; the project just no longer points to the profile
+                set { $0.materialID = nil }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Projects that use it keep their values.")
         }
     }
 
