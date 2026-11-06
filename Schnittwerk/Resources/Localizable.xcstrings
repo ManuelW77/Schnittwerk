@@ -1,0 +1,1689 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "+90°" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+90°"
+          }
+        }
+      }
+    },
+    "1 (left)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 (links)"
+          }
+        }
+      }
+    },
+    "2 (right)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 (rechts)"
+          }
+        }
+      }
+    },
+    "Add text" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text hinzufügen"
+          }
+        }
+      }
+    },
+    "Add text (⌘T)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text hinzufügen (⌘T)"
+          }
+        }
+      }
+    },
+    "Already there: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schon vorhanden: %lld"
+          }
+        }
+      }
+    },
+    "Angle (°)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Winkel (°)"
+          }
+        }
+      }
+    },
+    "AutoBlade" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AutoBlade"
+          }
+        }
+      }
+    },
+    "Blade depth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klingentiefe"
+          }
+        }
+      }
+    },
+    "Blocks (INSERT) in the DXF were skipped. Explode them before exporting." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blöcke (INSERT) im DXF wurden übersprungen. Vor dem Export auflösen."
+          }
+        }
+      }
+    },
+    "Bring to front" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach vorne bringen"
+          }
+        }
+      }
+    },
+    "Built-in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitgeliefert"
+          }
+        }
+      }
+    },
+    "Built-in values are starting points. Always do a test cut on new material." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die mitgelieferten Werte sind Startwerte. Bei neuem Material immer zuerst einen Testschnitt machen."
+          }
+        }
+      }
+    },
+    "Busy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beschäftigt"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        }
+      }
+    },
+    "Cancelled." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgebrochen."
+          }
+        }
+      }
+    },
+    "Cancelled. Commands already sent are still being cut; press pause on the plotter to stop at once." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgebrochen. Bereits gesendete Befehle werden noch geschnitten. Zum sofortigen Stopp die Pause-Taste am Plotter drücken."
+          }
+        }
+      }
+    },
+    "Cardstock 220 g/m²" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karton 220 g/m²"
+          }
+        }
+      }
+    },
+    "Center on mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf Matte zentrieren"
+          }
+        }
+      }
+    },
+    "Change cut settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneideeinstellungen ändern"
+          }
+        }
+      }
+    },
+    "Change mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte ändern"
+          }
+        }
+      }
+    },
+    "Change order" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihenfolge ändern"
+          }
+        }
+      }
+    },
+    "Changed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geändert"
+          }
+        }
+      }
+    },
+    "Changes are saved right away. Open projects keep their values until you pick the profile again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Änderungen werden sofort gespeichert. Offene Projekte behalten ihre Werte, bis du das Profil dort erneut auswählst."
+          }
+        }
+      }
+    },
+    "Check connection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung prüfen"
+          }
+        }
+      }
+    },
+    "Choose one or more cut profile files" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine oder mehrere Schnittprofil-Dateien auswählen"
+          }
+        }
+      }
+    },
+    "Close Silhouette Studio, load the mat, then cut." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silhouette Studio schließen, Matte einlegen, dann schneiden."
+          }
+        }
+      }
+    },
+    "Connected, no mat loaded" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbunden, keine Matte eingelegt"
+          }
+        }
+      }
+    },
+    "Connected, unknown status “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbunden, unbekannter Status „%@“"
+          }
+        }
+      }
+    },
+    "Connecting…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinde…"
+          }
+        }
+      }
+    },
+    "Copy of built-in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopie einer Vorgabe"
+          }
+        }
+      }
+    },
+    "Custom" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Werte"
+          }
+        }
+      }
+    },
+    "Cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneiden"
+          }
+        }
+      }
+    },
+    "Cut (%lld)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneiden (%lld)"
+          }
+        }
+      }
+    },
+    "Cut anyway" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trotzdem schneiden"
+          }
+        }
+      }
+    },
+    "Cut on/off" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneiden ein/aus"
+          }
+        }
+      }
+    },
+    "Cut profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofil"
+          }
+        }
+      }
+    },
+    "Cut profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofile"
+          }
+        }
+      }
+    },
+    "Cut profiles imported" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofile importiert"
+          }
+        }
+      }
+    },
+    "Cut settings and send to the plotter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneideeinstellungen und an den Plotter senden"
+          }
+        }
+      }
+    },
+    "Cut this object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Objekt schneiden"
+          }
+        }
+      }
+    },
+    "Cuts a 10 mm square with a triangle at the top left of the mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneidet links oben auf der Matte ein Quadrat (10 mm) mit Dreieck"
+          }
+        }
+      }
+    },
+    "Cutting mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneidematte"
+          }
+        }
+      }
+    },
+    "Cutting…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneide…"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen"
+          }
+        }
+      }
+    },
+    "Delete (⌫)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen (⌫)"
+          }
+        }
+      }
+    },
+    "Delete profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil löschen"
+          }
+        }
+      }
+    },
+    "Delete the profile “%@”?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil „%@“ löschen?"
+          }
+        }
+      }
+    },
+    "Delete…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen…"
+          }
+        }
+      }
+    },
+    "Done. Unload the mat with the button on the plotter." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig. Matte mit der Taste am Plotter auswerfen."
+          }
+        }
+      }
+    },
+    "Drawing with pen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeichnen mit Stift"
+          }
+        }
+      }
+    },
+    "Duplicate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplizieren"
+          }
+        }
+      }
+    },
+    "Duplicate (⌘D)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplizieren (⌘D)"
+          }
+        }
+      }
+    },
+    "Edit text" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text bearbeiten"
+          }
+        }
+      }
+    },
+    "Empty profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leeres Profil"
+          }
+        }
+      }
+    },
+    "Export %lld cut profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Schnittprofile exportieren"
+          }
+        }
+      }
+    },
+    "Export all own profiles…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle eigenen Profile exportieren…"
+          }
+        }
+      }
+    },
+    "Export all profiles…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Profile exportieren…"
+          }
+        }
+      }
+    },
+    "Export commands…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Befehle exportieren…"
+          }
+        }
+      }
+    },
+    "Export cut profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofil exportieren"
+          }
+        }
+      }
+    },
+    "Export failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export fehlgeschlagen"
+          }
+        }
+      }
+    },
+    "Export selected profile…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewähltes Profil exportieren…"
+          }
+        }
+      }
+    },
+    "Export this profile…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Profil exportieren…"
+          }
+        }
+      }
+    },
+    "Finishing…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließe ab…"
+          }
+        }
+      }
+    },
+    "Font" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schrift"
+          }
+        }
+      }
+    },
+    "Font size (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schriftgröße (mm)"
+          }
+        }
+      }
+    },
+    "Force" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Druck"
+          }
+        }
+      }
+    },
+    "Heat transfer vinyl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flexfolie (Textil)"
+          }
+        }
+      }
+    },
+    "Height" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höhe"
+          }
+        }
+      }
+    },
+    "Holder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halter"
+          }
+        }
+      }
+    },
+    "Images in the SVG were skipped. Only lines can be cut." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder im SVG wurden übersprungen. Geschnitten werden nur Linien."
+          }
+        }
+      }
+    },
+    "Import" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importieren"
+          }
+        }
+      }
+    },
+    "Import failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import fehlgeschlagen"
+          }
+        }
+      }
+    },
+    "Import or export cut profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofile importieren oder exportieren"
+          }
+        }
+      }
+    },
+    "Import profiles…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile importieren…"
+          }
+        }
+      }
+    },
+    "Import SVG or DXF (⌘I)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SVG oder DXF importieren (⌘I)"
+          }
+        }
+      }
+    },
+    "Import with errors" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import mit Fehlern"
+          }
+        }
+      }
+    },
+    "Imported with notes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importiert mit Hinweisen"
+          }
+        }
+      }
+    },
+    "Imported: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importiert: %lld"
+          }
+        }
+      }
+    },
+    "Keep proportions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seitenverhältnis beibehalten"
+          }
+        }
+      }
+    },
+    "Lies outside the cutting area" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liegt außerhalb des Schneidebereichs"
+          }
+        }
+      }
+    },
+    "Lines outside the mat are moved to its edge." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linien außerhalb der Matte werden an den Rand gesetzt."
+          }
+        }
+      }
+    },
+    "Linked copies (<use>) in the SVG were skipped." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verknüpfte Kopien (<use>) im SVG wurden übersprungen."
+          }
+        }
+      }
+    },
+    "Looking for the plotter…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suche Plotter…"
+          }
+        }
+      }
+    },
+    "Manage all cut profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Schnittprofile verwalten"
+          }
+        }
+      }
+    },
+    "Mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte"
+          }
+        }
+      }
+    },
+    "Mat 12 × 12 in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte 12 × 12 Zoll"
+          }
+        }
+      }
+    },
+    "Mat 12 × 24 in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte 12 × 24 Zoll"
+          }
+        }
+      }
+    },
+    "Mat or roll in the plotter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte oder Rolle im Plotter"
+          }
+        }
+      }
+    },
+    "Mirror" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiegeln"
+          }
+        }
+      }
+    },
+    "Mirror horizontally" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horizontal spiegeln"
+          }
+        }
+      }
+    },
+    "Mirror vertically" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertikal spiegeln"
+          }
+        }
+      }
+    },
+    "Mirror, e.g. for heat transfer vinyl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiegeln, z. B. für Flexfolie"
+          }
+        }
+      }
+    },
+    "Move" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschieben"
+          }
+        }
+      }
+    },
+    "My profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Profile"
+          }
+        }
+      }
+    },
+    "Name" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "New profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Profil"
+          }
+        }
+      }
+    },
+    "No Cameo 4 found. Is it switched on and connected via USB?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Cameo 4 gefunden. Ist er eingeschaltet und per USB verbunden?"
+          }
+        }
+      }
+    },
+    "No mat or material loaded. Load it with the button on the plotter." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Matte und kein Material eingelegt. Mit der Taste am Plotter einziehen."
+          }
+        }
+      }
+    },
+    "No objects yet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Objekte"
+          }
+        }
+      }
+    },
+    "No own profiles yet" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine eigenen Profile"
+          }
+        }
+      }
+    },
+    "Not cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird nicht geschnitten"
+          }
+        }
+      }
+    },
+    "Object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objekt"
+          }
+        }
+      }
+    },
+    "Objects" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objekte"
+          }
+        }
+      }
+    },
+    "Outside the cutting area: %lld. Lines there are cut off at the edge." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Außerhalb des Schneidebereichs: %lld. Linien dort werden am Rand abgeschnitten."
+          }
+        }
+      }
+    },
+    "Panel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bereich"
+          }
+        }
+      }
+    },
+    "Paper 80 g/m²" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Papier 80 g/m²"
+          }
+        }
+      }
+    },
+    "Passes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchgänge"
+          }
+        }
+      }
+    },
+    "Pen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stift"
+          }
+        }
+      }
+    },
+    "Plotter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plotter"
+          }
+        }
+      }
+    },
+    "Position (mm, top left)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position (mm, links oben)"
+          }
+        }
+      }
+    },
+    "Profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil"
+          }
+        }
+      }
+    },
+    "Projects that use it keep their values." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Projekte, die es nutzen, behalten ihre Werte."
+          }
+        }
+      }
+    },
+    "Ratchet blade" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ratchet-Messer"
+          }
+        }
+      }
+    },
+    "Ready" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bereit"
+          }
+        }
+      }
+    },
+    "Rename" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umbenennen"
+          }
+        }
+      }
+    },
+    "Rename profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil umbenennen"
+          }
+        }
+      }
+    },
+    "Rename, delete, import or export profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile umbenennen, löschen, importieren oder exportieren"
+          }
+        }
+      }
+    },
+    "Rename…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umbenennen…"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurücksetzen"
+          }
+        }
+      }
+    },
+    "Reset zoom" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoom zurücksetzen"
+          }
+        }
+      }
+    },
+    "Resize" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größe ändern"
+          }
+        }
+      }
+    },
+    "Rotate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drehen"
+          }
+        }
+      }
+    },
+    "Rotate and mirror" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drehen und spiegeln"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sichern"
+          }
+        }
+      }
+    },
+    "Save as new profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als neues Profil sichern"
+          }
+        }
+      }
+    },
+    "Save as new profile…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als neues Profil sichern…"
+          }
+        }
+      }
+    },
+    "Save to profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ins Profil übernehmen"
+          }
+        }
+      }
+    },
+    "Saves the current values into “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übernimmt die aktuellen Werte in „%@“"
+          }
+        }
+      }
+    },
+    "Saves the plotter commands as a text file, to check them without a plotter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichert die Plotter-Befehle als Textdatei, zum Prüfen ohne Plotter"
+          }
+        }
+      }
+    },
+    "Saves tool, blade depth, force, speed and passes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesichert werden Werkzeug, Klingentiefe, Druck, Geschwindigkeit und Durchgänge."
+          }
+        }
+      }
+    },
+    "Schnittwerk" : {
+      "shouldTranslate" : false
+    },
+    "Schnittwerk does not change SVG or DXF files. Use File → Save As to save a .schnittwerk project." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk verändert keine SVG- oder DXF-Dateien. Bitte mit Ablage → Sichern unter… als .schnittwerk-Projekt sichern."
+          }
+        }
+      }
+    },
+    "Select a profile or create one with +." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle ein Profil aus oder lege mit + ein neues an."
+          }
+        }
+      }
+    },
+    "Select an object on the mat, or import a file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle ein Objekt auf der Matte aus oder importiere eine Datei."
+          }
+        }
+      }
+    },
+    "Send to back" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach hinten stellen"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        }
+      }
+    },
+    "Show or hide settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen ein- oder ausblenden"
+          }
+        }
+      }
+    },
+    "Size (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größe (mm)"
+          }
+        }
+      }
+    },
+    "Some objects lie outside the cutting area." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einige Objekte liegen außerhalb des Schneidebereichs."
+          }
+        }
+      }
+    },
+    "Speed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschwindigkeit"
+          }
+        }
+      }
+    },
+    "Sticker paper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stickerpapier"
+          }
+        }
+      }
+    },
+    "Style" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnitt"
+          }
+        }
+      }
+    },
+    "Test cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testschnitt"
+          }
+        }
+      }
+    },
+    "Text" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text"
+          }
+        }
+      }
+    },
+    "Text in the DXF was skipped. Convert text to lines before exporting." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text im DXF wurde übersprungen. Text vor dem Export in Linien umwandeln."
+          }
+        }
+      }
+    },
+    "Text in the SVG was skipped. Convert text to paths before exporting." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text im SVG wurde übersprungen. Text vor dem Export in Pfade umwandeln."
+          }
+        }
+      }
+    },
+    "The AutoBlade only works in holder 1." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die AutoBlade funktioniert nur in Halter 1."
+          }
+        }
+      }
+    },
+    "The file contains no cut profiles." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei enthält keine Schnittprofile."
+          }
+        }
+      }
+    },
+    "The file contains no lines that can be cut." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei enthält keine Linien, die geschnitten werden können."
+          }
+        }
+      }
+    },
+    "The file could not be read." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei konnte nicht gelesen werden."
+          }
+        }
+      }
+    },
+    "The file does not contain Schnittwerk cut profiles." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei enthält keine Schnittwerk-Schnittprofile."
+          }
+        }
+      }
+    },
+    "The file is too large for a cut profile file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei ist zu groß für eine Schnittprofil-Datei."
+          }
+        }
+      }
+    },
+    "The file type “%@” is not supported. Use SVG or DXF." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Dateityp „%@“ wird nicht unterstützt. Bitte SVG oder DXF verwenden."
+          }
+        }
+      }
+    },
+    "The plotter did not respond in time." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Plotter hat nicht rechtzeitig geantwortet."
+          }
+        }
+      }
+    },
+    "The plotter is in use by another program. Quit Silhouette Studio and try again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Plotter wird von einem anderen Programm benutzt. Silhouette Studio beenden und erneut versuchen."
+          }
+        }
+      }
+    },
+    "This file contained a Schnittwerk project instead of SVG/DXF. It was opened as a project. Save it as a .schnittwerk file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Datei enthielt ein Schnittwerk-Projekt statt SVG/DXF. Sie wurde als Projekt geöffnet. Bitte als .schnittwerk-Datei sichern."
+          }
+        }
+      }
+    },
+    "Tool" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkzeug"
+          }
+        }
+      }
+    },
+    "USB error: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "USB-Fehler: %@"
+          }
+        }
+      }
+    },
+    "Vinyl (glossy/matte)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vinylfolie (glänzend/matt)"
+          }
+        }
+      }
+    },
+    "Width" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breite"
+          }
+        }
+      }
+    },
+    "Without mat (roll)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ohne Matte (Rolle)"
+          }
+        }
+      }
+    },
+    "X" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "X"
+          }
+        }
+      }
+    },
+    "Y" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Y"
+          }
+        }
+      }
+    },
+    "Your cut profiles could not be loaded: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Schnittprofile konnten nicht geladen werden: %@"
+          }
+        }
+      }
+    },
+    "Your cut profiles could not be saved: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Schnittprofile konnten nicht gesichert werden: %@"
+          }
+        }
+      }
+    },
+    "Zoom in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vergrößern"
+          }
+        }
+      }
+    },
+    "Zoom out" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verkleinern"
+          }
+        }
+      }
+    },
+    "−90°" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "−90°"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

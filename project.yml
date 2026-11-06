@@ -1,0 +1,107 @@
+name: Schnittwerk
+options:
+  bundleIdPrefix: de.manuelweiser
+  developmentLanguage: en
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # Homebrew libusb (linked statically) is arm64-only and built for macOS 26
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    ARCHS: arm64
+    ONLY_ACTIVE_ARCH: NO
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+targets:
+  Schnittwerk:
+    type: application
+    platform: macOS
+    sources:
+      - path: Schnittwerk
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.manuelweiser.schnittwerk
+        PRODUCT_NAME: Schnittwerk
+        SWIFT_OBJC_BRIDGING_HEADER: Schnittwerk/Support/Schnittwerk-Bridging-Header.h
+        HEADER_SEARCH_PATHS: /opt/homebrew/include/libusb-1.0
+        # libusb statisch einbinden, damit die App ohne Homebrew läuft
+        OTHER_LDFLAGS:
+          - /opt/homebrew/lib/libusb-1.0.a
+          - -framework
+          - IOKit
+          - -framework
+          - CoreFoundation
+          - -framework
+          - Security
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_HARDENED_RUNTIME: NO
+        ENABLE_APP_SANDBOX: NO
+        COMBINE_HIDPI_IMAGES: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Schnittwerk
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    info:
+      path: Schnittwerk/Support/Info.plist
+      properties:
+        CFBundleDisplayName: Schnittwerk
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSApplicationCategoryType: public.app-category.graphics-design
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSHumanReadableCopyright: "© 2026 Manuel Weiser · GPL-3.0"
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Schnittwerk Project
+            CFBundleTypeRole: Editor
+            LSHandlerRank: Owner
+            LSItemContentTypes:
+              - de.manuelweiser.schnittwerk.project
+          - CFBundleTypeName: Cut File
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes:
+              - public.svg-image
+              - com.autodesk.dxf
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: com.autodesk.dxf
+            UTTypeDescription: DXF Drawing
+            UTTypeConformsTo:
+              - public.data
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dxf
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: de.manuelweiser.schnittwerk.cutprofiles
+            UTTypeDescription: Schnittwerk Cut Profiles
+            UTTypeConformsTo:
+              - public.json
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - schnittprofile
+          - UTTypeIdentifier: de.manuelweiser.schnittwerk.project
+            UTTypeDescription: Schnittwerk Project
+            UTTypeConformsTo:
+              - public.data
+              - public.content
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - schnittwerk
+    scheme:
+      testTargets:
+        - SchnittwerkTests
+  SchnittwerkTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: SchnittwerkTests
+    dependencies:
+      - target: Schnittwerk
+    settings:
+      base:
+        HEADER_SEARCH_PATHS: /opt/homebrew/include/libusb-1.0
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        GENERATE_INFOPLIST_FILE: YES

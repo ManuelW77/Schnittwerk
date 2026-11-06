@@ -1,0 +1,46 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Cut File" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneidedatei"
+          }
+        }
+      }
+    },
+    "DXF Drawing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DXF-Zeichnung"
+          }
+        }
+      }
+    },
+    "Schnittwerk Cut Profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk-Schnittprofile"
+          }
+        }
+      }
+    },
+    "Schnittwerk Project" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk-Projekt"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
