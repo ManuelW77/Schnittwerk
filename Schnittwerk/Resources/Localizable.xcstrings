@@ -751,16 +751,6 @@
         }
       }
     },
-    "Material" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Material"
-          }
-        }
-      }
-    },
     "Mirror" : {
       "localizations" : {
         "de" : {
@@ -1260,16 +1250,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geschwindigkeit"
-          }
-        }
-      }
-    },
-    "Starting values. Always do a test cut on new material." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Startwerte. Bei neuem Material immer zuerst einen Testschnitt machen."
           }
         }
       }
