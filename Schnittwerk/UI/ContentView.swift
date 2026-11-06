@@ -59,6 +59,14 @@ struct ContentView: View {
             case .failure(let error): message = AlertMessage(title: String(localized: "Import failed"), text: error.localizedDescription)
             }
         }
+        .onAppear {
+            // Notes from opening an SVG/DXF directly (File → Open, Finder)
+            guard !document.openNotes.isEmpty else { return }
+            message = AlertMessage(title: String(localized: "Imported with notes"),
+                                   text: document.openNotes.joined(separator: "\n"))
+            document.openNotes = []
+            selection = document.data.shapes.first?.id
+        }
         .alert(item: $message) { m in
             Alert(title: Text(verbatim: m.title), message: Text(verbatim: m.text))
         }

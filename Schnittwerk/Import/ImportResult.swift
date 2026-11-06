@@ -13,7 +13,8 @@ struct ImportResult {
 enum ImportError: LocalizedError, Equatable {
     case unreadable
     case unsupportedFormat(String)
-    case noGeometry
+    /// No cut lines; `skipped` names what was in the file instead.
+    case noGeometry(skipped: [String])
 
     var errorDescription: String? {
         switch self {
@@ -21,8 +22,9 @@ enum ImportError: LocalizedError, Equatable {
             return String(localized: "The file could not be read.")
         case .unsupportedFormat(let ext):
             return String(localized: "The file type “\(ext)” is not supported. Use SVG or DXF.")
-        case .noGeometry:
-            return String(localized: "The file contains no lines that can be cut.")
+        case .noGeometry(let skipped):
+            let base = String(localized: "The file contains no lines that can be cut.")
+            return ([base] + skipped).joined(separator: "\n")
         }
     }
 }
@@ -34,7 +36,12 @@ enum ShapeImporter {
     static func importShape(from url: URL) throws -> (shape: CutShape, warnings: [String]) {
         let data: Data
         do { data = try Data(contentsOf: url) } catch { throw ImportError.unreadable }
-        let ext = url.pathExtension.lowercased()
+        return try importShape(data: data, fileExtension: url.pathExtension,
+                               name: url.deletingPathExtension().lastPathComponent)
+    }
+
+    static func importShape(data: Data, fileExtension: String, name: String) throws -> (shape: CutShape, warnings: [String]) {
+        let ext = fileExtension.lowercased()
         let result: ImportResult
         switch ext {
         case "svg":
@@ -44,8 +51,7 @@ enum ShapeImporter {
         default:
             throw ImportError.unsupportedFormat(ext)
         }
-        guard !result.paths.isEmpty else { throw ImportError.noGeometry }
-        let name = url.deletingPathExtension().lastPathComponent
+        guard !result.paths.isEmpty else { throw ImportError.noGeometry(skipped: result.warnings) }
         return (CutShape(name: name, matPaths: result.paths), result.warnings)
     }
 }

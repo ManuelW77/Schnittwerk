@@ -1,6 +1,7 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 
 import XCTest
+import UniformTypeIdentifiers
 @testable import Schnittwerk
 
 final class SVGImportTests: XCTestCase {
@@ -162,5 +163,23 @@ final class BrokenFileTests: XCTestCase {
     func testDXFWithBrokenValuesDoesNotCrash() throws {
         let s = "0\nSECTION\n2\nENTITIES\n0\nARC\n10\n0\n20\n0\n40\nnan\n50\ninf\n51\n1e999\n0\nCIRCLE\n10\n0\n20\n0\n40\n1e308\n0\nSPLINE\n71\n999999\n10\n0\n20\n0\n0\nENDSEC\n0\nEOF\n"
         _ = try DXFImporter.parse(Data(s.utf8))
+    }
+}
+
+final class OpenAsDocumentTests: XCTestCase {
+    func testImageOnlySVGExplainsWhy() {
+        let svg = #"<svg xmlns="http://www.w3.org/2000/svg"><image width="10" height="10" href="x.png"/></svg>"#
+        XCTAssertThrowsError(try ShapeImporter.importShape(data: Data(svg.utf8), fileExtension: "svg", name: "x")) { error in
+            guard case ImportError.noGeometry(let skipped) = error else { return XCTFail("\(error)") }
+            XCTAssertEqual(skipped.count, 1)
+            XCTAssertTrue(error.localizedDescription.contains("\n"))
+        }
+    }
+
+    func testDocumentTypes() {
+        XCTAssertTrue(CutDocument.readableContentTypes.contains(.svg))
+        XCTAssertTrue(CutDocument.readableContentTypes.contains(.dxf))
+        XCTAssertEqual(CutDocument.writableContentTypes, [.schnittwerkProject])
+        XCTAssertEqual(UTType(filenameExtension: "dxf"), .dxf)
     }
 }

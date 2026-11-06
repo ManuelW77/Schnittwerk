@@ -58,6 +58,20 @@ targets:
             LSHandlerRank: Owner
             LSItemContentTypes:
               - de.manuelweiser.schnittwerk.project
+          - CFBundleTypeName: Cut File
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes:
+              - public.svg-image
+              - com.autodesk.dxf
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: com.autodesk.dxf
+            UTTypeDescription: DXF Drawing
+            UTTypeConformsTo:
+              - public.data
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dxf
         UTExportedTypeDeclarations:
           - UTTypeIdentifier: de.manuelweiser.schnittwerk.project
             UTTypeDescription: Schnittwerk Project
