@@ -51,6 +51,16 @@
         }
       }
     },
+    "Already there: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schon vorhanden: %lld"
+          }
+        }
+      }
+    },
     "Angle (°)" : {
       "localizations" : {
         "de" : {
@@ -241,6 +251,16 @@
         }
       }
     },
+    "Choose one or more cut profile files" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine oder mehrere Schnittprofil-Dateien auswählen"
+          }
+        }
+      }
+    },
     "Close Silhouette Studio, load the mat, then cut." : {
       "localizations" : {
         "de" : {
@@ -357,6 +377,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schnittprofile"
+          }
+        }
+      }
+    },
+    "Cut profiles imported" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofile importiert"
           }
         }
       }
@@ -521,12 +551,82 @@
         }
       }
     },
+    "Export %lld cut profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Schnittprofile exportieren"
+          }
+        }
+      }
+    },
+    "Export all own profiles…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle eigenen Profile exportieren…"
+          }
+        }
+      }
+    },
+    "Export all profiles…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Profile exportieren…"
+          }
+        }
+      }
+    },
     "Export commands…" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Befehle exportieren…"
+          }
+        }
+      }
+    },
+    "Export cut profile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofil exportieren"
+          }
+        }
+      }
+    },
+    "Export failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export fehlgeschlagen"
+          }
+        }
+      }
+    },
+    "Export selected profile…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewähltes Profil exportieren…"
+          }
+        }
+      }
+    },
+    "Export this profile…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Profil exportieren…"
           }
         }
       }
@@ -631,6 +731,26 @@
         }
       }
     },
+    "Import or export cut profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittprofile importieren oder exportieren"
+          }
+        }
+      }
+    },
+    "Import profiles…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile importieren…"
+          }
+        }
+      }
+    },
     "Import SVG or DXF (⌘I)" : {
       "localizations" : {
         "de" : {
@@ -641,12 +761,32 @@
         }
       }
     },
+    "Import with errors" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import mit Fehlern"
+          }
+        }
+      }
+    },
     "Imported with notes" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importiert mit Hinweisen"
+          }
+        }
+      }
+    },
+    "Imported: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importiert: %lld"
           }
         }
       }
@@ -1021,22 +1161,22 @@
         }
       }
     },
-    "Rename or delete this profile" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Profil umbenennen oder löschen"
-          }
-        }
-      }
-    },
     "Rename profile" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Profil umbenennen"
+          }
+        }
+      }
+    },
+    "Rename, delete, import or export profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profile umbenennen, löschen, importieren oder exportieren"
           }
         }
       }
@@ -1334,6 +1474,16 @@
         }
       }
     },
+    "The file contains no cut profiles." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei enthält keine Schnittprofile."
+          }
+        }
+      }
+    },
     "The file contains no lines that can be cut." : {
       "localizations" : {
         "de" : {
@@ -1350,6 +1500,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Datei konnte nicht gelesen werden."
+          }
+        }
+      }
+    },
+    "The file does not contain Schnittwerk cut profiles." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei enthält keine Schnittwerk-Schnittprofile."
+          }
+        }
+      }
+    },
+    "The file is too large for a cut profile file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei ist zu groß für eine Schnittprofil-Datei."
           }
         }
       }

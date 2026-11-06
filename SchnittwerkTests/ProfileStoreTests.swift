@@ -88,3 +88,71 @@ final class ProfileStoreTests: XCTestCase {
         XCTAssertNil(store.profile(settingsID: "user:\(UUID().uuidString)"))
     }
 }
+
+@MainActor
+final class ProfileImportExportTests: XCTestCase {
+    private var dir: URL!
+
+    override func setUp() {
+        dir = FileManager.default.temporaryDirectory.appendingPathComponent("sw-ie-\(UUID().uuidString)", isDirectory: true)
+    }
+
+    override func tearDown() { try? FileManager.default.removeItem(at: dir) }
+
+    private func store(_ name: String) -> ProfileStore {
+        ProfileStore(fileURL: dir.appendingPathComponent(name).appendingPathComponent("profiles.json"))
+    }
+
+    func testExportAllAndImportIntoEmptyStore() throws {
+        let a = store("a")
+        var s = CutSettings(); s.pressure = 20
+        a.add(CutProfile(name: "Karton", settings: s))
+        a.add(CutProfile(name: "Folie", settings: CutSettings()))
+        let data = try a.exportData(a.profiles)
+
+        let b = store("b")
+        let summary = try b.importProfiles(from: data)
+        XCTAssertEqual(summary, .init(added: 2, unchanged: 0))
+        XCTAssertEqual(b.profiles, a.profiles) // same ids and values
+        XCTAssertEqual(store("b").profiles.count, 2) // saved to disk
+    }
+
+    func testImportTwiceAddsNothing() throws {
+        let a = store("a")
+        a.add(CutProfile(name: "Vinyl", settings: CutSettings()))
+        let data = try a.exportData(a.profiles)
+        let summary = try a.importProfiles(from: data)
+        XCTAssertEqual(summary, .init(added: 0, unchanged: 1))
+        XCTAssertEqual(a.profiles.count, 1)
+    }
+
+    func testSameIDDifferentValuesBecomesCopy() throws {
+        let a = store("a")
+        let original = a.add(CutProfile(name: "Vinyl", settings: CutSettings()))
+        var changed = original
+        changed.pressure = 30
+        let data = try a.exportData([changed])
+        let summary = try a.importProfiles(from: data)
+        XCTAssertEqual(summary.added, 1)
+        XCTAssertEqual(a.profiles.count, 2)
+        XCTAssertEqual(a.profiles[0], original) // never overwritten
+        XCTAssertNotEqual(a.profiles[1].id, original.id)
+        XCTAssertEqual(a.profiles[1].name, "Vinyl 2")
+    }
+
+    func testHandWrittenFileWithoutIDsAndClamping() throws {
+        let json = #"{"profiles":[{"name":"Filz","tool":"ratchetBlade","pressure":99,"speed":3}]}"#
+        let a = store("a")
+        try a.importProfiles(from: Data(json.utf8))
+        XCTAssertEqual(a.profiles.first?.pressure, 33)
+        XCTAssertEqual(a.profiles.first?.passes, 1)
+    }
+
+    func testRejectsOtherFiles() {
+        let a = store("a")
+        XCTAssertThrowsError(try a.importProfiles(from: Data(#"{"shapes":[]}"#.utf8)))
+        XCTAssertThrowsError(try a.importProfiles(from: Data(#"{"profiles":[]}"#.utf8)))
+        XCTAssertThrowsError(try a.importProfiles(from: Data(repeating: 0x20, count: ProfileExportFile.maxBytes + 1)))
+        XCTAssertTrue(a.profiles.isEmpty)
+    }
+}

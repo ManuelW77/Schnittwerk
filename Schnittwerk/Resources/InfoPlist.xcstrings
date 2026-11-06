@@ -21,6 +21,16 @@
         }
       }
     },
+    "Schnittwerk Cut Profiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk-Schnittprofile"
+          }
+        }
+      }
+    },
     "Schnittwerk Project" : {
       "localizations" : {
         "de" : {
