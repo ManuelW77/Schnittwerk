@@ -1,0 +1,159 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "AutoBlade" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AutoBlade"
+          }
+        }
+      }
+    },
+    "Cardstock 220 g/m²" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karton 220 g/m²"
+          }
+        }
+      }
+    },
+    "Change mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte ändern"
+          }
+        }
+      }
+    },
+    "Cutting area: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneidebereich: %@"
+          }
+        }
+      }
+    },
+    "Drawing with pen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeichnen mit Stift"
+          }
+        }
+      }
+    },
+    "Heat transfer vinyl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flexfolie (Textil)"
+          }
+        }
+      }
+    },
+    "Mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte"
+          }
+        }
+      }
+    },
+    "Mat 12 × 12 in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte 12 × 12 Zoll"
+          }
+        }
+      }
+    },
+    "Mat 12 × 24 in" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte 12 × 24 Zoll"
+          }
+        }
+      }
+    },
+    "Paper 80 g/m²" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Papier 80 g/m²"
+          }
+        }
+      }
+    },
+    "Pen" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stift"
+          }
+        }
+      }
+    },
+    "Ratchet blade" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ratchet-Messer"
+          }
+        }
+      }
+    },
+    "Schnittwerk" : {
+      "shouldTranslate" : false
+    },
+    "Sticker paper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stickerpapier"
+          }
+        }
+      }
+    },
+    "Vinyl (glossy/matte)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vinylfolie (glänzend/matt)"
+          }
+        }
+      }
+    },
+    "Without mat (roll)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ohne Matte (Rolle)"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
