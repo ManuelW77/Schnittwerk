@@ -146,3 +146,15 @@ final class DXFImportTests: XCTestCase {
         XCTAssertEqual(r.paths.count, 1)
     }
 }
+
+final class BrokenFileTests: XCTestCase {
+    func testSVGWithInfiniteNumbersDoesNotCrash() throws {
+        let text = #"<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0 A1e999 1e999 0 0 1 10 10 L1e999 5"/><rect width="1e999" height="5"/></svg>"#
+        _ = try SVGImporter.parse(Data(text.utf8))
+    }
+
+    func testDXFWithBrokenValuesDoesNotCrash() throws {
+        let s = "0\nSECTION\n2\nENTITIES\n0\nARC\n10\n0\n20\n0\n40\nnan\n50\ninf\n51\n1e999\n0\nCIRCLE\n10\n0\n20\n0\n40\n1e308\n0\nSPLINE\n71\n999999\n10\n0\n20\n0\n0\nENDSEC\n0\nEOF\n"
+        _ = try DXFImporter.parse(Data(s.utf8))
+    }
+}
