@@ -1,10 +1,13 @@
 {
   "AutoBlade": "AutoBlade",
+  "Blocks (INSERT) in the DXF were skipped. Explode them before exporting.": "Blöcke (INSERT) im DXF wurden übersprungen. Vor dem Export auflösen.",
   "Cardstock 220 g/m²": "Karton 220 g/m²",
   "Change mat": "Matte ändern",
   "Cutting area: %@": "Schneidebereich: %@",
   "Drawing with pen": "Zeichnen mit Stift",
   "Heat transfer vinyl": "Flexfolie (Textil)",
+  "Images in the SVG were skipped. Only lines can be cut.": "Bilder im SVG wurden übersprungen. Geschnitten werden nur Linien.",
+  "Linked copies (<use>) in the SVG were skipped.": "Verknüpfte Kopien (<use>) im SVG wurden übersprungen.",
   "Mat": "Matte",
   "Mat 12 × 12 in": "Matte 12 × 12 Zoll",
   "Mat 12 × 24 in": "Matte 12 × 24 Zoll",
@@ -12,6 +15,11 @@
   "Pen": "Stift",
   "Ratchet blade": "Ratchet-Messer",
   "Sticker paper": "Stickerpapier",
+  "Text in the DXF was skipped. Convert text to lines before exporting.": "Text im DXF wurde übersprungen. Text vor dem Export in Linien umwandeln.",
+  "Text in the SVG was skipped. Convert text to paths before exporting.": "Text im SVG wurde übersprungen. Text vor dem Export in Pfade umwandeln.",
+  "The file contains no lines that can be cut.": "Die Datei enthält keine Linien, die geschnitten werden können.",
+  "The file could not be read.": "Die Datei konnte nicht gelesen werden.",
+  "The file type “%@” is not supported. Use SVG or DXF.": "Der Dateityp „%@“ wird nicht unterstützt. Bitte SVG oder DXF verwenden.",
   "Vinyl (glossy/matte)": "Vinylfolie (glänzend/matt)",
   "Without mat (roll)": "Ohne Matte (Rolle)"
 }
