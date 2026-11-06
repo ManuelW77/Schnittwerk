@@ -114,7 +114,9 @@ enum DXFImporter {
         let pairs: [Pair]
 
         func values(_ code: Int) -> [String] { pairs.filter { $0.code == code }.map(\.value) }
-        func all(_ code: Int) -> [CGFloat] { values(code).compactMap { Double($0) }.map { CGFloat($0) } }
+        func all(_ code: Int) -> [CGFloat] {
+            values(code).compactMap { Double($0) }.filter(\.isFinite).map { CGFloat($0) }
+        }
         func double(_ code: Int) -> CGFloat { all(code).first ?? 0 }
         func int(_ code: Int) -> Int { values(code).first.flatMap { Int($0) } ?? 0 }
         func point(_ code: Int) -> CGPoint { CGPoint(x: double(code), y: double(code + 10)) }
@@ -124,7 +126,7 @@ enum DXFImporter {
             var result: [CGFloat] = []
             for p in pairs {
                 if p.code == 10 { result.append(0) }
-                if p.code == 42, !result.isEmpty { result[result.count - 1] = CGFloat(Double(p.value) ?? 0) }
+                if p.code == 42, !result.isEmpty { result[result.count - 1] = CGFloat(Double(p.value).flatMap { $0.isFinite ? $0 : nil } ?? 0) }
             }
             return result
         }
@@ -170,8 +172,9 @@ enum DXFImporter {
     static func segmentCount(radius: CGFloat, sweep: CGFloat) -> Int {
         let r = max(abs(radius), 0.001)
         let maxStep = 2 * acos(max(-1, min(1, 1 - ShapeImporter.tolerance / r)))
-        let n = Int(ceil(abs(sweep) / max(maxStep, 0.01)))
-        return min(max(n, 8), 2000)
+        let q = abs(sweep) / max(maxStep, 0.01)
+        guard q.isFinite else { return 8 }
+        return min(max(Int(min(q, 2000).rounded(.up)), 8), 2000)
     }
 
     static func polyline(vertices: [CGPoint], bulges: [CGFloat], closed: Bool) -> Polyline? {
@@ -240,7 +243,8 @@ enum DXFImporter {
     static func spline(_ e: Entity) -> Polyline? {
         let closed = e.int(70) & 1 == 1
         let ctrl = zip(e.all(10), e.all(20)).map { CGPoint(x: $0, y: $1) }
-        let degree = max(1, e.int(71))
+        // Real CAD files use degree 2–5; a cap keeps broken files from hanging
+        let degree = min(max(1, e.int(71)), 10)
         let knots = e.all(40)
         let weightsRaw = e.all(41)
         guard ctrl.count > degree, knots.count == ctrl.count + degree + 1 else {
@@ -250,7 +254,7 @@ enum DXFImporter {
         let weights = weightsRaw.count == ctrl.count ? weightsRaw : Array(repeating: 1, count: ctrl.count)
         let lo = knots[degree], hi = knots[knots.count - degree - 1]
         guard hi > lo else { return nil }
-        let samples = max(16, (ctrl.count - degree) * 24)
+        let samples = min(max(16, (ctrl.count - degree) * 24), 20_000)
         var pts: [CGPoint] = []
         for i in 0...samples {
             let u = lo + (hi - lo) * CGFloat(i) / CGFloat(samples)

@@ -36,7 +36,7 @@ enum SVGImporter {
             factor = f
             break
         }
-        guard let v = Double(s.trimmingCharacters(in: .whitespaces)) else { return nil }
+        guard let v = Double(s.trimmingCharacters(in: .whitespaces)), v.isFinite else { return nil }
         return CGFloat(v) * factor
     }
 
@@ -354,7 +354,9 @@ enum SVGPathParser {
         if !sweep, delta > 0 { delta -= 2 * .pi }
         if sweep, delta < 0 { delta += 2 * .pi }
 
-        let count = max(1, Int(ceil(abs(delta) / (.pi / 2) - 1e-9)))
+        // Broken input (NaN/Inf) would crash Int(); draw a straight line instead
+        guard [delta, theta1, cx, cy, rx, ry].allSatisfy(\.isFinite) else { path.addLine(to: p2); return }
+        let count = min(max(1, Int(ceil(abs(delta) / (.pi / 2) - 1e-9))), 8)
         let step = delta / CGFloat(count)
         let k = 4.0 / 3.0 * tan(step / 4)
         func map(_ x: CGFloat, _ y: CGFloat) -> CGPoint {
@@ -437,7 +439,7 @@ struct NumberScanner {
             while k < bytes.count, bytes[k] >= 0x30 && bytes[k] <= 0x39 { k += 1; expDigits = true }
             if expDigits { j = k }
         }
-        guard let s = String(bytes: bytes[startIndex..<j], encoding: .ascii), let v = Double(s) else { return nil }
+        guard let s = String(bytes: bytes[startIndex..<j], encoding: .ascii), let v = Double(s), v.isFinite else { return nil }
         i = j
         return CGFloat(v)
     }
