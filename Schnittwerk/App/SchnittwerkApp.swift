@@ -17,5 +17,6 @@ struct SchnittwerkApp: App {
             ContentView(document: file.document)
                 .frame(minWidth: 900, minHeight: 600)
         }
+        .defaultSize(width: 1280, height: 820)
     }
 }

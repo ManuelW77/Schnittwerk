@@ -5,7 +5,8 @@ import UniformTypeIdentifiers
 
 extension UTType {
     static let schnittwerkProject = UTType(exportedAs: "de.manuelweiser.schnittwerk.project")
-    static let dxf = UTType(filenameExtension: "dxf") ?? .data
+    /// Declared in Info.plist (UTImportedTypeDeclarations); macOS has no own type for DXF.
+    static let dxf = UTType(importedAs: "com.autodesk.dxf")
 }
 
 /// Content of a `.schnittwerk` file (JSON).
@@ -18,9 +19,14 @@ struct ProjectData: Codable, Equatable {
 
 /// One open project window.
 final class CutDocument: ReferenceFileDocument, ObservableObject {
-    static var readableContentTypes: [UTType] { [.schnittwerkProject] }
+    /// SVG and DXF open as a new, unsaved project; saving asks for a
+    /// `.schnittwerk` file, so the original file is never overwritten.
+    static var readableContentTypes: [UTType] { [.schnittwerkProject, .svg, .dxf] }
+    static var writableContentTypes: [UTType] { [.schnittwerkProject] }
 
     @Published var data: ProjectData
+    /// Notes from opening an SVG/DXF (skipped text etc.), shown once.
+    @Published var openNotes: [String] = []
 
     init() {
         data = ProjectData()
@@ -30,7 +36,20 @@ final class CutDocument: ReferenceFileDocument, ObservableObject {
         guard let raw = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
         }
-        data = try JSONDecoder().decode(ProjectData.self, from: raw)
+        if configuration.contentType.conforms(to: .schnittwerkProject) {
+            data = try JSONDecoder().decode(ProjectData.self, from: raw)
+            return
+        }
+        let fileName = configuration.file.filename ?? "Import"
+        let url = URL(fileURLWithPath: fileName)
+        let ext = configuration.contentType.conforms(to: .svg) ? "svg" : (url.pathExtension.isEmpty ? "dxf" : url.pathExtension)
+        var (shape, warnings) = try ShapeImporter.importShape(data: raw, fileExtension: ext,
+                                                               name: url.deletingPathExtension().lastPathComponent)
+        var project = ProjectData()
+        shape.placeInside(project.mat.displaySize)
+        project.shapes = [shape]
+        data = project
+        openNotes = warnings
     }
 
     func snapshot(contentType: UTType) throws -> ProjectData { data }
