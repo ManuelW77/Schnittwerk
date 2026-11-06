@@ -18,5 +18,12 @@ struct SchnittwerkApp: App {
                 .frame(minWidth: 900, minHeight: 600)
         }
         .defaultSize(width: 1280, height: 820)
+
+        Settings {
+            TabView {
+                ProfilesSettingsView()
+                    .tabItem { Label("Cut profiles", systemImage: "scissors") }
+            }
+        }
     }
 }
