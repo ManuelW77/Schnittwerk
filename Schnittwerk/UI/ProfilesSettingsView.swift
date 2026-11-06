@@ -52,6 +52,24 @@ struct ProfilesSettingsView: View {
                     .disabled(index == nil)
                     .help("Delete profile")
                     Spacer()
+                    Menu {
+                        Button("Import profiles…") { ProfileTransfer.importFiles() }
+                        Divider()
+                        Button("Export selected profile…") {
+                            if let i = index {
+                                let p = store.profiles[i]
+                                ProfileTransfer.export([p], suggestedName: ProfileTransfer.fileName(for: p.name))
+                            }
+                        }
+                        .disabled(index == nil)
+                        Button("Export all profiles…") { ProfileTransfer.exportAll() }
+                            .disabled(store.profiles.isEmpty)
+                    } label: {
+                        Image(systemName: "square.and.arrow.up.on.square")
+                    }
+                    .menuStyle(.borderlessButton)
+                    .fixedSize()
+                    .help("Import or export cut profiles")
                 }
                 .padding(6)
             }

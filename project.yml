@@ -73,6 +73,13 @@ targets:
               public.filename-extension:
                 - dxf
         UTExportedTypeDeclarations:
+          - UTTypeIdentifier: de.manuelweiser.schnittwerk.cutprofiles
+            UTTypeDescription: Schnittwerk Cut Profiles
+            UTTypeConformsTo:
+              - public.json
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - schnittprofile
           - UTTypeIdentifier: de.manuelweiser.schnittwerk.project
             UTTypeDescription: Schnittwerk Project
             UTTypeConformsTo:

@@ -53,6 +53,20 @@ struct CutProfile: Codable, Identifiable, Equatable, Hashable {
             && (tool != .autoBlade || s.depth == depth)
     }
 
+    private enum CodingKeys: String, CodingKey { case id, name, tool, depth, pressure, speed, passes }
+
+    /// Missing id (hand-written files) gets a new one; missing depth/passes get defaults.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        name = try c.decode(String.self, forKey: .name)
+        tool = try c.decode(ToolKind.self, forKey: .tool)
+        depth = try c.decodeIfPresent(Int.self, forKey: .depth) ?? 2
+        pressure = try c.decode(Int.self, forKey: .pressure)
+        speed = try c.decode(Int.self, forKey: .speed)
+        passes = try c.decodeIfPresent(Int.self, forKey: .passes) ?? 1
+    }
+
     var clamped: CutProfile {
         var p = self
         p.depth = min(max(depth, CutSettings.depthRange.lowerBound), CutSettings.depthRange.upperBound)
@@ -165,5 +179,89 @@ final class ProfileStore: ObservableObject {
         } catch {
             lastError = String(localized: "Your cut profiles could not be saved: \(error.localizedDescription)")
         }
+    }
+
+    // MARK: - Import / export
+
+    struct ImportSummary: Equatable {
+        var added = 0
+        /// Profiles that already exist with exactly the same values.
+        var unchanged = 0
+    }
+
+    /// File content for export: one or many profiles, same format.
+    func exportData(_ selection: [CutProfile]) throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        return try encoder.encode(ProfileExportFile(profiles: selection))
+    }
+
+    /// Adds the profiles from an export file. Existing profiles are never
+    /// overwritten: a profile with the same id but other values is added
+    /// as a copy with its own name.
+    @discardableResult
+    func importProfiles(from data: Data) throws -> ImportSummary {
+        let incoming = try ProfileExportFile.decode(data)
+        var summary = ImportSummary()
+        for var p in incoming {
+            p = p.clamped
+            if let existing = profiles.first(where: { $0.id == p.id }) {
+                if existing == p || (existing.name == p.name && existing.matchesValues(p)) {
+                    summary.unchanged += 1
+                    continue
+                }
+                p.id = UUID()
+            }
+            p.name = uniqueName(p.name.trimmingCharacters(in: .whitespacesAndNewlines), excluding: nil)
+            profiles.append(p)
+            summary.added += 1
+        }
+        if summary.added > 0 { save() }
+        return summary
+    }
+}
+
+extension CutProfile {
+    func matchesValues(_ other: CutProfile) -> Bool {
+        tool == other.tool && depth == other.depth && pressure == other.pressure
+            && speed == other.speed && passes == other.passes
+    }
+}
+
+/// `.schnittprofile` file (JSON).
+struct ProfileExportFile: Codable {
+    var app = "Schnittwerk"
+    var version = 1
+    var profiles: [CutProfile]
+
+    static let maxBytes = 2_000_000
+    static let maxProfiles = 1000
+
+    enum ImportError: LocalizedError {
+        case tooLarge, notAProfileFile, empty
+
+        var errorDescription: String? {
+            switch self {
+            case .tooLarge: return String(localized: "The file is too large for a cut profile file.")
+            case .notAProfileFile: return String(localized: "The file does not contain Schnittwerk cut profiles.")
+            case .empty: return String(localized: "The file contains no cut profiles.")
+            }
+        }
+    }
+
+    static func decode(_ data: Data) throws -> [CutProfile] {
+        guard data.count <= maxBytes else { throw ImportError.tooLarge }
+        // Also accepts the app's own profiles.json (same "profiles" array)
+        guard let file = try? JSONDecoder().decode(ProfileExportFile.Loose.self, from: data) else {
+            throw ImportError.notAProfileFile
+        }
+        let list = Array(file.profiles.prefix(maxProfiles))
+        guard !list.isEmpty else { throw ImportError.empty }
+        return list
+    }
+
+    /// Like the file, but "app" and "version" may be missing.
+    private struct Loose: Decodable {
+        var profiles: [CutProfile]
     }
 }

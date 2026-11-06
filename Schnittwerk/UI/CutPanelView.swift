@@ -48,6 +48,14 @@ struct CutPanelView: View {
         }
     }
 
+    /// The selected profile with the current values (for export).
+    private var currentAsProfile: CutProfile {
+        let name = ownProfile?.name ?? builtIn?.title ?? String(localized: "Custom")
+        var p = CutProfile(name: name, settings: settings)
+        if let own = ownProfile, !isModified { p.id = own.id } // same id: re-import is recognised
+        return p
+    }
+
     private func saveAsNewProfile() {
         let suggested = ownProfile?.name ?? builtIn?.title ?? String(localized: "New profile")
         let profile = store.add(CutProfile(name: newName.isEmpty ? suggested : newName, settings: settings))
@@ -105,20 +113,28 @@ struct CutPanelView: View {
                         askNewName = true
                     }
                     Spacer()
-                    if let p = ownProfile {
-                        Menu {
+                    Menu {
+                        if let p = ownProfile {
                             Button("Rename…") {
                                 renameText = p.name
                                 askRename = true
                             }
                             Button("Delete…", role: .destructive) { confirmDelete = true }
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
+                            Divider()
                         }
-                        .menuStyle(.borderlessButton)
-                        .fixedSize()
-                        .help("Rename or delete this profile")
+                        Button("Export this profile…") {
+                            let profile = currentAsProfile
+                            ProfileTransfer.export([profile], suggestedName: ProfileTransfer.fileName(for: profile.name))
+                        }
+                        Button("Export all own profiles…") { ProfileTransfer.exportAll() }
+                            .disabled(store.profiles.isEmpty)
+                        Button("Import profiles…") { ProfileTransfer.importFiles() }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
                     }
+                    .menuStyle(.borderlessButton)
+                    .fixedSize()
+                    .help("Rename, delete, import or export profiles")
                     SettingsLink {
                         Image(systemName: "list.bullet.rectangle")
                     }
