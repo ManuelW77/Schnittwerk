@@ -43,6 +43,7 @@ targets:
         ENABLE_APP_SANDBOX: NO
         COMBINE_HIDPI_IMAGES: YES
         INFOPLIST_KEY_CFBundleDisplayName: Schnittwerk
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     info:
       path: Schnittwerk/Support/Info.plist
       properties:
