@@ -1,0 +1,16 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Schnittwerk Project" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk-Projekt"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
