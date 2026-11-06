@@ -11,6 +11,16 @@
         }
       }
     },
+    "Blocks (INSERT) in the DXF were skipped. Explode them before exporting." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blöcke (INSERT) im DXF wurden übersprungen. Vor dem Export auflösen."
+          }
+        }
+      }
+    },
     "Cardstock 220 g/m²" : {
       "localizations" : {
         "de" : {
@@ -57,6 +67,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Flexfolie (Textil)"
+          }
+        }
+      }
+    },
+    "Images in the SVG were skipped. Only lines can be cut." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder im SVG wurden übersprungen. Geschnitten werden nur Linien."
+          }
+        }
+      }
+    },
+    "Linked copies (<use>) in the SVG were skipped." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verknüpfte Kopien (<use>) im SVG wurden übersprungen."
           }
         }
       }
@@ -130,6 +160,56 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stickerpapier"
+          }
+        }
+      }
+    },
+    "Text in the DXF was skipped. Convert text to lines before exporting." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text im DXF wurde übersprungen. Text vor dem Export in Linien umwandeln."
+          }
+        }
+      }
+    },
+    "Text in the SVG was skipped. Convert text to paths before exporting." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text im SVG wurde übersprungen. Text vor dem Export in Pfade umwandeln."
+          }
+        }
+      }
+    },
+    "The file contains no lines that can be cut." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei enthält keine Linien, die geschnitten werden können."
+          }
+        }
+      }
+    },
+    "The file could not be read." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei konnte nicht gelesen werden."
+          }
+        }
+      }
+    },
+    "The file type “%@” is not supported. Use SVG or DXF." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Dateityp „%@“ wird nicht unterstützt. Bitte SVG oder DXF verwenden."
           }
         }
       }
