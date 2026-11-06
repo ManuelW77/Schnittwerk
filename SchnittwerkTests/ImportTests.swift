@@ -153,6 +153,12 @@ final class BrokenFileTests: XCTestCase {
         _ = try SVGImporter.parse(Data(text.utf8))
     }
 
+    func testSVGOverflowThroughTransformDoesNotCrash() throws {
+        let text = #"<svg xmlns="http://www.w3.org/2000/svg"><g transform="scale(1e300)"><path d="M0 0 C1e300 0 1e300 1e300 0 1e300 Q5 5 1e10 1e10"/></g><rect width="5" height="5"/></svg>"#
+        let r = try SVGImporter.parse(Data(text.utf8))
+        XCTAssertTrue(r.paths.allSatisfy { $0.points.allSatisfy { $0.x.isFinite && $0.y.isFinite } })
+    }
+
     func testDXFWithBrokenValuesDoesNotCrash() throws {
         let s = "0\nSECTION\n2\nENTITIES\n0\nARC\n10\n0\n20\n0\n40\nnan\n50\ninf\n51\n1e999\n0\nCIRCLE\n10\n0\n20\n0\n40\n1e308\n0\nSPLINE\n71\n999999\n10\n0\n20\n0\n0\nENDSEC\n0\nEOF\n"
         _ = try DXFImporter.parse(Data(s.utf8))

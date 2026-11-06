@@ -85,6 +85,7 @@ private final class PathFlattener {
         switch e.type {
         case .moveToPoint:
             finish(closed: false)
+            guard p[0].x.isFinite, p[0].y.isFinite else { current = []; return }
             start = p[0]; last = p[0]; current = [p[0]]
         case .addLineToPoint:
             append(p[0])
@@ -120,11 +121,14 @@ private final class PathFlattener {
     /// Number of straight pieces so that the chord error stays below the
     /// tolerance: error ≤ M / (8 n²), M = largest second derivative.
     private func segments(maxSecondDerivative m: CGFloat) -> Int {
-        let n = Int(ceil(sqrt(m / (8 * tolerance))))
-        return Swift.min(Swift.max(n, 1), 1000)
+        let q = sqrt(m / (8 * tolerance))
+        guard q.isFinite else { return 1 }
+        return Swift.min(Swift.max(Int(Swift.min(q, 1000).rounded(.up)), 1), 1000)
     }
 
     private func append(_ p: CGPoint) {
+        // Broken input can overflow to Inf/NaN after transforms: drop such points
+        guard p.x.isFinite, p.y.isFinite else { return }
         if current.isEmpty { current = [last] }
         if let l = current.last, l.distance(to: p) < 1e-6 { last = p; return }
         current.append(p)
