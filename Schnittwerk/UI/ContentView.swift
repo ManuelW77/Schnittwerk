@@ -14,6 +14,9 @@ struct ContentView: View {
     @State private var showImporter = false
     @State private var showInspector = true
     @State private var message: AlertMessage?
+    @State private var inspectorTab: InspectorTab = .object
+
+    enum InspectorTab: Hashable { case object, cut }
 
     private static let zoomSteps: [CGFloat] = [0.5, 0.75, 1, 1.5, 2, 3, 4]
 
@@ -33,8 +36,21 @@ struct ContentView: View {
             }
         }
         .inspector(isPresented: $showInspector) {
-            InspectorView(document: document, selection: selection)
-                .inspectorColumnWidth(min: 260, ideal: 300, max: 400)
+            VStack(spacing: 0) {
+                Picker("Panel", selection: $inspectorTab) {
+                    Text("Object").tag(InspectorTab.object)
+                    Text("Cut").tag(InspectorTab.cut)
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .padding(.horizontal, 12)
+                .padding(.top, 10)
+                switch inspectorTab {
+                case .object: InspectorView(document: document, selection: selection)
+                case .cut: CutPanelView(document: document)
+                }
+            }
+            .inspectorColumnWidth(min: 280, ideal: 320, max: 420)
         }
         .toolbar { toolbar }
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.svg, .dxf], allowsMultipleSelection: true) { result in
@@ -88,6 +104,12 @@ struct ContentView: View {
 
             Button { showInspector.toggle() } label: { Label("Settings", systemImage: "sidebar.right") }
                 .help("Show or hide settings")
+
+            Button {
+                inspectorTab = .cut
+                showInspector = true
+            } label: { Label("Cut", systemImage: "scissors") }
+                .help("Cut settings and send to the plotter")
         }
     }
 
