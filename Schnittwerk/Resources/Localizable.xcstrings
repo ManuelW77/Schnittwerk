@@ -1174,6 +1174,16 @@
     "Schnittwerk" : {
       "shouldTranslate" : false
     },
+    "Schnittwerk does not change SVG or DXF files. Use File → Save As to save a .schnittwerk project." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk verändert keine SVG- oder DXF-Dateien. Bitte mit Ablage → Sichern unter… als .schnittwerk-Projekt sichern."
+          }
+        }
+      }
+    },
     "Select a profile or create one with +." : {
       "localizations" : {
         "de" : {
@@ -1370,6 +1380,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Plotter wird von einem anderen Programm benutzt. Silhouette Studio beenden und erneut versuchen."
+          }
+        }
+      }
+    },
+    "This file contained a Schnittwerk project instead of SVG/DXF. It was opened as a project. Save it as a .schnittwerk file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Datei enthielt ein Schnittwerk-Projekt statt SVG/DXF. Sie wurde als Projekt geöffnet. Bitte als .schnittwerk-Datei sichern."
           }
         }
       }

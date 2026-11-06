@@ -70,6 +70,14 @@ struct ContentView: View {
         .alert(item: $message) { m in
             Alert(title: Text(verbatim: m.title), message: Text(verbatim: m.text))
         }
+        .background(WindowAccessor { window in
+            // Opened from an SVG/DXF: make it an untitled project so the
+            // original file is never overwritten
+            guard document.needsDetachFromSourceFile else { return }
+            if SourceFileDetacher.detach(window: window, name: document.sourceFileName) {
+                document.needsDetachFromSourceFile = false
+            }
+        })
     }
 
     // MARK: - Toolbar
