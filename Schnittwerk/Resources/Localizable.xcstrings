@@ -11,6 +11,26 @@
         }
       }
     },
+    "1 (left)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 (links)"
+          }
+        }
+      }
+    },
+    "2 (right)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2 (rechts)"
+          }
+        }
+      }
+    },
     "Add text" : {
       "localizations" : {
         "de" : {
@@ -51,6 +71,16 @@
         }
       }
     },
+    "Blade depth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klingentiefe"
+          }
+        }
+      }
+    },
     "Blocks (INSERT) in the DXF were skipped. Explode them before exporting." : {
       "localizations" : {
         "de" : {
@@ -67,6 +97,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nach vorne bringen"
+          }
+        }
+      }
+    },
+    "Busy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beschäftigt"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        }
+      }
+    },
+    "Cancelled." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgebrochen."
+          }
+        }
+      }
+    },
+    "Cancelled. Commands already sent are still being cut; press pause on the plotter to stop at once." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abgebrochen. Bereits gesendete Befehle werden noch geschnitten. Zum sofortigen Stopp die Pause-Taste am Plotter drücken."
           }
         }
       }
@@ -91,6 +161,16 @@
         }
       }
     },
+    "Change cut settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneideeinstellungen ändern"
+          }
+        }
+      }
+    },
     "Change mat" : {
       "localizations" : {
         "de" : {
@@ -111,12 +191,112 @@
         }
       }
     },
+    "Check connection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung prüfen"
+          }
+        }
+      }
+    },
+    "Close Silhouette Studio, load the mat, then cut." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silhouette Studio schließen, Matte einlegen, dann schneiden."
+          }
+        }
+      }
+    },
+    "Connected, no mat loaded" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbunden, keine Matte eingelegt"
+          }
+        }
+      }
+    },
+    "Connected, unknown status “%@”" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbunden, unbekannter Status „%@“"
+          }
+        }
+      }
+    },
+    "Connecting…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinde…"
+          }
+        }
+      }
+    },
+    "Custom" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigene Werte"
+          }
+        }
+      }
+    },
+    "Cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneiden"
+          }
+        }
+      }
+    },
+    "Cut (%lld)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneiden (%lld)"
+          }
+        }
+      }
+    },
+    "Cut anyway" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trotzdem schneiden"
+          }
+        }
+      }
+    },
     "Cut on/off" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schneiden ein/aus"
+          }
+        }
+      }
+    },
+    "Cut settings and send to the plotter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneideeinstellungen und an den Plotter senden"
           }
         }
       }
@@ -131,12 +311,32 @@
         }
       }
     },
+    "Cuts a 10 mm square with a triangle at the top left of the mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneidet links oben auf der Matte ein Quadrat (10 mm) mit Dreieck"
+          }
+        }
+      }
+    },
     "Cutting mat" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schneidematte"
+          }
+        }
+      }
+    },
+    "Cutting…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneide…"
           }
         }
       }
@@ -157,6 +357,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Löschen (⌫)"
+          }
+        }
+      }
+    },
+    "Done. Unload the mat with the button on the plotter." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig. Matte mit der Taste am Plotter auswerfen."
           }
         }
       }
@@ -201,6 +411,26 @@
         }
       }
     },
+    "Export commands…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Befehle exportieren…"
+          }
+        }
+      }
+    },
+    "Finishing…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließe ab…"
+          }
+        }
+      }
+    },
     "Font" : {
       "localizations" : {
         "de" : {
@@ -221,6 +451,16 @@
         }
       }
     },
+    "Force" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Druck"
+          }
+        }
+      }
+    },
     "Heat transfer vinyl" : {
       "localizations" : {
         "de" : {
@@ -237,6 +477,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Höhe"
+          }
+        }
+      }
+    },
+    "Holder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halter"
           }
         }
       }
@@ -311,12 +561,32 @@
         }
       }
     },
+    "Lines outside the mat are moved to its edge." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linien außerhalb der Matte werden an den Rand gesetzt."
+          }
+        }
+      }
+    },
     "Linked copies (<use>) in the SVG were skipped." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verknüpfte Kopien (<use>) im SVG wurden übersprungen."
+          }
+        }
+      }
+    },
+    "Looking for the plotter…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suche Plotter…"
           }
         }
       }
@@ -357,6 +627,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Matte oder Rolle im Plotter"
+          }
+        }
+      }
+    },
+    "Material" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Material"
           }
         }
       }
@@ -421,6 +701,26 @@
         }
       }
     },
+    "No Cameo 4 found. Is it switched on and connected via USB?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Cameo 4 gefunden. Ist er eingeschaltet und per USB verbunden?"
+          }
+        }
+      }
+    },
+    "No mat or material loaded. Load it with the button on the plotter." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Matte und kein Material eingelegt. Mit der Taste am Plotter einziehen."
+          }
+        }
+      }
+    },
     "No objects yet" : {
       "localizations" : {
         "de" : {
@@ -461,12 +761,42 @@
         }
       }
     },
+    "Outside the cutting area: %lld. Lines there are cut off at the edge." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Außerhalb des Schneidebereichs: %lld. Linien dort werden am Rand abgeschnitten."
+          }
+        }
+      }
+    },
+    "Panel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bereich"
+          }
+        }
+      }
+    },
     "Paper 80 g/m²" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Papier 80 g/m²"
+          }
+        }
+      }
+    },
+    "Passes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchgänge"
           }
         }
       }
@@ -481,6 +811,16 @@
         }
       }
     },
+    "Plotter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plotter"
+          }
+        }
+      }
+    },
     "Position (mm, top left)" : {
       "localizations" : {
         "de" : {
@@ -491,12 +831,32 @@
         }
       }
     },
+    "Preset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorgabe"
+          }
+        }
+      }
+    },
     "Ratchet blade" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ratchet-Messer"
+          }
+        }
+      }
+    },
+    "Ready" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bereit"
           }
         }
       }
@@ -547,6 +907,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drehen und spiegeln"
+          }
+        }
+      }
+    },
+    "Saves the plotter commands as a text file, to check them without a plotter" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichert die Plotter-Befehle als Textdatei, zum Prüfen ohne Plotter"
           }
         }
       }
@@ -604,6 +974,36 @@
         }
       }
     },
+    "Some objects lie outside the cutting area." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einige Objekte liegen außerhalb des Schneidebereichs."
+          }
+        }
+      }
+    },
+    "Speed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschwindigkeit"
+          }
+        }
+      }
+    },
+    "Starting values. Always do a test cut on new material." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startwerte. Bei neuem Material immer zuerst einen Testschnitt machen."
+          }
+        }
+      }
+    },
     "Sticker paper" : {
       "localizations" : {
         "de" : {
@@ -620,6 +1020,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schnitt"
+          }
+        }
+      }
+    },
+    "Test cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testschnitt"
           }
         }
       }
@@ -654,6 +1064,16 @@
         }
       }
     },
+    "The AutoBlade only works in holder 1." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die AutoBlade funktioniert nur in Halter 1."
+          }
+        }
+      }
+    },
     "The file contains no lines that can be cut." : {
       "localizations" : {
         "de" : {
@@ -680,6 +1100,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Dateityp „%@“ wird nicht unterstützt. Bitte SVG oder DXF verwenden."
+          }
+        }
+      }
+    },
+    "The plotter did not respond in time." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Plotter hat nicht rechtzeitig geantwortet."
+          }
+        }
+      }
+    },
+    "The plotter is in use by another program. Quit Silhouette Studio and try again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Plotter wird von einem anderen Programm benutzt. Silhouette Studio beenden und erneut versuchen."
+          }
+        }
+      }
+    },
+    "Tool" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkzeug"
+          }
+        }
+      }
+    },
+    "USB error: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "USB-Fehler: %@"
           }
         }
       }
