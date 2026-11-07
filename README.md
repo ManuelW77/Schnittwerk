@@ -75,6 +75,11 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 - Zoom with pinch, ⌘ or ⌥ + scroll wheel (around the pointer), or the toolbar
 - Move the view with space + drag or the middle mouse button
 
+### Settings
+- Language (same as macOS, Deutsch, English), light or dark look, unit mm or inches
+- Default mat and cut profiles for tool 1 and 2 in new projects
+- Optionally show the preview before every cut
+
 ### Cutting
 - Two tools in one job: each object is handled by tool 1 (red) or tool 2 (blue); pen and embossing run before cutting
 - Tools: AutoBlade, ratchet blade, Kraft Blade (leather, felt, chipboard), pen, embossing tool, punch tool

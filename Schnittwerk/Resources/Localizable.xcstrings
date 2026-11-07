@@ -681,12 +681,12 @@
         }
       }
     },
-    "Box margin (mm)" : {
+    "Box margin" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rahmenabstand (mm)"
+            "value" : "Rahmenabstand"
           }
         }
       }
@@ -1131,6 +1131,16 @@
         }
       }
     },
+    "Corner radius" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eckenradius"
+          }
+        }
+      }
+    },
     "Corner radius (mm)" : {
       "localizations" : {
         "de" : {
@@ -1411,6 +1421,16 @@
         }
       }
     },
+    "Cutting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneiden"
+          }
+        }
+      }
+    },
     "Cutting mat" : {
       "localizations" : {
         "de" : {
@@ -1517,6 +1537,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erkennen nach"
+          }
+        }
+      }
+    },
+    "Distance" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abstand"
           }
         }
       }
@@ -1981,6 +2011,16 @@
         }
       }
     },
+    "Font size" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schriftgröße"
+          }
+        }
+      }
+    },
     "Font size (mm)" : {
       "localizations" : {
         "de" : {
@@ -2021,12 +2061,12 @@
         }
       }
     },
-    "Gap (mm)" : {
+    "Gap" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abstand (mm)"
+            "value" : "Abstand"
           }
         }
       }
@@ -2227,6 +2267,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "In einer Gruppe"
+          }
+        }
+      }
+    },
+    "Inches" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoll"
           }
         }
       }
@@ -2651,12 +2701,12 @@
         }
       }
     },
-    "Mark inset (mm)" : {
+    "Mark inset" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abstand der Passkreuze vom Rand (mm)"
+            "value" : "Abstand der Passkreuze vom Rand"
           }
         }
       }
@@ -2707,6 +2757,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Metallic-Flex (Stahls)"
+          }
+        }
+      }
+    },
+    "Millimetres" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Millimeter"
           }
         }
       }
@@ -2887,6 +2947,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Neues Profil"
+          }
+        }
+      }
+    },
+    "New projects" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Projekte"
           }
         }
       }
@@ -3087,6 +3157,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nur die erste Seite des PDF wurde verwendet."
+          }
+        }
+      }
+    },
+    "Open projects keep their own settings." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offene Projekte behalten ihre eigenen Einstellungen."
           }
         }
       }
@@ -3367,6 +3447,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Position (mm, links oben)"
+          }
+        }
+      }
+    },
+    "Position (top left)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position (links oben)"
           }
         }
       }
@@ -4094,6 +4184,16 @@
         }
       }
     },
+    "Show the preview before every cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vor jedem Schnitt die Vorschau zeigen"
+          }
+        }
+      }
+    },
     "Shows the order of the cut lines and the time, before cutting" : {
       "localizations" : {
         "de" : {
@@ -4110,6 +4210,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Siser P.S. Electric"
+          }
+        }
+      }
+    },
+    "Size" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größe"
           }
         }
       }
@@ -4184,12 +4294,12 @@
         }
       }
     },
-    "Spacing (mm)" : {
+    "Spacing" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Abstand (mm)"
+            "value" : "Abstand"
           }
         }
       }
@@ -4924,6 +5034,26 @@
         }
       }
     },
+    "Unit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maßeinheit"
+          }
+        }
+      }
+    },
+    "Unit for all lengths you type in. Projects keep their sizes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheit für alle Längen, die du eingibst. Projekte behalten ihre Größen."
+          }
+        }
+      }
+    },
     "Unlock" : {
       "localizations" : {
         "de" : {
@@ -5120,6 +5250,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Du hast Version %@. Lade die neue Version herunter und zieh sie in den Programme-Ordner."
+          }
+        }
+      }
+    },
+    "You see the order of the lines and the time, and start the cut from there." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du siehst Reihenfolge und Dauer und startest den Schnitt von dort."
           }
         }
       }

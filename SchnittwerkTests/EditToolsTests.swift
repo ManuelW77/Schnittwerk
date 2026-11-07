@@ -137,4 +137,26 @@ final class EditToolsTests: XCTestCase {
         let data = try JSONDecoder().decode(ProjectData.self, from: Data(json.utf8))
         XCTAssertFalse(data.usesPrintAndCut)
     }
+
+    // MARK: Settings
+
+    func testInchConversion() {
+        XCTAssertEqual(LengthUnit.inch.mmPerUnit, 25.4)
+        XCTAssertTrue(LengthUnit.inch.text(25.4).hasPrefix("1"))
+        XCTAssertTrue(LengthUnit.inch.text(25.4).hasSuffix(" in"))
+    }
+
+    func testNewProjectUsesDefaults() {
+        let d = UserDefaults.standard
+        let keys = [NewProjectDefaults.matKey, NewProjectDefaults.profile1Key, NewProjectDefaults.profile2Key]
+        let saved = keys.map { d.object(forKey: $0) }
+        defer { for (k, v) in zip(keys, saved) { d.set(v, forKey: k) } }
+        d.set(MatType.mat12x24.rawValue, forKey: NewProjectDefaults.matKey)
+        d.set("leatherThin", forKey: NewProjectDefaults.profile1Key)
+        d.set("embossPaper", forKey: NewProjectDefaults.profile2Key)
+        let doc = CutDocument.newProject()
+        XCTAssertEqual(doc.data.mat, .mat12x24)
+        XCTAssertEqual(doc.data.settings(slot: 1).tool, .kraftBlade)
+        XCTAssertEqual(doc.data.settings(slot: 2).tool, .emboss)
+    }
 }

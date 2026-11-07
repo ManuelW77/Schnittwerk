@@ -39,7 +39,6 @@ struct EditPanelView: View {
     private var editable: Set<UUID> { document.data.unlocked(selection) }
     private var hasSelection: Bool { !editable.isEmpty }
 
-    private let mm = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0...2))
 
     var body: some View {
         Form {
@@ -103,7 +102,7 @@ struct EditPanelView: View {
                 .labelStyle(.iconOnly)
                 .controlSize(.small)
             }
-            TextField("Distance (mm)", value: $moveDistance, format: mm)
+            LengthField("Distance", mm: $moveDistance)
 
             LabeledContent("Rotate by") {
                 HStack(spacing: 4) {
@@ -151,7 +150,7 @@ struct EditPanelView: View {
                            orFail: String(localized: "Nothing to copy."))
                 }
             }
-            TextField("Gap (mm)", value: $gap, format: mm)
+            LengthField("Gap", mm: $gap)
             HStack {
                 Stepper("Rows: \(rows)", value: $rows, in: 1...50)
                 Stepper("Columns: \(columns)", value: $columns, in: 1...50)
@@ -241,7 +240,7 @@ struct EditPanelView: View {
 
     private var weedSection: some View {
         Section("Weeding lines", isExpanded: $openWeed) {
-            TextField("Box margin (mm)", value: $weedMargin, format: mm)
+            LengthField("Box margin", mm: $weedMargin)
             HStack {
                 Stepper("Across: \(weedHorizontal)", value: $weedHorizontal, in: 0...20)
                 Stepper("Down: \(weedVertical)", value: $weedVertical, in: 0...20)
@@ -265,7 +264,7 @@ struct EditPanelView: View {
 
     private var offsetSection: some View {
         Section("Offset", isExpanded: $openOffset) {
-            TextField("Distance (mm)", value: $offsetDistance, format: mm)
+            LengthField("Distance", mm: $offsetDistance)
             Picker("Corners", selection: $offsetRound) {
                 Text("Round").tag(true)
                 Text("Sharp").tag(false)
@@ -297,7 +296,7 @@ struct EditPanelView: View {
             Picker("Pattern", selection: $fillPattern) {
                 ForEach(FillPattern.allCases) { Label($0.title, systemImage: $0.systemImage).tag($0.rawValue) }
             }
-            TextField("Spacing (mm)", value: $fillSpacing, format: mm)
+            LengthField("Spacing", mm: $fillSpacing)
             if fillPattern != FillPattern.concentric.rawValue {
                 TextField("Angle (°)", value: $fillAngle, format: .number.precision(.fractionLength(0...1)))
             }
@@ -324,7 +323,7 @@ struct EditPanelView: View {
                 ForEach(StippleMode.allCases) { Text($0.title).tag($0.rawValue) }
             }
             .pickerStyle(.segmented)
-            TextField("Spacing (mm)", value: $stippleSpacing, format: mm)
+            LengthField("Spacing", mm: $stippleSpacing)
             Toggle("Replace the object", isOn: $stippleReplace)
             Button {
                 let mode = StippleMode(rawValue: stippleMode) ?? .outline

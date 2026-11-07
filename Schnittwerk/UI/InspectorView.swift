@@ -132,7 +132,6 @@ struct InspectorView: View {
     @ViewBuilder
     private func objectSection(_ i: Int) -> some View {
         let shape = document.data.shapes[i]
-        let mm = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0...1))
 
         Section("Object") {
             TextField("Name", text: Binding(
@@ -150,13 +149,13 @@ struct InspectorView: View {
             }
         }
 
-        Section("Position (mm, top left)") {
-            TextField("X", value: value({ Double($0.matBounds.minX) }, action: String(localized: "Move")) { s, v in
+        Section("Position (top left)") {
+            LengthField("X", mm: value({ Double($0.matBounds.minX) }, action: String(localized: "Move")) { s, v in
                 s.position.x += CGFloat(v) - s.matBounds.minX
-            }, format: mm)
-            TextField("Y", value: value({ Double($0.matBounds.minY) }, action: String(localized: "Move")) { s, v in
+            })
+            LengthField("Y", mm: value({ Double($0.matBounds.minY) }, action: String(localized: "Move")) { s, v in
                 s.position.y += CGFloat(v) - s.matBounds.minY
-            }, format: mm)
+            })
             Button("Center on mat") {
                 let mat = document.data.mat.displaySize
                 change(String(localized: "Center on mat")) { s in
@@ -167,13 +166,13 @@ struct InspectorView: View {
             }
         }
 
-        Section("Size (mm)") {
-            TextField("Width", value: value({ Double($0.size.width) }, action: String(localized: "Resize")) { s, v in
+        Section("Size") {
+            LengthField("Width", mm: value({ Double($0.size.width) }, action: String(localized: "Resize")) { s, v in
                 resize(&s, width: v, height: nil)
-            }, format: mm)
-            TextField("Height", value: value({ Double($0.size.height) }, action: String(localized: "Resize")) { s, v in
+            })
+            LengthField("Height", mm: value({ Double($0.size.height) }, action: String(localized: "Resize")) { s, v in
                 resize(&s, width: nil, height: v)
-            }, format: mm)
+            })
             Toggle("Keep proportions", isOn: $lockAspect)
         }
 
@@ -210,14 +209,13 @@ struct InspectorView: View {
 
     @ViewBuilder
     private func shapeSection(_ spec: ShapeSpec) -> some View {
-        let mm = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0...1))
         Section(spec.kind.title) {
             switch spec.kind {
             case .rectangle:
-                TextField("Corner radius (mm)", value: Binding(
+                LengthField("Corner radius", mm: Binding(
                     get: { spec.cornerRadiusMM },
                     set: { v in guard v.isFinite else { return }; updateShape { $0.cornerRadiusMM = v } }
-                ), format: mm)
+                ))
             case .ellipse:
                 Button("Make it a circle") {
                     updateShape { s in
@@ -296,13 +294,13 @@ struct InspectorView: View {
                 }
             }
 
-            TextField("Font size (mm)", value: Binding(
+            LengthField("Font size", mm: Binding(
                 get: { spec.sizeMM },
                 set: { size in
                     guard size.isFinite, size > 0 else { return }
                     updateText { $0.sizeMM = min(size, 1000) }
                 }
-            ), format: .number.precision(.fractionLength(0...1)))
+            ))
         }
     }
 

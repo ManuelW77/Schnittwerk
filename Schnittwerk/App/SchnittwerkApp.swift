@@ -23,7 +23,7 @@ struct SchnittwerkApp: App {
     }
 
     var body: some Scene {
-        DocumentGroup(newDocument: { CutDocument() }) { file in
+        DocumentGroup(newDocument: { CutDocument.newProject() }) { file in
             ContentView(document: file.document)
                 .frame(minWidth: 900, minHeight: 600)
         }
@@ -36,7 +36,7 @@ struct SchnittwerkApp: App {
 
         Settings {
             TabView {
-                LanguageSettingsView()
+                GeneralSettingsView()
                     .tabItem { Label("General", systemImage: "gearshape") }
                 ProfilesSettingsView()
                     .tabItem { Label("Cut profiles", systemImage: "scissors") }

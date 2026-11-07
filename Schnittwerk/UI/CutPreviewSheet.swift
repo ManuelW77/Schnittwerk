@@ -32,7 +32,8 @@ struct CutPreviewSheet: View {
     }
 
     private func mm(_ v: CGFloat) -> String {
-        v >= 1000 ? (Double(v) / 1000).formatted(.number.precision(.fractionLength(2))) + " m"
+        if LengthUnit.current == .inch { return LengthUnit.inch.text(Double(v)) }
+        return v >= 1000 ? (Double(v) / 1000).formatted(.number.precision(.fractionLength(2))) + " m"
             : Double(v).formatted(.number.precision(.fractionLength(0))) + " mm"
     }
 
