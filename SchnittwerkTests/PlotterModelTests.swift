@@ -96,6 +96,20 @@ final class PlotterModelTests: XCTestCase {
         XCTAssertTrue(job.commands.contains("Z6096,4120"))
     }
 
+    func testModelFromFirmwareAndBluetoothName() {
+        XCTAssertEqual(PlotterModel.named("CAMEO 3 V1.70    ")?.name, "Cameo 3")
+        XCTAssertEqual(PlotterModel.named("CAMEO3-004651A")?.name, "Cameo 3")
+        XCTAssertEqual(PlotterModel.named("CAMEO 4 PLUS V1.20")?.name, "Cameo 4 Plus")
+        XCTAssertEqual(PlotterModel.named("CAMEO V2.00")?.name, "Cameo")
+        XCTAssertNil(PlotterModel.named("Beats Studio Pro"))
+    }
+
+    func testSerialPortsOnlyPlotters() {
+        let names = ["cu.CAMEO3-004651A", "tty.CAMEO3-004651A", "cu.BeatsStudioProvonManuel",
+                     "cu.Bluetooth-Incoming-Port", "cu.debug-console"]
+        XCTAssertEqual(CameoSerial.ports(in: names), ["/dev/cu.CAMEO3-004651A"])
+    }
+
     func testCameo4KeepsFastSpeed() {
         var s = CutSettings()
         s.speed = 20

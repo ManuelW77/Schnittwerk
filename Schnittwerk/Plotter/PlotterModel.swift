@@ -1,9 +1,9 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 //
 // Supported Silhouette plotters: the Cameo 4 line, the Cameo 3 and older
-// machines, each family with its own command set. USB ids and widths were taken from the
-// open-source project inkscape-silhouette (silhouette/Graphtec.py); only the
-// Cameo 4 itself was tested with Schnittwerk.
+// machines, each family with its own command set. USB ids and widths were
+// taken from the open-source project inkscape-silhouette
+// (silhouette/Graphtec.py); only the Cameo 3 was tested with Schnittwerk.
 
 import Foundation
 
@@ -87,6 +87,15 @@ struct PlotterModel: Equatable, Hashable, Sendable {
         if n.contains("pro"), let m = candidates.first(where: { $0.name.hasSuffix("Pro") }) { return m }
         if n.contains("plus"), let m = candidates.first(where: { $0.name.hasSuffix("Plus") }) { return m }
         return cameo4
+    }
+
+    /// Model from a firmware reply ("CAMEO 3 V1.70") or a Bluetooth name
+    /// ("CAMEO3-004651A"): the longest model name the text starts with.
+    static func named(_ text: String) -> PlotterModel? {
+        func squeeze(_ s: String) -> String { s.lowercased().filter { $0.isLetter || $0.isNumber } }
+        let t = squeeze(text)
+        return all.filter { t.hasPrefix(squeeze($0.name)) }
+            .max { squeeze($0.name).count < squeeze($1.name).count }
     }
 
     /// Names for help texts, e.g. "Cameo 4, Cameo 4 Plus, …".

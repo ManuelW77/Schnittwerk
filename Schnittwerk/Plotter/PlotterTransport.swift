@@ -51,17 +51,27 @@ enum PlotterConnection {
         case .usb:
             return try opened(CameoUSB())
         case .bluetooth:
-            return try opened(CameoBluetooth())
+            return try openBluetooth()
         case .automatic:
             do {
                 return try opened(CameoUSB())
             } catch PlotterError.notFound {
                 do {
-                    return try opened(CameoBluetooth())
+                    return try openBluetooth()
                 } catch PlotterError.notFound, PlotterError.bluetoothOff {
                     throw PlotterError.notFound
                 }
             }
+        }
+    }
+
+    /// Classic Bluetooth (Cameo 3, a paired serial port) first, then
+    /// Bluetooth LE (Cameo 4 line).
+    private static func openBluetooth() throws -> PlotterTransport {
+        do {
+            return try opened(CameoSerial())
+        } catch PlotterError.notFound {
+            return try opened(CameoBluetooth())
         }
     }
 

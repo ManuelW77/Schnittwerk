@@ -184,7 +184,7 @@ struct CutPanelView: View {
                     ForEach(ConnectionKind.allCases) { Text($0.title).tag($0) }
                 }
                 .disabled(plotter.isBusy)
-                .help("Automatic tries USB first, then Bluetooth. Supported: \(PlotterModel.supportedNames). Bluetooth: Cameo 4, 4 Plus and 4 Pro. Cameo 3 and older machines cut at speed 10 at most.")
+                .help("Automatic tries USB first, then Bluetooth. Supported: \(PlotterModel.supportedNames). Bluetooth: Cameo 3 (pair it in System Settings first), Cameo 4, 4 Plus and 4 Pro. Cameo 3 and older machines cut at speed 10 at most.")
                 statusView
                 if let p = plotter.progress {
                     ProgressView(value: p)
