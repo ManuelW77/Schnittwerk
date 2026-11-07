@@ -196,9 +196,22 @@ enum GPGLBuilder {
             }
         }
 
-        // Move the head below the cut and finish
-        c.append("M\(units(maxY)),0")
-        c.append("SO0")
+        switch model.family {
+        case .cameo4:
+            // Move the head below the cut and finish
+            c.append("M\(units(maxY)),0")
+            c.append("SO0")
+        case .cameo3, .classic:
+            // Back to the origin, as Silhouette Studio does: a new origin
+            // below the cut (SO0) makes the Cameo 3 keep the mat on unload
+            // and moves the next job.
+            c.append("L0")
+            c.append("\\0,0")
+            c.append("M0,0")
+            if model.twoTools { c.append("J0") }
+            c.append("FN0")
+            c.append("TB50,0")
+        }
         return GPGLJob(commands: c, pathCount: paths.count, cutLengthMM: length)
     }
 

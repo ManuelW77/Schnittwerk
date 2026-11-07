@@ -53,7 +53,7 @@ final class PlotterModelTests: XCTestCase {
             "J1", "!10,1", "FX12,1", "FE0,1", "FF1,0,1", "FF1,1,1", "FC0,1,1", "FC18,1,1", "TF3,1",
         ])
         XCTAssertFalse(job.commands.contains { $0.hasPrefix("TJ") })
-        XCTAssertEqual(job.commands.suffix(1), ["SO0"])
+        XCTAssertEqual(Array(job.commands.suffix(6)), ["L0", "\\0,0", "M0,0", "J0", "FN0", "TB50,0"])
     }
 
     func testCameo3PenHasNoBladeOffset() {
@@ -84,7 +84,7 @@ final class PlotterModelTests: XCTestCase {
             "\\0,0", "Z6096,6080", "L0", "FE0,0", "FF0,0,0", "M360,240",
         ])
         XCTAssertFalse(job.commands.contains { $0.hasPrefix("TG") || $0.hasPrefix("J") || $0.hasPrefix("TF") })
-        XCTAssertEqual(job.commands.suffix(1), ["SO0"])
+        XCTAssertEqual(Array(job.commands.suffix(5)), ["L0", "\\0,0", "M0,0", "FN0", "TB50,0"])
     }
 
     func testClassicPenHasNoOffset() throws {
