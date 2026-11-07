@@ -232,19 +232,7 @@ struct InspectorView: View {
     }
 
     private func resize(_ s: inout CutShape, width: Double?, height: Double?) {
-        let base = s.localBounds
-        if let width, width > 0, base.width > 0 {
-            let f = width / (base.width * abs(s.scaleX))
-            s.scaleX *= f
-            if lockAspect { s.scaleY *= f }
-        }
-        if let height, height > 0, base.height > 0 {
-            let f = height / (base.height * abs(s.scaleY))
-            s.scaleY *= f
-            if lockAspect { s.scaleX *= f }
-        }
-        // Basic shapes: keep real corner radii when stretched
-        s.bakeShapeScale()
+        s.resize(width: width, height: height, keepProportions: lockAspect)
     }
 
     // MARK: - Basic shape

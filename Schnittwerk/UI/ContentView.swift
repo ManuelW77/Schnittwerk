@@ -71,6 +71,8 @@ struct ContentView: View {
             Alert(title: Text(verbatim: m.title), message: Text(verbatim: m.text))
         }
         .background(WindowAccessor { window in
+            // Lets the MCP server find this project (and select in it)
+            DocumentRegistry.shared.register(document, window: window) { selection = $0 }
             // Opened from an SVG/DXF: make it an untitled project so the
             // original file is never overwritten
             guard document.needsDetachFromSourceFile else { return }

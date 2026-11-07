@@ -20,6 +20,18 @@ Native macOS-App zum Schneiden auf dem **Silhouette Cameo 4** – ein schlanker 
 - Offset outwards or inwards, round or sharp corners
 - Align and distribute
 
+## AI design via MCP / KI-Gestaltung über MCP
+Schnittwerk has a built-in [MCP](https://modelcontextprotocol.io) server, so an AI assistant can design on the mat.
+Off by default. Turn it on in Settings → AI (MCP); it listens on `127.0.0.1` only.
+
+```bash
+claude mcp add --transport http schnittwerk http://127.0.0.1:39170/mcp
+```
+
+Tools: `get_document`, `render_preview`, `add_svg`, `add_text`, `add_shape`, `update_object`, `delete_objects`,
+`duplicate_objects`, `combine`, `add_offset`, `arrange`, `set_mat`, `list_fonts`, `new_document`.
+They work on the front project window; every change is one undo step (⌘Z). Cutting is not available through MCP.
+
 Languages: English, Deutsch.
 
 ## Build
