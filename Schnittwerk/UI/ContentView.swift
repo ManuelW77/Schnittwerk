@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var showInspector = true
     @State private var message: AlertMessage?
     @State private var inspectorTab: InspectorTab = .object
+    @State private var tool: DrawingTool = .select
 
     enum InspectorTab: Hashable { case object, cut }
 
@@ -26,7 +27,10 @@ struct ContentView: View {
                 .navigationSplitViewColumnWidth(min: 180, ideal: 210, max: 320)
         } detail: {
             ScrollView([.horizontal, .vertical]) {
-                MatCanvasView(document: document, selection: $selection, zoom: zoom)
+                MatCanvasView(document: document, selection: $selection, zoom: zoom, tool: $tool) {
+                    inspectorTab = .object
+                    showInspector = true
+                }
                     .padding(8)
             }
             .background(Color(nsColor: .underPageBackgroundColor))
@@ -90,9 +94,20 @@ struct ContentView: View {
             Button { showImporter = true } label: { Label("Import", systemImage: "square.and.arrow.down") }
                 .keyboardShortcut("i", modifiers: .command)
                 .help("Import SVG or DXF (⌘I)")
-            Button(action: addText) { Label("Text", systemImage: "textformat") }
-                .keyboardShortcut("t", modifiers: .command)
-                .help("Add text (⌘T)")
+            Picker("Tool", selection: $tool) {
+                ForEach(DrawingTool.allCases) { t in
+                    Label(t.title, systemImage: t.systemImage).tag(t).help(t.help)
+                }
+            }
+            .pickerStyle(.segmented)
+            .help("Tool: select, text, freehand or curve")
+            .background {
+                // ⌘T picks the text tool
+                Button("Text") { tool = .text }
+                    .keyboardShortcut("t", modifiers: .command)
+                    .opacity(0)
+                    .accessibilityHidden(true)
+            }
             Menu {
                 ForEach(ShapeSpec.Kind.allCases) { kind in
                     Button { addShape(kind) } label: { Label(kind.title, systemImage: kind.systemImage) }
@@ -173,13 +188,6 @@ struct ContentView: View {
         } else if !notes.isEmpty {
             message = AlertMessage(title: String(localized: "Imported with notes"), text: notes.joined(separator: "\n"))
         }
-    }
-
-    private func addText() {
-        guard let shape = CutShape.text(FontCatalog.defaultSpec(), at: CGPoint(x: 20, y: 20)) else { return }
-        document.update(String(localized: "Add text"), undoManager: undoManager) { $0.shapes.append(shape) }
-        selection = [shape.id]
-        showInspector = true
     }
 
     private func addShape(_ kind: ShapeSpec.Kind) {

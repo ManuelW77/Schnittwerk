@@ -101,16 +101,6 @@
         }
       }
     },
-    "Add text (⌘T)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Text hinzufügen (⌘T)"
-          }
-        }
-      }
-    },
     "AI (MCP)" : {
       "localizations" : {
         "de" : {
@@ -431,6 +421,16 @@
         }
       }
     },
+    "Click on the mat to place text (T)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf die Matte klicken, um Text zu setzen (T)"
+          }
+        }
+      }
+    },
     "Close Silhouette Studio, load the mat, then cut." : {
       "localizations" : {
         "de" : {
@@ -577,6 +577,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erzeugt einen neuen geheimen Schlüssel. Bereits verbundene Assistenten funktionieren erst wieder, wenn du den neuen Befehl ausführst."
+          }
+        }
+      }
+    },
+    "Curve" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurve"
           }
         }
       }
@@ -811,6 +821,36 @@
         }
       }
     },
+    "Draw" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeichnen"
+          }
+        }
+      }
+    },
+    "Draw a freehand line (F)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freihand-Linie zeichnen (F)"
+          }
+        }
+      }
+    },
+    "Draw curves: click for corners, drag for round points. Return or double-click ends, click the first point to close (P)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurven zeichnen: Klicken setzt Ecken, Ziehen setzt runde Punkte. Return oder Doppelklick beendet, Klick auf den ersten Punkt schließt die Form (P)"
+          }
+        }
+      }
+    },
     "Drawing with pen" : {
       "localizations" : {
         "de" : {
@@ -997,6 +1037,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Druck"
+          }
+        }
+      }
+    },
+    "Freehand" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freihand"
           }
         }
       }
@@ -1834,6 +1884,16 @@
         }
       }
     },
+    "Select" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auswählen"
+          }
+        }
+      }
+    },
     "Select a profile or create one with +." : {
       "localizations" : {
         "de" : {
@@ -1850,6 +1910,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wähle ein Objekt auf der Matte aus oder importiere eine Datei."
+          }
+        }
+      }
+    },
+    "Select and move objects (V)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objekte auswählen und bewegen (V)"
           }
         }
       }
@@ -2170,6 +2240,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Werkzeug"
+          }
+        }
+      }
+    },
+    "Tool: select, text, freehand or curve" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkzeug: Auswählen, Text, Freihand oder Kurve"
           }
         }
       }

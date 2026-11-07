@@ -2,6 +2,7 @@
 //
 // The cutting mat: draws all objects and handles selecting,
 // moving, scaling (corner handles) and rotating (round handle).
+// With a drawing tool, clicks place text or draw lines and curves.
 
 import AppKit
 import SwiftUI
@@ -23,6 +24,9 @@ struct MatCanvasView: View {
     @ObservedObject var document: CutDocument
     @Binding var selection: Set<UUID>
     let zoom: CGFloat
+    @Binding var tool: DrawingTool
+    /// Called after a new object was drawn or placed.
+    var onCreated: () -> Void = {}
 
     @Environment(\.undoManager) private var undoManager
     @Environment(\.colorScheme) private var colorScheme
@@ -30,6 +34,14 @@ struct MatCanvasView: View {
     /// Rubber band while dragging on the empty mat (mat coordinates).
     @State private var marquee: CGRect?
     @FocusState private var focused: Bool
+    /// Freehand line while drawing (mat coordinates).
+    @State private var freehand: [CGPoint] = []
+    /// Curve under construction with the curve tool.
+    @State private var pen = PenCurve()
+    /// True while the mouse is down on a new curve point.
+    @State private var penDragging = false
+    /// Mouse position over the mat (view coordinates).
+    @State private var hover: CGPoint?
 
     static let basePxPerMM: CGFloat = 2.6
     static let margin: CGFloat = 28
@@ -62,6 +74,7 @@ struct MatCanvasView: View {
             for shape in selected {
                 drawSelection(shape, handles: selected.count == 1, &ctx, vp)
             }
+            drawToolPreview(&ctx, vp)
             if let marquee {
                 let r = Path(marquee.applying(vp.matToView))
                 ctx.fill(r, with: .color(.accentColor.opacity(0.08)))
@@ -77,7 +90,37 @@ struct MatCanvasView: View {
         .onKeyPress(keys: [.upArrow, .downArrow, .leftArrow, .rightArrow]) { press in
             nudge(press)
         }
-        .onDeleteCommand { deleteSelection() }
+        .onKeyPress(.return) {
+            guard !pen.anchors.isEmpty else { return .ignored }
+            finishPen(closed: false)
+            return .handled
+        }
+        .onKeyPress(characters: CharacterSet(charactersIn: "vtfpVTFP"), phases: .down) { press in
+            guard press.modifiers.isEmpty || press.modifiers == .shift,
+                  let picked = DrawingTool.allCases.first(where: { String($0.key) == press.characters.lowercased() })
+            else { return .ignored }
+            tool = picked
+            return .handled
+        }
+        .onExitCommand {
+            if !pen.anchors.isEmpty { finishPen(closed: false) } else { tool = .select }
+        }
+        .onChange(of: tool) {
+            if !pen.anchors.isEmpty { finishPen(closed: false) }
+            freehand = []
+        }
+        .onContinuousHover { phase in
+            switch phase {
+            case .active(let p):
+                hover = p
+                if tool == .text { NSCursor.iBeam.set() } else if tool != .select { NSCursor.crosshair.set() }
+            case .ended:
+                hover = nil
+            }
+        }
+        .onDeleteCommand {
+            if !pen.anchors.isEmpty { pen.anchors.removeLast() } else { deleteSelection() }
+        }
         .accessibilityLabel(Text("Cutting mat"))
     }
 
@@ -122,9 +165,9 @@ struct MatCanvasView: View {
         ctx.stroke(Path(rect), with: .color(gridStrongColor), lineWidth: 1)
     }
 
-    private func path(for shape: CutShape, _ vp: MatViewport) -> Path {
+    private func path(for shape: CutShape, _ vp: MatViewport, closedOnly: Bool = false) -> Path {
         var p = Path()
-        for line in shape.paths {
+        for line in shape.paths where !closedOnly || line.closed {
             guard let first = line.points.first else { continue }
             p.move(to: first)
             for pt in line.points.dropFirst() { p.addLine(to: pt) }
@@ -137,11 +180,51 @@ struct MatCanvasView: View {
         let p = path(for: shape, vp)
         let outside = !shape.fits(in: document.data.mat.size)
         let color: Color = !shape.cutEnabled ? .gray : (outside ? .orange : .red)
-        ctx.fill(p, with: .color(color.opacity(0.10)), style: FillStyle(eoFill: true))
+        ctx.fill(path(for: shape, vp, closedOnly: true), with: .color(color.opacity(0.10)), style: FillStyle(eoFill: true))
         if shape.cutEnabled {
             ctx.stroke(p, with: .color(color), lineWidth: 1)
         } else {
             ctx.stroke(p, with: .color(color), style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+        }
+    }
+
+    /// Freehand line and curve while they are being drawn.
+    private func drawToolPreview(_ ctx: inout GraphicsContext, _ vp: MatViewport) {
+        let ink = Color.accentColor
+        if freehand.count > 1 {
+            var p = Path()
+            p.addLines(freehand.map(vp.view))
+            ctx.stroke(p, with: .color(ink), lineWidth: 1.5)
+        }
+        guard tool == .curve, !pen.anchors.isEmpty else { return }
+        let curve = Path(pen.path(closed: false)).applying(vp.matToView)
+        ctx.stroke(curve, with: .color(ink), lineWidth: 1.5)
+        // Rubber line to the mouse
+        if !penDragging, let hover, let last = pen.anchors.last {
+            var next = PenCurve(anchors: [last, PenCurve.Anchor(point: vp.mat(hover))])
+            next.anchors[1].handle = .zero
+            ctx.stroke(Path(next.path(closed: false)).applying(vp.matToView), with: .color(ink.opacity(0.5)),
+                       style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+        }
+        let r: CGFloat = 3.5
+        for (i, a) in pen.anchors.enumerated() {
+            let c = vp.view(a.point)
+            if a.handle != .zero {
+                let hOut = vp.view(CGPoint(x: a.point.x + a.handle.x, y: a.point.y + a.handle.y))
+                let hIn = vp.view(CGPoint(x: a.point.x - a.handle.x, y: a.point.y - a.handle.y))
+                var stem = Path()
+                stem.move(to: hIn); stem.addLine(to: hOut)
+                ctx.stroke(stem, with: .color(ink.opacity(0.6)), lineWidth: 0.8)
+                for h in [hIn, hOut] {
+                    ctx.fill(Path(ellipseIn: CGRect(x: h.x - 2.5, y: h.y - 2.5, width: 5, height: 5)), with: .color(ink))
+                }
+            }
+            let box = Path(CGRect(x: c.x - r, y: c.y - r, width: 2 * r, height: 2 * r))
+            // The first point gets bigger under the mouse: a click closes the curve
+            let closing = i == 0 && pen.anchors.count >= 2 && hover.map { $0.distance(to: c) <= Self.handleRadius + 3 } == true
+            let shown = closing ? Path(CGRect(x: c.x - r - 2, y: c.y - r - 2, width: 2 * r + 4, height: 2 * r + 4)) : box
+            ctx.fill(shown, with: .color(i == 0 ? ink : .white))
+            ctx.stroke(shown, with: .color(ink), lineWidth: 1.2)
         }
     }
 
@@ -204,10 +287,18 @@ struct MatCanvasView: View {
     private func dragGesture(_ vp: MatViewport) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .local)
             .onChanged { value in
+                if tool != .select {
+                    toolDragChanged(value, vp)
+                    return
+                }
                 if drag == nil { beginDrag(at: value.startLocation, vp) }
                 continueDrag(to: value.location, vp)
             }
-            .onEnded { _ in
+            .onEnded { value in
+                if tool != .select {
+                    toolDragEnded(value, vp)
+                    return
+                }
                 guard let d = drag else { return }
                 let name: String
                 switch d.kind {
@@ -312,6 +403,86 @@ struct MatCanvasView: View {
         case .none:
             return
         }
+    }
+
+    // MARK: - Drawing tools
+
+    private func toolDragChanged(_ value: DragGesture.Value, _ vp: MatViewport) {
+        let start = vp.mat(value.startLocation), now = vp.mat(value.location)
+        switch tool {
+        case .select, .text:
+            return
+        case .freehand:
+            if freehand.isEmpty {
+                focused = true
+                freehand = [start]
+            }
+            // Skip points closer than about one screen pixel
+            if let last = freehand.last, last.distance(to: now) >= 1 / vp.pxPerMM {
+                freehand.append(now)
+            }
+        case .curve:
+            if !penDragging {
+                focused = true
+                penDragging = true
+                pen.anchors.append(PenCurve.Anchor(point: start))
+            }
+            // Dragging pulls out the handles: a round point
+            guard let i = pen.anchors.indices.last else { return }
+            let d = CGPoint(x: now.x - start.x, y: now.y - start.y)
+            pen.anchors[i].handle = hypot(d.x, d.y) * vp.pxPerMM >= 3 ? d : .zero
+        }
+    }
+
+    private func toolDragEnded(_ value: DragGesture.Value, _ vp: MatViewport) {
+        let start = vp.mat(value.startLocation)
+        switch tool {
+        case .select:
+            return
+        case .text:
+            focused = true
+            guard let shape = CutShape.text(FontCatalog.defaultSpec(), at: start) else { return }
+            add(shape, actionName: String(localized: "Add text"))
+            tool = .select
+        case .freehand:
+            let points = freehand
+            freehand = []
+            let px = 1 / vp.pxPerMM
+            guard let line = FreehandBuilder.polyline(from: points, tolerance: 1.2 * px, closeDistance: 10 * px)
+            else { return }
+            add(.drawn(line, name: String(localized: "Freehand")), actionName: String(localized: "Draw"))
+        case .curve:
+            penDragging = false
+            let count = pen.anchors.count
+            guard count >= 2 else { return }
+            let new = pen.anchors[count - 1]
+            let hit = (Self.handleRadius + 3) / vp.pxPerMM
+            // Click on the first point: close the curve
+            if count >= 3, new.point.distance(to: pen.anchors[0].point) <= hit {
+                pen.anchors.removeLast()
+                if new.handle != .zero { pen.anchors[0].handle = new.handle }
+                finishPen(closed: true)
+            // Click on the last point again (double-click): end the curve
+            } else if new.point.distance(to: pen.anchors[count - 2].point) <= hit {
+                pen.anchors.removeLast()
+                if new.handle != .zero { pen.anchors[count - 2].handle = new.handle }
+                if new.handle == .zero { finishPen(closed: false) }
+            }
+        }
+    }
+
+    private func finishPen(closed: Bool) {
+        let curve = pen
+        pen = PenCurve()
+        penDragging = false
+        guard let line = curve.polyline(closed: closed) else { return }
+        add(.drawn(line, name: String(localized: "Curve")), actionName: String(localized: "Draw"))
+    }
+
+    private func add(_ shape: CutShape, actionName: String) {
+        document.update(actionName, undoManager: undoManager) { $0.shapes.append(shape) }
+        selection = [shape.id]
+        onCreated()
     }
 
     // MARK: - Keyboard
