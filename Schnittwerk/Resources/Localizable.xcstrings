@@ -1781,6 +1781,16 @@
         }
       }
     },
+    "General" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allgemein"
+          }
+        }
+      }
+    },
     "Give colours the same layer number to cut them as one piece." : {
       "localizations" : {
         "de" : {
@@ -2097,6 +2107,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kraftpapier 260 g/m² (ritzen)"
+          }
+        }
+      }
+    },
+    "Language" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprache"
           }
         }
       }
@@ -3241,6 +3261,16 @@
         }
       }
     },
+    "Restart now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt neu starten"
+          }
+        }
+      }
+    },
     "Return makes a new line." : {
       "localizations" : {
         "de" : {
@@ -3347,6 +3377,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Läuft auf Port %@"
+          }
+        }
+      }
+    },
+    "Same as macOS" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie macOS"
           }
         }
       }
@@ -3860,6 +3900,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle subtrahieren"
+          }
+        }
+      }
+    },
+    "Takes effect after a restart." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wirkt nach einem Neustart."
           }
         }
       }
@@ -4600,6 +4650,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verkleinern"
+          }
+        }
+      }
+    },
+    "“Same as macOS” follows System Settings → General → Language & Region." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„Wie macOS“ folgt Systemeinstellungen → Allgemein → Sprache & Region."
           }
         }
       }
