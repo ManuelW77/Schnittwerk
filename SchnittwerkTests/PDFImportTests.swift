@@ -91,4 +91,58 @@ final class PDFImportTests: XCTestCase {
         let (shape, _) = try ShapeImporter.importShape(data: data, fileExtension: "pdf", name: "Test")
         XCTAssertEqual(shape.size.width, 30 * mm, accuracy: 0.05)
     }
+
+    // MARK: - Hostile files
+
+    /// Builds a PDF by hand: `forms[i]` is the content of form XObject /Fi
+    /// (each may call others with "/Fk Do"); the page draws `page`.
+    private func handMadePDF(page: String, forms: [String]) -> Data {
+        var objects: [String] = []
+        let formNames = forms.indices.map { "/F\($0) \($0 + 4) 0 R" }.joined(separator: " ")
+        let resources = "<< /XObject << \(formNames) >> >>"
+        objects.append("<< /Type /Catalog /Pages 2 0 R >>")
+        objects.append("<< /Type /Pages /Kids [3 0 R] /Count 1 >>")
+        let pageContentID = forms.count + 4
+        objects.append("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] /Resources \(resources) /Contents \(pageContentID) 0 R >>")
+        for f in forms {
+            objects.append("<< /Type /XObject /Subtype /Form /BBox [0 0 200 200] /Resources \(resources) /Length \(f.utf8.count) >>\nstream\n\(f)\nendstream")
+        }
+        objects.append("<< /Length \(page.utf8.count) >>\nstream\n\(page)\nendstream")
+        var out = "%PDF-1.4\n"
+        var offsets: [Int] = []
+        for (n, o) in objects.enumerated() {
+            offsets.append(out.utf8.count)
+            out += "\(n + 1) 0 obj\n\(o)\nendobj\n"
+        }
+        let xref = out.utf8.count
+        out += "xref\n0 \(objects.count + 1)\n0000000000 65535 f \n"
+        for o in offsets { out += String(format: "%010d 00000 n \n", o) }
+        out += "trailer\n<< /Size \(objects.count + 1) /Root 1 0 R >>\nstartxref\n\(xref)\n%%EOF\n"
+        return Data(out.utf8)
+    }
+
+    func testHandMadePDFWorks() throws {
+        let data = handMadePDF(page: "/F0 Do", forms: ["10 10 50 50 re f"])
+        let result = try PDFImporter.parse(data)
+        XCTAssertEqual(result.paths.count, 1)
+        XCTAssertTrue(result.warnings.isEmpty)
+    }
+
+    func testFormCallingItselfStops() throws {
+        let data = handMadePDF(page: "/F0 Do", forms: ["10 10 50 50 re f /F0 Do"])
+        let result = try PDFImporter.parse(data)
+        XCTAssertEqual(result.paths.count, 1)
+        XCTAssertFalse(result.warnings.isEmpty, "reported as too complex")
+    }
+
+    func testFanOutIsLimited() throws {
+        // Each form calls the next ten times: 10^7 rectangles without limits
+        let call = { (k: Int) in String(repeating: "/F\(k) Do ", count: 10) }
+        var forms = (0..<7).map { call($0 + 1) }
+        forms.append("10 10 5 5 re f")
+        let start = Date()
+        let result = try PDFImporter.parse(handMadePDF(page: call(0), forms: forms))
+        XCTAssertLessThan(Date().timeIntervalSince(start), 10)
+        XCTAssertFalse(result.warnings.isEmpty, "reported as too complex")
+    }
 }

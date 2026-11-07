@@ -2914,6 +2914,16 @@
         }
       }
     },
+    "The PDF is too complex; only part of it was read." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das PDF ist zu verschachtelt; nur ein Teil wurde gelesen."
+          }
+        }
+      }
+    },
     "The plotter did not respond in time." : {
       "localizations" : {
         "de" : {

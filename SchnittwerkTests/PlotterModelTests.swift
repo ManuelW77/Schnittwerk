@@ -45,24 +45,35 @@ final class PlotterModelTests: XCTestCase {
 
     func testBluetoothPiecesEndAfterETX() {
         let etx = GPGLJob.etx
-        let data = Data("M10,20".utf8) + [etx] + Data("D30,40".utf8) + [etx] + Data("D50,60".utf8) + [etx]
+        var data = Data()
+        for command in ["M10,20", "D30,40", "D50,60"] {
+            data.append(contentsOf: Array(command.utf8))
+            data.append(etx)
+        }
         let pieces = CameoBluetooth.pieces(of: data, maxLength: 15)
         // Three commands of 7 bytes: two fit into 15, the third goes alone
-        XCTAssertEqual(pieces.map(\.count), [14, 7])
-        XCTAssertEqual(pieces.reduce(Data(), +), data)
+        XCTAssertEqual(pieces.map { $0.count }, [14, 7])
+        XCTAssertEqual(joined(pieces), data)
         XCTAssertTrue(pieces.allSatisfy { $0.count <= 15 && $0.last == etx })
     }
 
     func testBluetoothSplitsLongCommand() {
         let etx = GPGLJob.etx
-        let data = Data(repeating: 0x41, count: 30) + [etx]
+        var data = Data(repeating: 0x41, count: 30)
+        data.append(etx)
         let pieces = CameoBluetooth.pieces(of: data, maxLength: 10)
-        XCTAssertEqual(pieces.map(\.count), [10, 10, 10, 1])
-        XCTAssertEqual(pieces.reduce(Data(), +), data)
+        XCTAssertEqual(pieces.map { $0.count }, [10, 10, 10, 1])
+        XCTAssertEqual(joined(pieces), data)
     }
 
     func testSmallDataIsOnePiece() {
         let data = Data([0x1B, 0x05, GPGLJob.etx])
         XCTAssertEqual(CameoBluetooth.pieces(of: data, maxLength: 182), [data])
+    }
+
+    private func joined(_ pieces: [Data]) -> Data {
+        var all = Data()
+        for p in pieces { all.append(p) }
+        return all
     }
 }

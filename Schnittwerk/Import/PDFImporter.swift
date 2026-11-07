@@ -37,6 +37,9 @@ enum PDFImporter {
         if collector.sawImage {
             warnings.append(String(localized: "Images in the PDF were skipped."))
         }
+        if collector.overBudget {
+            warnings.append(String(localized: "The PDF is too complex; only part of it was read."))
+        }
         return ImportResult(paths: lines, warnings: warnings)
     }
 }
@@ -47,6 +50,17 @@ final class PDFPathCollector {
     let path = CGMutablePath()
     var sawText = false
     var sawImage = false
+    /// Set when a limit below stopped reading (protects against PDFs
+    /// built to make the import explode).
+    private(set) var overBudget = false
+
+    static let maxDepth = 8
+    static let maxFormCalls = 5_000
+    static let maxPathElements = 2_000_000
+    private var formCalls = 0
+    private var pathElements = 0
+    /// Forms being drawn right now (a form drawing itself is refused).
+    private var activeForms: Set<Int> = []
 
     private var ctm = CGAffineTransform.identity
     private var stack: [CGAffineTransform] = []
@@ -58,7 +72,11 @@ final class PDFPathCollector {
 
     /// Scans the stream and releases it afterwards.
     func scan(_ stream: CGPDFContentStreamRef) {
-        guard depth < 16 else { CGPDFContentStreamRelease(stream); return } // runaway nesting
+        guard depth < Self.maxDepth else {
+            overBudget = true
+            CGPDFContentStreamRelease(stream)
+            return
+        }
         depth += 1
         defer { depth -= 1 }
         let table = Self.makeTable()
@@ -149,19 +167,29 @@ final class PDFPathCollector {
 
     private func page(_ p: CGPoint) -> CGPoint { p.applying(ctm) }
 
+    /// Counts one path element; false once the budget is used up.
+    private func spend() -> Bool {
+        guard pathElements < Self.maxPathElements else { overBudget = true; return false }
+        pathElements += 1
+        return true
+    }
+
     private func move(_ p: CGPoint) {
+        guard spend() else { return }
         current.move(to: page(p))
         point = p
     }
 
     private func line(_ p: CGPoint) {
         guard !current.isEmpty else { return move(p) }
+        guard spend() else { return }
         current.addLine(to: page(p))
         point = p
     }
 
     private func curve(_ c1: CGPoint, _ c2: CGPoint, _ end: CGPoint) {
         guard !current.isEmpty else { return move(end) }
+        guard spend() else { return }
         current.addCurve(to: page(end), control1: page(c1), control2: page(c2))
         point = end
     }
@@ -169,6 +197,7 @@ final class PDFPathCollector {
     private func close() { if !current.isEmpty { current.closeSubpath() } }
 
     private func rect(_ r: CGRect) {
+        guard spend() else { return }
         current.move(to: page(CGPoint(x: r.minX, y: r.minY)))
         current.addLine(to: page(CGPoint(x: r.maxX, y: r.minY)))
         current.addLine(to: page(CGPoint(x: r.maxX, y: r.maxY)))
@@ -198,6 +227,14 @@ final class PDFPathCollector {
         case "Image":
             sawImage = true
         case "Form":
+            let key = unsafeBitCast(xStream, to: Int.self) // address of the stream
+            guard formCalls < Self.maxFormCalls, !activeForms.contains(key) else {
+                overBudget = true
+                return
+            }
+            formCalls += 1
+            activeForms.insert(key)
+            defer { activeForms.remove(key) }
             save()
             var matrix: CGPDFArrayRef?
             if CGPDFDictionaryGetArray(dict, "Matrix", &matrix), let matrix, CGPDFArrayGetCount(matrix) == 6 {

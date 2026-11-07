@@ -13,6 +13,10 @@
 #   - notary profile:  xcrun notarytool store-credentials schnittwerk-notary
 #   - gh logged in:    gh auth login
 # Passwords never go into this script; notarytool reads them from the keychain.
+#
+# In GitHub Actions (.github/workflows/release.yml) the script runs for a
+# pushed tag v<version>; notarization then uses an App Store Connect API key
+# given in NOTARY_KEY_PATH, NOTARY_KEY_ID and NOTARY_ISSUER.
 
 set -euo pipefail
 
@@ -43,6 +47,16 @@ VERSION="$(sed -n 's/^ *MARKETING_VERSION: *"\{0,1\}\([0-9.]*\)"\{0,1\}.*/\1/p' 
 TAG="v$VERSION"
 DMG="$BUILD_DIR/$APP_NAME-$VERSION.dmg"
 
+IN_CI=0
+[ "${GITHUB_ACTIONS:-}" = "true" ] && IN_CI=1
+
+# Notarization login: API key (CI) or keychain profile (your Mac)
+if [ -n "${NOTARY_KEY_PATH:-}" ]; then
+  NOTARY_ARGS=(--key "$NOTARY_KEY_PATH" --key-id "${NOTARY_KEY_ID:?}" --issuer "${NOTARY_ISSUER:?}")
+else
+  NOTARY_ARGS=(--keychain-profile "$NOTARY_PROFILE")
+fi
+
 # ---------------------------------------------------------------- checks
 step "Checks for $APP_NAME $VERSION"
 command -v xcodegen >/dev/null || fail "xcodegen missing (brew install xcodegen)"
@@ -50,15 +64,21 @@ command -v xcodegen >/dev/null || fail "xcodegen missing (brew install xcodegen)
 IDENTITIES="$(security find-identity -v -p codesigning)"
 [[ "$IDENTITIES" == *"$IDENTITY"* ]] || fail "Certificate not found: $IDENTITY"
 if [ $DRY_RUN -eq 0 ]; then
-  xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null 2>&1 \
-    || fail "Notary profile '$NOTARY_PROFILE' missing. Run: xcrun notarytool store-credentials $NOTARY_PROFILE"
+  xcrun notarytool history "${NOTARY_ARGS[@]}" >/dev/null 2>&1 \
+    || fail "Notarization login failed. On your Mac run: xcrun notarytool store-credentials $NOTARY_PROFILE"
 fi
 if [ $UPLOAD -eq 1 ]; then
   gh auth status >/dev/null 2>&1 || fail "gh is not logged in (gh auth login)"
-  [ -z "$(git status --porcelain)" ] || fail "Uncommitted changes. Commit first, a release must match a commit."
-  git fetch -q origin
-  [ "$(git rev-parse HEAD)" = "$(git rev-parse @{u} 2>/dev/null || echo none)" ] \
-    || fail "This commit is not pushed. Push first."
+  if [ $IN_CI -eq 1 ]; then
+    # The workflow runs for a tag; it must match the version in project.yml
+    [ "${GITHUB_REF_TYPE:-}" = "tag" ] || fail "Releases are only made for tags (v<version>)."
+    [ "${GITHUB_REF_NAME:-}" = "$TAG" ] || fail "Tag ${GITHUB_REF_NAME:-} does not match MARKETING_VERSION ($TAG)."
+  else
+    [ -z "$(git status --porcelain)" ] || fail "Uncommitted changes. Commit first, a release must match a commit."
+    git fetch -q origin
+    [ "$(git rev-parse HEAD)" = "$(git rev-parse @{u} 2>/dev/null || echo none)" ] \
+      || fail "This commit is not pushed. Push first."
+  fi
   if gh release view "$TAG" >/dev/null 2>&1; then
     fail "Release $TAG already exists. Raise MARKETING_VERSION in project.yml."
   fi
@@ -105,11 +125,11 @@ fi
 # ---------------------------------------------------------------- notarize
 step "Notarize (takes a few minutes)"
 SUBMIT_LOG="$BUILD_DIR/notary.json"
-xcrun notarytool submit "$DMG" --keychain-profile "$NOTARY_PROFILE" --wait --output-format json >"$SUBMIT_LOG" || true
+xcrun notarytool submit "$DMG" "${NOTARY_ARGS[@]}" --wait --output-format json >"$SUBMIT_LOG" || true
 STATUS="$(/usr/bin/python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("status",""))' "$SUBMIT_LOG" 2>/dev/null || echo "")"
 if [ "$STATUS" != "Accepted" ]; then
   ID="$(/usr/bin/python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("id",""))' "$SUBMIT_LOG" 2>/dev/null || echo "")"
-  [ -n "$ID" ] && xcrun notarytool log "$ID" --keychain-profile "$NOTARY_PROFILE" "$BUILD_DIR/notary-log.json" || true
+  [ -n "$ID" ] && xcrun notarytool log "$ID" "${NOTARY_ARGS[@]}" "$BUILD_DIR/notary-log.json" || true
   fail "Notarization: ${STATUS:-failed}. Details: $BUILD_DIR/notary-log.json"
 fi
 xcrun stapler staple "$DMG"
@@ -132,12 +152,17 @@ NOTES="$BUILD_DIR/notes.md"
   echo "Download the DMG, open it and drag Schnittwerk into Applications."
   echo
   echo "## Changes"
-  PREV="$(git describe --tags --abbrev=0 2>/dev/null || true)"
+  # Previous tag, not the one of this commit
+  PREV="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)"
   if [ -n "$PREV" ]; then
     git log --no-merges --format='- %s' "$PREV..HEAD"
   else
     git log --no-merges --format='- %s' -n 30
   fi
 } >"$NOTES"
-gh release create "$TAG" "$DMG" --title "$APP_NAME $VERSION" --notes-file "$NOTES" --target "$(git rev-parse HEAD)"
+if [ $IN_CI -eq 1 ]; then
+  gh release create "$TAG" "$DMG" --title "$APP_NAME $VERSION" --notes-file "$NOTES" --verify-tag
+else
+  gh release create "$TAG" "$DMG" --title "$APP_NAME $VERSION" --notes-file "$NOTES" --target "$(git rev-parse HEAD)"
+fi
 step "Published: $(gh release view "$TAG" --json url -q .url)"
