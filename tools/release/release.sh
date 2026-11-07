@@ -52,7 +52,9 @@ IN_CI=0
 
 # Notarization login: API key (CI) or keychain profile (your Mac)
 if [ -n "${NOTARY_KEY_PATH:-}" ]; then
-  NOTARY_ARGS=(--key "$NOTARY_KEY_PATH" --key-id "${NOTARY_KEY_ID:?}" --issuer "${NOTARY_ISSUER:?}")
+  NOTARY_ARGS=(--key "$NOTARY_KEY_PATH" --key-id "${NOTARY_KEY_ID:?}")
+  # Team keys need the issuer id; individual keys have none
+  [ -n "${NOTARY_ISSUER:-}" ] && NOTARY_ARGS+=(--issuer "$NOTARY_ISSUER")
 else
   NOTARY_ARGS=(--keychain-profile "$NOTARY_PROFILE")
 fi
@@ -64,8 +66,11 @@ command -v xcodegen >/dev/null || fail "xcodegen missing (brew install xcodegen)
 IDENTITIES="$(security find-identity -v -p codesigning)"
 [[ "$IDENTITIES" == *"$IDENTITY"* ]] || fail "Certificate not found: $IDENTITY"
 if [ $DRY_RUN -eq 0 ]; then
-  xcrun notarytool history "${NOTARY_ARGS[@]}" >/dev/null 2>&1 \
-    || fail "Notarization login failed. On your Mac run: xcrun notarytool store-credentials $NOTARY_PROFILE"
+  if ! LOGIN="$(xcrun notarytool history "${NOTARY_ARGS[@]}" 2>&1)"; then
+    # Apple's answer says what is wrong (key id, issuer, role …)
+    printf '%s\n' "$LOGIN" | tail -5 >&2
+    fail "Notarization login failed (see Apple's message above)."
+  fi
 fi
 if [ $UPLOAD -eq 1 ]; then
   gh auth status >/dev/null 2>&1 || fail "gh is not logged in (gh auth login)"
