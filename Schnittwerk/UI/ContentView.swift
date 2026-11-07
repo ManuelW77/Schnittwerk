@@ -9,7 +9,7 @@ struct ContentView: View {
     @ObservedObject var document: CutDocument
     @Environment(\.undoManager) private var undoManager
 
-    @State private var selection: UUID?
+    @State private var selection: Set<UUID> = []
     @State private var zoom: CGFloat = 1
     @State private var showImporter = false
     @State private var showInspector = true
@@ -65,7 +65,7 @@ struct ContentView: View {
             message = AlertMessage(title: String(localized: "Imported with notes"),
                                    text: document.openNotes.joined(separator: "\n"))
             document.openNotes = []
-            selection = document.data.shapes.first?.id
+            selection = Set(document.data.shapes.prefix(1).map(\.id))
         }
         .alert(item: $message) { m in
             Alert(title: Text(verbatim: m.title), message: Text(verbatim: m.text))
@@ -103,10 +103,10 @@ struct ContentView: View {
         ToolbarItemGroup {
             Button(action: duplicateSelection) { Label("Duplicate", systemImage: "plus.square.on.square") }
                 .keyboardShortcut("d", modifiers: .command)
-                .disabled(selection == nil)
+                .disabled(selection.isEmpty)
                 .help("Duplicate (⌘D)")
             Button(role: .destructive, action: deleteSelection) { Label("Delete", systemImage: "trash") }
-                .disabled(selection == nil)
+                .disabled(selection.isEmpty)
                 .help("Delete (⌫)")
 
             Picker("Mat", selection: Binding(
@@ -148,7 +148,6 @@ struct ContentView: View {
     private func importFiles(_ urls: [URL]) {
         var notes: [String] = []
         var failures: [String] = []
-        var lastID: UUID?
         let area = document.data.mat.displaySize
         var newShapes: [CutShape] = []
         for url in urls {
@@ -158,7 +157,6 @@ struct ContentView: View {
                 var (shape, warnings) = try ShapeImporter.importShape(from: url)
                 shape.placeInside(area)
                 newShapes.append(shape)
-                lastID = shape.id
                 notes.append(contentsOf: warnings.map { "\(url.lastPathComponent): \($0)" })
             } catch {
                 failures.append("\(url.lastPathComponent): \(error.localizedDescription)")
@@ -166,7 +164,7 @@ struct ContentView: View {
         }
         if !newShapes.isEmpty {
             document.update(String(localized: "Import"), undoManager: undoManager) { $0.shapes.append(contentsOf: newShapes) }
-            selection = lastID
+            selection = Set(newShapes.map(\.id))
         }
         if !failures.isEmpty {
             message = AlertMessage(title: String(localized: "Import failed"), text: (failures + notes).joined(separator: "\n"))
@@ -178,29 +176,30 @@ struct ContentView: View {
     private func addText() {
         guard let shape = CutShape.text(FontCatalog.defaultSpec(), at: CGPoint(x: 20, y: 20)) else { return }
         document.update(String(localized: "Add text"), undoManager: undoManager) { $0.shapes.append(shape) }
-        selection = shape.id
+        selection = [shape.id]
         showInspector = true
     }
 
     private func addShape(_ kind: ShapeSpec.Kind) {
         let shape = CutShape.basic(.standard(kind), at: CGPoint(x: 20, y: 20))
         document.update(String(localized: "Add shape"), undoManager: undoManager) { $0.shapes.append(shape) }
-        selection = shape.id
+        selection = [shape.id]
         inspectorTab = .object
         showInspector = true
     }
 
     private func duplicateSelection() {
-        guard let id = selection, let shape = document.data.shapes.first(where: { $0.id == id }) else { return }
-        let copy = shape.duplicated()
-        document.update(String(localized: "Duplicate"), undoManager: undoManager) { $0.shapes.append(copy) }
-        selection = copy.id
+        let copies = document.data.shapes.filter { selection.contains($0.id) }.map { $0.duplicated() }
+        guard !copies.isEmpty else { return }
+        document.update(String(localized: "Duplicate"), undoManager: undoManager) { $0.shapes.append(contentsOf: copies) }
+        selection = Set(copies.map(\.id))
     }
 
     private func deleteSelection() {
-        guard let id = selection else { return }
-        document.update(String(localized: "Delete"), undoManager: undoManager) { $0.shapes.removeAll { $0.id == id } }
-        selection = nil
+        guard !selection.isEmpty else { return }
+        let ids = selection
+        document.update(String(localized: "Delete"), undoManager: undoManager) { $0.shapes.removeAll { ids.contains($0.id) } }
+        selection = []
     }
 }
 
