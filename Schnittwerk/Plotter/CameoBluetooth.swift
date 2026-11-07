@@ -24,7 +24,14 @@ final class CameoBluetooth: NSObject, PlotterTransport {
     static let scanTimeout: TimeInterval = 8
 
     private(set) var model = PlotterModel.cameo4
-    var displayName: String { "\(model.name) (Bluetooth)" }
+    /// Bluetooth name of the connected device, shown so the user sees
+    /// which machine gets the job.
+    private var deviceName = ""
+    var displayName: String {
+        deviceName.isEmpty ? "\(model.name) (Bluetooth)" : "\(model.name) (Bluetooth: \(deviceName))"
+    }
+    /// The plotter that worked last time; it is preferred over others.
+    static let rememberedKey = "plotter.bluetoothID"
     private(set) var preferredChunkSize = 182
 
     private let cbQueue = DispatchQueue(label: "de.manuelweiser.schnittwerk.bluetooth")
@@ -66,17 +73,24 @@ final class CameoBluetooth: NSObject, PlotterTransport {
 
         // A plotter only advertises while nothing else is connected to it
         let known = central.retrieveConnectedPeripherals(withServices: [Self.serviceID])
-        if let p = known.first {
+        let remembered = UserDefaults.standard.string(forKey: Self.rememberedKey).flatMap(UUID.init(uuidString:))
+        if let p = known.first(where: { $0.identifier == remembered }) ?? known.first {
             peripheral = p
         } else {
             central.scanForPeripherals(withServices: nil, options: nil)
             let result = found.wait(timeout: .now() + Self.scanTimeout)
-            central.stopScan()
-            guard result == .success, peripheral != nil else { throw PlotterError.notFound }
+            // Another plotter answered first: give the remembered one a moment
+            if result == .success, let remembered,
+               cbQueue.sync(execute: { peripheral?.identifier }) != remembered {
+                Thread.sleep(forTimeInterval: 2)
+            }
+            cbQueue.sync { central.stopScan() }
+            guard result == .success else { throw PlotterError.notFound }
         }
-        guard let p = peripheral else { throw PlotterError.notFound }
+        guard let p = cbQueue.sync(execute: { peripheral }) else { throw PlotterError.notFound }
         p.delegate = self
-        model = PlotterModel.bluetooth(name: p.name ?? "")
+        deviceName = p.name ?? ""
+        model = PlotterModel.bluetooth(name: deviceName)
 
         central.connect(p, options: nil)
         guard connected.wait(timeout: .now() + 10) == .success, p.state == .connected else {
@@ -84,6 +98,7 @@ final class CameoBluetooth: NSObject, PlotterTransport {
         }
         p.discoverServices([Self.serviceID])
         guard discovered.wait(timeout: .now() + 10) == .success else { throw PlotterError.bluetooth("services") }
+        // Only a device with the Silhouette service is accepted, whatever its name
         guard let service = p.services?.first(where: { $0.uuid == Self.serviceID }) else {
             throw PlotterError.bluetooth(String(localized: "This plotter offers no Cameo 4 Bluetooth service."))
         }
@@ -101,6 +116,7 @@ final class CameoBluetooth: NSObject, PlotterTransport {
         }
         // Each write must end with ETX, so chunks may be at most one write long
         preferredChunkSize = max(min(p.maximumWriteValueLength(for: .withResponse), 512), 20)
+        UserDefaults.standard.set(p.identifier.uuidString, forKey: Self.rememberedKey)
     }
 
     func close() {
@@ -223,12 +239,15 @@ extension CameoBluetooth: CBCentralManagerDelegate, CBPeripheralDelegate {
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        guard self.peripheral == nil else { return }
+        let remembered = UserDefaults.standard.string(forKey: Self.rememberedKey).flatMap(UUID.init(uuidString:))
+        // Another device was found first: switch only to the remembered one
+        if let current = self.peripheral, current.identifier == remembered || peripheral.identifier != remembered { return }
         let services = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] ?? []
         let name = (peripheral.name ?? advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "").lowercased()
         guard services.contains(Self.serviceID) || name.contains("cameo") || name.contains("silhouette") else { return }
+        let first = self.peripheral == nil
         self.peripheral = peripheral
-        found.signal()
+        if first { found.signal() }
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {

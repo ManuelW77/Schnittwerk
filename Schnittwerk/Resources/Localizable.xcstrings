@@ -551,6 +551,36 @@
         }
       }
     },
+    "Check for new versions automatically" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch nach neuen Versionen suchen"
+          }
+        }
+      }
+    },
+    "Check for Updates …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Updates suchen …"
+          }
+        }
+      }
+    },
+    "Check now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt prüfen"
+          }
+        }
+      }
+    },
     "Choose one or more cut profile files" : {
       "localizations" : {
         "de" : {
@@ -717,6 +747,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ecken: %lld"
+          }
+        }
+      }
+    },
+    "Could not check for updates" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updates konnten nicht geprüft werden"
           }
         }
       }
@@ -997,6 +1037,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fertig. Matte mit der Taste am Plotter auswerfen."
+          }
+        }
+      }
+    },
+    "Download" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herunterladen"
           }
         }
       }
@@ -1421,6 +1471,16 @@
         }
       }
     },
+    "Installed version" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installierte Version"
+          }
+        }
+      }
+    },
     "Intersect" : {
       "localizations" : {
         "de" : {
@@ -1467,6 +1527,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seitenverhältnis beibehalten"
+          }
+        }
+      }
+    },
+    "Last check" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Prüfung"
+          }
+        }
+      }
+    },
+    "Later" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Später"
           }
         }
       }
@@ -1717,6 +1797,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Name"
+          }
+        }
+      }
+    },
+    "Never" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch nie"
           }
         }
       }
@@ -2314,12 +2404,42 @@
     "Schnittwerk" : {
       "shouldTranslate" : false
     },
+    "Schnittwerk %@ is available" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk %@ ist verfügbar"
+          }
+        }
+      }
+    },
+    "Schnittwerk asks GitHub once a day whether a newer release exists. Nothing about you is sent. New versions are downloaded and installed by you." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk fragt einmal am Tag bei GitHub, ob es eine neuere Version gibt. Dabei wird nichts über dich gesendet. Neue Versionen lädst und installierst du selbst."
+          }
+        }
+      }
+    },
     "Schnittwerk does not change SVG or DXF files. Use File → Save As to save a .schnittwerk project." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schnittwerk verändert keine SVG- oder DXF-Dateien. Bitte mit Ablage → Sichern unter… als .schnittwerk-Projekt sichern."
+          }
+        }
+      }
+    },
+    "Schnittwerk is up to date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk ist aktuell"
           }
         }
       }
@@ -2450,6 +2570,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Größe (mm)"
+          }
+        }
+      }
+    },
+    "Skip this version" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Version überspringen"
           }
         }
       }
@@ -2934,6 +3064,16 @@
         }
       }
     },
+    "Updates" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updates"
+          }
+        }
+      }
+    },
     "USB" : {
       "localizations" : {
         "de" : {
@@ -2950,6 +3090,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "USB-Fehler: %@"
+          }
+        }
+      }
+    },
+    "Version %@ is the newest version." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@ ist die neueste Version."
           }
         }
       }
@@ -3030,6 +3180,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Y"
+          }
+        }
+      }
+    },
+    "You have version %@. Download the new version and drag it into Applications." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du hast Version %@. Lade die neue Version herunter und zieh sie in den Programme-Ordner."
           }
         }
       }
