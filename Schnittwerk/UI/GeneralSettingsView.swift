@@ -86,6 +86,30 @@ enum NewProjectDefaults {
     static let profile2Key = "new.profile2"
     /// Show the cut preview before every cut.
     static let previewFirstKey = "cut.previewFirst"
+    /// Value of the pickers for "what was set last" (also the default).
+    static let lastUsed = "last"
+
+    private static let lastMatKey = "last.mat"
+    private static func lastSettingsKey(_ slot: Int) -> String { "last.settings\(slot)" }
+
+    /// Remembers mat and tool values of the project worked on last.
+    static func remember(_ data: ProjectData) {
+        let d = UserDefaults.standard
+        d.set(data.mat.rawValue, forKey: lastMatKey)
+        for slot in [1, 2] {
+            if let json = try? JSONEncoder().encode(data.settings(slot: slot)) {
+                d.set(json, forKey: lastSettingsKey(slot))
+            }
+        }
+    }
+
+    static var lastMat: MatType? {
+        UserDefaults.standard.string(forKey: lastMatKey).flatMap(MatType.init)
+    }
+
+    static func lastSettings(slot: Int) -> CutSettings? {
+        UserDefaults.standard.data(forKey: lastSettingsKey(slot)).flatMap { try? JSONDecoder().decode(CutSettings.self, from: $0) }
+    }
 
     /// Applies a built-in preset or own profile by its id.
     @MainActor
@@ -105,14 +129,23 @@ extension CutDocument {
     static func newProject() -> CutDocument {
         let doc = CutDocument()
         let d = UserDefaults.standard
-        if let mat = d.string(forKey: NewProjectDefaults.matKey).flatMap(MatType.init) { doc.data.mat = mat }
-        var s1 = doc.data.settings(slot: 1)
-        NewProjectDefaults.apply(d.string(forKey: NewProjectDefaults.profile1Key), to: &s1)
-        doc.data.setSettings(s1, slot: 1)
-        if let id = d.string(forKey: NewProjectDefaults.profile2Key) {
-            var s2 = doc.data.settings(slot: 2)
-            NewProjectDefaults.apply(id, to: &s2)
-            doc.data.setSettings(s2, slot: 2)
+        let last = NewProjectDefaults.lastUsed
+        let matChoice = d.string(forKey: NewProjectDefaults.matKey) ?? last
+        if matChoice == last {
+            if let mat = NewProjectDefaults.lastMat { doc.data.mat = mat }
+        } else if let mat = MatType(rawValue: matChoice) {
+            doc.data.mat = mat
+        }
+        for (slot, key) in [(1, NewProjectDefaults.profile1Key), (2, NewProjectDefaults.profile2Key)] {
+            let choice = d.string(forKey: key) ?? last
+            if choice == last {
+                // Nothing remembered yet: the built-in defaults stay
+                if let s = NewProjectDefaults.lastSettings(slot: slot) { doc.data.setSettings(s, slot: slot) }
+            } else {
+                var s = doc.data.settings(slot: slot)
+                NewProjectDefaults.apply(choice, to: &s)
+                doc.data.setSettings(s, slot: slot)
+            }
         }
         return doc
     }
@@ -126,6 +159,8 @@ struct ProfileIDPicker: View {
 
     var body: some View {
         Picker(title, selection: $id) {
+            Text("Last used").tag(NewProjectDefaults.lastUsed)
+            Divider()
             ForEach(MaterialPreset.Category.allCases) { category in
                 Section(category.title) {
                     ForEach(MaterialPreset.all.filter { $0.category == category }) { Text($0.title).tag($0.id) }
@@ -143,9 +178,9 @@ struct ProfileIDPicker: View {
 struct GeneralSettingsView: View {
     @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
     @AppStorage(LengthUnit.storageKey) private var unit: LengthUnit = .mm
-    @AppStorage(NewProjectDefaults.matKey) private var newMat: MatType = .mat12x12
-    @AppStorage(NewProjectDefaults.profile1Key) private var newProfile1 = MaterialPreset.vinyl.id
-    @AppStorage(NewProjectDefaults.profile2Key) private var newProfile2 = MaterialPreset.pen.id
+    @AppStorage(NewProjectDefaults.matKey) private var newMat = NewProjectDefaults.lastUsed
+    @AppStorage(NewProjectDefaults.profile1Key) private var newProfile1 = NewProjectDefaults.lastUsed
+    @AppStorage(NewProjectDefaults.profile2Key) private var newProfile2 = NewProjectDefaults.lastUsed
     @AppStorage(NewProjectDefaults.previewFirstKey) private var previewFirst = false
     @State private var choice = AppLanguage.current
     /// Language the app was started with.
@@ -184,14 +219,16 @@ struct GeneralSettingsView: View {
             }
             Section {
                 Picker("Mat", selection: $newMat) {
-                    ForEach(MatType.allCases) { Text($0.title).tag($0) }
+                    Text("Last used").tag(NewProjectDefaults.lastUsed)
+                    Divider()
+                    ForEach(MatType.allCases) { Text($0.title).tag($0.rawValue) }
                 }
                 ProfileIDPicker(title: "Tool 1", id: $newProfile1)
                 ProfileIDPicker(title: "Tool 2", id: $newProfile2)
             } header: {
                 Text("New projects")
             } footer: {
-                Text("Open projects keep their own settings.")
+                Text("“Last used” takes the mat and the tool values (with your changes) of the project you worked on last. Open projects keep their own settings.")
                     .foregroundStyle(.secondary)
             }
             Section {

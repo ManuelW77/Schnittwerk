@@ -243,6 +243,7 @@
   "Kraft paper 260 g/m² (score)": "Kraftpapier 260 g/m² (ritzen)",
   "Language": "Sprache",
   "Last check": "Letzte Prüfung",
+  "Last used": "Letzte Einstellung",
   "Later": "Später",
   "Layer": "Ebene",
   "Layer %lld": "Ebene %lld",
@@ -315,7 +316,6 @@
   "OK": "OK",
   "Only closed outlines can be filled.": "Nur geschlossene Umrisse lassen sich füllen.",
   "Only the first page of the PDF was used.": "Nur die erste Seite des PDF wurde verwendet.",
-  "Open projects keep their own settings.": "Offene Projekte behalten ihre eigenen Einstellungen.",
   "Oracal 531/651 (glossy)": "Oracal 531/651 (glänzend)",
   "Oracal 631 (matte)": "Oracal 631 (matt)",
   "Outline": "Umriss",
@@ -529,6 +529,7 @@
   "Your cut profiles could not be saved: %@": "Deine Schnittprofile konnten nicht gesichert werden: %@",
   "Zoom in": "Vergrößern",
   "Zoom out": "Verkleinern",
+  "“Last used” takes the mat and the tool values (with your changes) of the project you worked on last. Open projects keep their own settings.": "„Letzte Einstellung“ übernimmt Matte und Werkzeugwerte (mit deinen Änderungen) aus dem Projekt, an dem du zuletzt gearbeitet hast. Offene Projekte behalten ihre eigenen Einstellungen.",
   "“Same as macOS” follows System Settings → General → Language & Region.": "„Wie macOS“ folgt Systemeinstellungen → Allgemein → Sprache & Region.",
   "−90°": "−90°"
 }

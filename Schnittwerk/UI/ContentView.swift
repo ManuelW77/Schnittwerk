@@ -170,6 +170,10 @@ struct ContentView: View {
             case .failure(let error): message = AlertMessage(title: String(localized: "Import failed"), text: error.localizedDescription)
             }
         }
+        // Remember mat and tool values for "Last used" in new projects
+        .onChange(of: document.data.mat) { NewProjectDefaults.remember(document.data) }
+        .onChange(of: document.data.settings) { NewProjectDefaults.remember(document.data) }
+        .onChange(of: document.data.settings2) { NewProjectDefaults.remember(document.data) }
         .onAppear {
             // Notes from opening an SVG/DXF directly (File → Open, Finder)
             guard !document.openNotes.isEmpty else { return }
