@@ -131,11 +131,16 @@ struct ContentView: View {
                 .padding(.horizontal, 12)
                 .padding(.top, 10)
                 .padding(.bottom, 4)
-                switch inspectorTab {
-                case .object: InspectorView(document: document, selection: $selection)
-                case .edit: EditPanelView(document: document, selection: $selection)
-                case .cut: CutPanelView(document: document, slot: $cutSlot)
+                Group {
+                    switch inspectorTab {
+                    case .object: InspectorView(document: document, selection: $selection)
+                    case .edit: EditPanelView(document: document, selection: $selection)
+                    case .cut: CutPanelView(document: document, slot: $cutSlot)
+                    }
                 }
+                // Room for a permanently shown scroll bar (mouse users),
+                // so it never covers buttons at the right edge
+                .contentMargins(.trailing, 12, for: .scrollContent)
             }
             .inspectorColumnWidth(min: 280, ideal: 320, max: 420)
         }
