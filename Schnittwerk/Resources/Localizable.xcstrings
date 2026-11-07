@@ -241,6 +241,16 @@
         }
       }
     },
+    "Actual size" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Originalgröße"
+          }
+        }
+      }
+    },
     "Add a basic shape" : {
       "localizations" : {
         "de" : {
@@ -311,6 +321,16 @@
         }
       }
     },
+    "Add SVG, DXF or PDF files to the mat. You can also drag files onto the mat." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SVG-, DXF- oder PDF-Dateien auf die Matte holen. Du kannst Dateien auch auf die Matte ziehen."
+          }
+        }
+      }
+    },
     "Add text" : {
       "localizations" : {
         "de" : {
@@ -337,6 +357,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entgitterlinien hinzufügen"
+          }
+        }
+      }
+    },
+    "Adds a rectangle, ellipse, polygon or star. Its size and corners stay editable." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügt ein Rechteck, eine Ellipse, ein Vieleck oder einen Stern hinzu. Größe und Ecken bleiben änderbar."
           }
         }
       }
@@ -597,6 +627,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatisch versucht zuerst USB, dann Bluetooth. Unterstützt: %@. Bluetooth: Cameo 4, 4 Plus und 4 Pro."
+          }
+        }
+      }
+    },
+    "Back to actual size. Zoom with pinch, or ⌘ and the scroll wheel." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurück zur Originalgröße. Zoomen mit Pinch oder ⌘ und Scrollrad."
           }
         }
       }
@@ -1097,6 +1137,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbindung"
+          }
+        }
+      }
+    },
+    "Copies the selected objects, slightly offset." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopiert die ausgewählten Objekte, leicht versetzt."
           }
         }
       }
@@ -2111,6 +2161,16 @@
         }
       }
     },
+    "Group objects so they move together (⌘G), ungroup (⇧⌘G), lock them so they cannot change (⌘L)." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objekte gruppieren, damit sie sich gemeinsam bewegen (⌘G), Gruppe lösen (⇧⌘G), sperren, damit sie sich nicht ändern (⌘L)."
+          }
+        }
+      }
+    },
     "Heat transfer vinyl" : {
       "localizations" : {
         "de" : {
@@ -2287,6 +2347,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kontur innen"
+          }
+        }
+      }
+    },
+    "Inspector" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inspektor"
           }
         }
       }
@@ -3171,6 +3241,16 @@
         }
       }
     },
+    "Opens the cut settings: tools, profiles, preview and sending to the plotter." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet die Schnitteinstellungen: Werkzeuge, Profile, Vorschau und Senden an den Plotter."
+          }
+        }
+      }
+    },
     "Oracal 531/651 (glossy)" : {
       "localizations" : {
         "de" : {
@@ -3657,6 +3737,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Flecken entfernen"
+          }
+        }
+      }
+    },
+    "Removes the selected objects. Locked objects stay." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernt die ausgewählten Objekte. Gesperrte Objekte bleiben."
           }
         }
       }
@@ -4194,6 +4284,16 @@
         }
       }
     },
+    "Shows or hides the panel with Object, Edit and Cut." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt oder versteckt den Bereich mit Objekt, Bearbeiten und Schneiden."
+          }
+        }
+      }
+    },
     "Shows the order of the cut lines and the time, before cutting" : {
       "localizations" : {
         "de" : {
@@ -4654,6 +4754,16 @@
         }
       }
     },
+    "The mat or roll in the plotter. It sets the cutting area." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte oder Rolle im Plotter. Sie legt den Schneidebereich fest."
+          }
+        }
+      }
+    },
     "The object has only one outline." : {
       "localizations" : {
         "de" : {
@@ -4990,6 +5100,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zum Ändern des Ports den Server ausschalten"
+          }
+        }
+      }
+    },
+    "Turns a picture (PNG, JPG, HEIC …) into cut lines, in black and white or by colour." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macht aus einem Bild (PNG, JPG, HEIC …) Schnittlinien, schwarz-weiß oder nach Farben."
           }
         }
       }

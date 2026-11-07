@@ -41,7 +41,7 @@ struct ProfilesSettingsView: View {
                     }
                     .menuStyle(.borderlessButton)
                     .fixedSize()
-                    .help("New profile")
+                    .tip("New profile")
 
                     Button {
                         confirmDelete = true
@@ -50,7 +50,7 @@ struct ProfilesSettingsView: View {
                     }
                     .buttonStyle(.borderless)
                     .disabled(index == nil)
-                    .help("Delete profile")
+                    .tip("Delete profile")
                     Spacer()
                     Menu {
                         Button("Import profiles…") { ProfileTransfer.importFiles() }
@@ -69,7 +69,7 @@ struct ProfilesSettingsView: View {
                     }
                     .menuStyle(.borderlessButton)
                     .fixedSize()
-                    .help("Import or export cut profiles")
+                    .tip("Import or export cut profiles")
                 }
                 .padding(6)
             }
