@@ -26,8 +26,22 @@ struct CutShape: Identifiable, Codable, Equatable {
     /// Rotation in degrees, clockwise on screen.
     var rotation: Double = 0
     var text: TextSpec?
+    /// Settings of a basic shape (rectangle, ellipse …), nil otherwise.
+    var shapeSpec: ShapeSpec?
     /// Objects with `cutEnabled == false` stay visible but are not cut.
     var cutEnabled: Bool = true
+    /// Objects with the same group id are selected and moved together.
+    var groupID: UUID?
+    /// Colour shown on the mat (e.g. a layer of a traced image), "#RRGGBB".
+    var colorHex: String?
+    /// Stored as optional so older project files still open.
+    private var lock: Bool?
+
+    /// A locked object cannot be selected on the mat, moved or edited.
+    var isLocked: Bool {
+        get { lock ?? false }
+        set { lock = newValue ? true : nil }
+    }
 
     /// Creates an object from geometry in mat coordinates.
     /// The object keeps its place on the mat.
@@ -104,5 +118,22 @@ struct CutShape: Identifiable, Codable, Equatable {
         copy.position.x += offset
         copy.position.y += offset
         return copy
+    }
+
+    /// Sets the size without rotation (mm). With `keepProportions`, the
+    /// other side follows. Basic shapes keep their real corner radii.
+    mutating func resize(width: Double?, height: Double?, keepProportions: Bool) {
+        let base = localBounds
+        if let width, width.isFinite, width > 0, base.width > 0 {
+            let f = width / (base.width * abs(scaleX))
+            scaleX *= f
+            if keepProportions { scaleY *= f }
+        }
+        if let height, height.isFinite, height > 0, base.height > 0 {
+            let f = height / (base.height * abs(scaleY))
+            scaleY *= f
+            if keepProportions { scaleX *= f }
+        }
+        bakeShapeScale()
     }
 }

@@ -1,6 +1,56 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ offset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Kontur"
+          }
+        }
+      }
+    },
+    "%lld cut lines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Schnittlinien"
+          }
+        }
+      }
+    },
+    "%lld layers, %lld cut lines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Ebenen, %lld Schnittlinien"
+          }
+        }
+      }
+    },
+    "%lld locked objects selected." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld gesperrte Objekte ausgewählt."
+          }
+        }
+      }
+    },
+    "%lld objects selected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Objekte ausgewählt"
+          }
+        }
+      }
+    },
     "+90°" : {
       "localizations" : {
         "de" : {
@@ -31,6 +81,46 @@
         }
       }
     },
+    "Add a basic shape" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grundform hinzufügen"
+          }
+        }
+      }
+    },
+    "Add an outline at this distance, e.g. for stickers" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einen Umriss in diesem Abstand hinzufügen, z. B. für Sticker"
+          }
+        }
+      }
+    },
+    "Add offset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontur hinzufügen"
+          }
+        }
+      }
+    },
+    "Add shape" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form hinzufügen"
+          }
+        }
+      }
+    },
     "Add text" : {
       "localizations" : {
         "de" : {
@@ -41,12 +131,132 @@
         }
       }
     },
-    "Add text (⌘T)" : {
+    "Add to mat" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Text hinzufügen (⌘T)"
+            "value" : "Auf die Matte"
+          }
+        }
+      }
+    },
+    "Adds the outline of the whole motif, e.g. as a base for layered vinyl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügt den Umriss des ganzen Motivs hinzu, z. B. als Grundlage für mehrlagige Folie"
+          }
+        }
+      }
+    },
+    "AI (MCP)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KI (MCP)"
+          }
+        }
+      }
+    },
+    "AI edit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KI-Änderung"
+          }
+        }
+      }
+    },
+    "Align" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausrichten"
+          }
+        }
+      }
+    },
+    "Align bottom" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unten ausrichten"
+          }
+        }
+      }
+    },
+    "Align centres horizontally" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horizontal mittig ausrichten"
+          }
+        }
+      }
+    },
+    "Align centres vertically" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertikal mittig ausrichten"
+          }
+        }
+      }
+    },
+    "Align left" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Links ausrichten"
+          }
+        }
+      }
+    },
+    "Align on mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf der Matte ausrichten"
+          }
+        }
+      }
+    },
+    "Align right" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechts ausrichten"
+          }
+        }
+      }
+    },
+    "Align top" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oben ausrichten"
+          }
+        }
+      }
+    },
+    "Allow AI assistants to design in Schnittwerk" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KI-Assistenten dürfen in Schnittwerk gestalten"
           }
         }
       }
@@ -71,12 +281,42 @@
         }
       }
     },
+    "Apply" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übernehmen"
+          }
+        }
+      }
+    },
+    "Arrange" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anordnen"
+          }
+        }
+      }
+    },
     "AutoBlade" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "AutoBlade"
+          }
+        }
+      }
+    },
+    "Background" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hintergrund"
           }
         }
       }
@@ -97,6 +337,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blöcke (INSERT) im DXF wurden übersprungen. Vor dem Export auflösen."
+          }
+        }
+      }
+    },
+    "Brightness" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Helligkeit"
           }
         }
       }
@@ -261,12 +511,72 @@
         }
       }
     },
+    "Click on the mat to place text (T)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf die Matte klicken, um Text zu setzen (T)"
+          }
+        }
+      }
+    },
     "Close Silhouette Studio, load the mat, then cut." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Silhouette Studio schließen, Matte einlegen, dann schneiden."
+          }
+        }
+      }
+    },
+    "Colours" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Farben"
+          }
+        }
+      }
+    },
+    "Colours found" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gefundene Farben"
+          }
+        }
+      }
+    },
+    "Combine" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kombinieren"
+          }
+        }
+      }
+    },
+    "Connect Claude Code" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code verbinden"
+          }
+        }
+      }
+    },
+    "Connected assistants stop working until you run the new command. Remove the old entry first: claude mcp remove schnittwerk -s user" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbundene Assistenten funktionieren erst wieder, wenn du den neuen Befehl ausführst. Vorher den alten Eintrag entfernen: claude mcp remove schnittwerk -s user"
           }
         }
       }
@@ -301,12 +611,92 @@
         }
       }
     },
+    "Copy command" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Befehl kopieren"
+          }
+        }
+      }
+    },
     "Copy of built-in" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kopie einer Vorgabe"
+          }
+        }
+      }
+    },
+    "Corner radius (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eckenradius (mm)"
+          }
+        }
+      }
+    },
+    "Corners" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ecken"
+          }
+        }
+      }
+    },
+    "Corners: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ecken: %lld"
+          }
+        }
+      }
+    },
+    "Could not start: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start fehlgeschlagen: %@"
+          }
+        }
+      }
+    },
+    "Create a new key?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuen Schlüssel erzeugen?"
+          }
+        }
+      }
+    },
+    "Creates a new secret key. Assistants that are already connected stop working until you run the new command." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erzeugt einen neuen geheimen Schlüssel. Bereits verbundene Assistenten funktionieren erst wieder, wenn du den neuen Befehl ausführst."
+          }
+        }
+      }
+    },
+    "Curve" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurve"
           }
         }
       }
@@ -401,6 +791,16 @@
         }
       }
     },
+    "Cut the front objects out of the backmost object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die vorderen Objekte aus dem hintersten Objekt ausschneiden"
+          }
+        }
+      }
+    },
     "Cut this object" : {
       "localizations" : {
         "de" : {
@@ -491,12 +891,82 @@
         }
       }
     },
+    "Detect by" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erkennen nach"
+          }
+        }
+      }
+    },
+    "Distance (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abstand (mm)"
+          }
+        }
+      }
+    },
+    "Distribute horizontally" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horizontal verteilen"
+          }
+        }
+      }
+    },
+    "Distribute vertically" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertikal verteilen"
+          }
+        }
+      }
+    },
     "Done. Unload the mat with the button on the plotter." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fertig. Matte mit der Taste am Plotter auswerfen."
+          }
+        }
+      }
+    },
+    "Draw" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeichnen"
+          }
+        }
+      }
+    },
+    "Draw a freehand line (F)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freihand-Linie zeichnen (F)"
+          }
+        }
+      }
+    },
+    "Draw curves: click for corners, drag for round points. Return or double-click ends, click the first point to close (P)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kurven zeichnen: Klicken setzt Ecken, Ziehen setzt runde Punkte. Return oder Doppelklick beendet, Klick auf den ersten Punkt schließt die Form (P)"
           }
         }
       }
@@ -531,12 +1001,42 @@
         }
       }
     },
+    "Edit shape" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form ändern"
+          }
+        }
+      }
+    },
     "Edit text" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Text bearbeiten"
+          }
+        }
+      }
+    },
+    "Edit text…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text bearbeiten …"
+          }
+        }
+      }
+    },
+    "Ellipse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ellipse"
           }
         }
       }
@@ -671,6 +1171,46 @@
         }
       }
     },
+    "Freehand" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freihand"
+          }
+        }
+      }
+    },
+    "Give colours the same layer number to cut them as one piece." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib Farben dieselbe Ebene, um sie als ein Stück zu schneiden."
+          }
+        }
+      }
+    },
+    "Group" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gruppieren"
+          }
+        }
+      }
+    },
+    "Group objects so they move together (⌘G), or lock them (⌘L)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objekte gruppieren, damit sie sich gemeinsam bewegen (⌘G), oder sperren (⌘L)"
+          }
+        }
+      }
+    },
     "Heat transfer vinyl" : {
       "localizations" : {
         "de" : {
@@ -691,12 +1231,32 @@
         }
       }
     },
+    "Height (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höhe (mm)"
+          }
+        }
+      }
+    },
     "Holder" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Halter"
+          }
+        }
+      }
+    },
+    "How many colours the image is reduced to" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf wie viele Farben das Bild reduziert wird"
           }
         }
       }
@@ -791,12 +1351,102 @@
         }
       }
     },
+    "In a group" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In einer Gruppe"
+          }
+        }
+      }
+    },
+    "Intersect" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittmenge"
+          }
+        }
+      }
+    },
+    "Invert" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umkehren"
+          }
+        }
+      }
+    },
+    "Join the selected objects into one outline" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die ausgewählten Objekte zu einem Umriss verbinden"
+          }
+        }
+      }
+    },
+    "Keep only the area where all selected objects overlap" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur die Fläche behalten, in der sich alle ausgewählten Objekte überlappen"
+          }
+        }
+      }
+    },
     "Keep proportions" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seitenverhältnis beibehalten"
+          }
+        }
+      }
+    },
+    "Layer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ebene"
+          }
+        }
+      }
+    },
+    "Layer %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ebene %lld"
+          }
+        }
+      }
+    },
+    "Leave out" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weglassen"
+          }
+        }
+      }
+    },
+    "Left: follow the pixels. Right: rounder lines. Sharp corners stay." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Links: genau den Pixeln folgen. Rechts: rundere Linien. Spitze Ecken bleiben erhalten."
           }
         }
       }
@@ -831,12 +1481,52 @@
         }
       }
     },
+    "Lock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sperren"
+          }
+        }
+      }
+    },
+    "Lock so it cannot be changed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sperren, damit es nicht verändert werden kann"
+          }
+        }
+      }
+    },
+    "Locked: click to unlock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesperrt: Klicken zum Entsperren"
+          }
+        }
+      }
+    },
     "Looking for the plotter…" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suche Plotter…"
+          }
+        }
+      }
+    },
+    "Make it a circle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Kreis machen"
           }
         }
       }
@@ -931,6 +1621,16 @@
         }
       }
     },
+    "Mode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modus"
+          }
+        }
+      }
+    },
     "Move" : {
       "localizations" : {
         "de" : {
@@ -957,6 +1657,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Name"
+          }
+        }
+      }
+    },
+    "New key" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuer Schlüssel"
+          }
+        }
+      }
+    },
+    "New key …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuer Schlüssel …"
           }
         }
       }
@@ -1001,6 +1721,16 @@
         }
       }
     },
+    "No outlines found. Try another threshold or Invert." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Umrisse gefunden. Versuche einen anderen Schwellwert oder „Umkehren“."
+          }
+        }
+      }
+    },
     "No own profiles yet" : {
       "localizations" : {
         "de" : {
@@ -1021,6 +1751,16 @@
         }
       }
     },
+    "Nothing left" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts übrig"
+          }
+        }
+      }
+    },
     "Object" : {
       "localizations" : {
         "de" : {
@@ -1037,6 +1777,76 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Objekte"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus"
+          }
+        }
+      }
+    },
+    "Offset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontur"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
+    "Outline" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umriss"
+          }
+        }
+      }
+    },
+    "Outline as base layer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umriss als Grundebene"
+          }
+        }
+      }
+    },
+    "Outline: one cut line around the motif. Colours: one layer per colour, e.g. for vinyl in several colours." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umriss: eine Schnittlinie um das Motiv. Farben: eine Ebene pro Farbe, z. B. für Folie in mehreren Farben."
+          }
+        }
+      }
+    },
+    "Outlines smaller than %@ mm are left out" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umrisse kleiner als %@ mm werden weggelassen"
           }
         }
       }
@@ -1101,12 +1911,62 @@
         }
       }
     },
+    "Point depth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zackentiefe"
+          }
+        }
+      }
+    },
+    "Points: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zacken: %lld"
+          }
+        }
+      }
+    },
+    "Polygon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vieleck"
+          }
+        }
+      }
+    },
+    "Port" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port"
+          }
+        }
+      }
+    },
     "Position (mm, top left)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Position (mm, links oben)"
+          }
+        }
+      }
+    },
+    "Positive values go outwards, negative values inwards" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Positive Werte gehen nach außen, negative nach innen"
           }
         }
       }
@@ -1147,6 +2007,56 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bereit"
+          }
+        }
+      }
+    },
+    "Rectangle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechteck"
+          }
+        }
+      }
+    },
+    "Redo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederholen"
+          }
+        }
+      }
+    },
+    "Redo %@ (⇧⌘Z)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wiederholen (⇧⌘Z)"
+          }
+        }
+      }
+    },
+    "Redo (⇧⌘Z)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederholen (⇧⌘Z)"
+          }
+        }
+      }
+    },
+    "Remove specks" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flecken entfernen"
           }
         }
       }
@@ -1201,12 +2111,12 @@
         }
       }
     },
-    "Reset zoom" : {
+    "Reset zoom (⌘0)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zoom zurücksetzen"
+            "value" : "Zoom zurücksetzen (⌘0)"
           }
         }
       }
@@ -1217,6 +2127,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Größe ändern"
+          }
+        }
+      }
+    },
+    "Return makes a new line." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return erzeugt eine neue Zeile."
           }
         }
       }
@@ -1237,6 +2157,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drehen und spiegeln"
+          }
+        }
+      }
+    },
+    "Round" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rund"
+          }
+        }
+      }
+    },
+    "Running on port %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Läuft auf Port %@"
           }
         }
       }
@@ -1324,6 +2264,16 @@
         }
       }
     },
+    "Select" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auswählen"
+          }
+        }
+      }
+    },
     "Select a profile or create one with +." : {
       "localizations" : {
         "de" : {
@@ -1334,12 +2284,32 @@
         }
       }
     },
+    "Select all" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles auswählen"
+          }
+        }
+      }
+    },
     "Select an object on the mat, or import a file." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wähle ein Objekt auf der Matte aus oder importiere eine Datei."
+          }
+        }
+      }
+    },
+    "Select and move objects (V)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objekte auswählen und bewegen (V)"
           }
         }
       }
@@ -1364,6 +2334,36 @@
         }
       }
     },
+    "Shape" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form"
+          }
+        }
+      }
+    },
+    "Sharp" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spitz"
+          }
+        }
+      }
+    },
+    "Show image" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild anzeigen"
+          }
+        }
+      }
+    },
     "Show or hide settings" : {
       "localizations" : {
         "de" : {
@@ -1380,6 +2380,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Größe (mm)"
+          }
+        }
+      }
+    },
+    "Smoothing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glätten"
           }
         }
       }
@@ -1404,6 +2414,26 @@
         }
       }
     },
+    "Star" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stern"
+          }
+        }
+      }
+    },
+    "Starting …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startet …"
+          }
+        }
+      }
+    },
     "Sticker paper" : {
       "localizations" : {
         "de" : {
@@ -1420,6 +2450,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schnitt"
+          }
+        }
+      }
+    },
+    "Subtract" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausschneiden"
           }
         }
       }
@@ -1470,6 +2510,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die AutoBlade funktioniert nur in Halter 1."
+          }
+        }
+      }
+    },
+    "The command contains a secret key. Do not share it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Befehl enthält einen geheimen Schlüssel. Gib ihn nicht weiter."
           }
         }
       }
@@ -1534,6 +2584,46 @@
         }
       }
     },
+    "The image could not be read." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Bild konnte nicht gelesen werden."
+          }
+        }
+      }
+    },
+    "The image could not be traced." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Bild konnte nicht nachgezeichnet werden."
+          }
+        }
+      }
+    },
+    "The image has see-through parts. Transparency usually works best for logos." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Bild hat durchsichtige Stellen. Für Logos klappt „Transparenz“ meist am besten."
+          }
+        }
+      }
+    },
+    "The object is too small for this inner offset." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Objekt ist für diese Innenkontur zu klein."
+          }
+        }
+      }
+    },
     "The plotter did not respond in time." : {
       "localizations" : {
         "de" : {
@@ -1554,6 +2644,26 @@
         }
       }
     },
+    "The result would be empty. Check that the objects overlap." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Ergebnis wäre leer. Prüfe, ob sich die Objekte überlappen."
+          }
+        }
+      }
+    },
+    "The server is only reachable from this Mac. An assistant can read and change the project in the front window; every change can be undone with ⌘Z. Cutting is only started by you." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Server ist nur von diesem Mac aus erreichbar. Ein Assistent kann das Projekt im vordersten Fenster lesen und ändern; jede Änderung lässt sich mit ⌘Z rückgängig machen. Schneiden startest nur du."
+          }
+        }
+      }
+    },
     "This file contained a Schnittwerk project instead of SVG/DXF. It was opened as a project. Save it as a .schnittwerk file." : {
       "localizations" : {
         "de" : {
@@ -1564,12 +2674,182 @@
         }
       }
     },
+    "This object is locked." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieses Objekt ist gesperrt."
+          }
+        }
+      }
+    },
+    "Threshold" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schwellwert"
+          }
+        }
+      }
+    },
     "Tool" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Werkzeug"
+          }
+        }
+      }
+    },
+    "Tool: select, text, freehand or curve" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkzeug: Auswählen, Text, Freihand oder Kurve"
+          }
+        }
+      }
+    },
+    "Trace an image (PNG, JPG …) into cut lines (⇧⌘I)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Bild (PNG, JPG …) als Schnittlinien nachzeichnen (⇧⌘I)"
+          }
+        }
+      }
+    },
+    "Trace image" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bild nachzeichnen"
+          }
+        }
+      }
+    },
+    "Trace the light parts instead of the dark ones" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die hellen statt der dunklen Teile nachzeichnen"
+          }
+        }
+      }
+    },
+    "Tracing …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird nachgezeichnet …"
+          }
+        }
+      }
+    },
+    "Transparency" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transparenz"
+          }
+        }
+      }
+    },
+    "Turn cutting off" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht schneiden"
+          }
+        }
+      }
+    },
+    "Turn cutting on" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schneiden einschalten"
+          }
+        }
+      }
+    },
+    "Turn the server off to change the port" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Ändern des Ports den Server ausschalten"
+          }
+        }
+      }
+    },
+    "Undo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückgängig"
+          }
+        }
+      }
+    },
+    "Undo %@ (⌘Z)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ widerrufen (⌘Z)"
+          }
+        }
+      }
+    },
+    "Undo (⌘Z)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückgängig (⌘Z)"
+          }
+        }
+      }
+    },
+    "Ungroup" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gruppierung aufheben"
+          }
+        }
+      }
+    },
+    "Unlock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entsperren"
+          }
+        }
+      }
+    },
+    "Unlock all" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle entsperren"
           }
         }
       }
@@ -1594,12 +2874,42 @@
         }
       }
     },
+    "Weld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschweißen"
+          }
+        }
+      }
+    },
+    "Which brightness counts as part of the motif" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ab welcher Helligkeit ein Pixel zum Motiv gehört"
+          }
+        }
+      }
+    },
     "Width" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Breite"
+          }
+        }
+      }
+    },
+    "Width (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breite (mm)"
           }
         }
       }

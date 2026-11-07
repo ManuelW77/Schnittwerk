@@ -2,6 +2,7 @@
 //
 // The cutting mat: draws all objects and handles selecting,
 // moving, scaling (corner handles) and rotating (round handle).
+// With a drawing tool, clicks place text or draw lines and curves.
 
 import AppKit
 import SwiftUI
@@ -21,13 +22,28 @@ struct MatViewport {
 
 struct MatCanvasView: View {
     @ObservedObject var document: CutDocument
-    @Binding var selection: UUID?
+    @Binding var selection: Set<UUID>
     let zoom: CGFloat
+    @Binding var tool: DrawingTool
+    /// Called after a new object was drawn or placed.
+    var onCreated: () -> Void = {}
+    /// Called to edit the text of a text object (double-click).
+    var onEditText: (UUID) -> Void = { _ in }
 
     @Environment(\.undoManager) private var undoManager
     @Environment(\.colorScheme) private var colorScheme
     @State private var drag: DragState?
+    /// Rubber band while dragging on the empty mat (mat coordinates).
+    @State private var marquee: CGRect?
     @FocusState private var focused: Bool
+    /// Freehand line while drawing (mat coordinates).
+    @State private var freehand: [CGPoint] = []
+    /// Curve under construction with the curve tool.
+    @State private var pen = PenCurve()
+    /// True while the mouse is down on a new curve point.
+    @State private var penDragging = false
+    /// Mouse position over the mat (view coordinates).
+    @State private var hover: CGPoint?
 
     static let basePxPerMM: CGFloat = 2.6
     static let margin: CGFloat = 28
@@ -56,20 +72,68 @@ struct MatCanvasView: View {
             for shape in document.data.shapes {
                 drawShape(shape, &ctx, vp)
             }
-            if let id = selection, let shape = document.data.shapes.first(where: { $0.id == id }) {
-                drawSelection(shape, &ctx, vp)
+            let selected = document.data.shapes.filter { selection.contains($0.id) }
+            for shape in selected {
+                drawSelection(shape, handles: selected.count == 1 && !shape.isLocked, &ctx, vp)
+            }
+            drawToolPreview(&ctx, vp)
+            if let marquee {
+                let r = Path(marquee.applying(vp.matToView))
+                ctx.fill(r, with: .color(.accentColor.opacity(0.08)))
+                ctx.stroke(r, with: .color(.accentColor), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
             }
         }
         .frame(width: size.width, height: size.height)
         .contentShape(Rectangle())
         .gesture(dragGesture(vp))
+        .simultaneousGesture(SpatialTapGesture(count: 2).onEnded { tap in
+            guard tool == .select else { return }
+            let p = vp.mat(tap.location)
+            if let shape = topmostUnlocked(at: p, vp), shape.text != nil {
+                selection = [shape.id]
+                onEditText(shape.id)
+            }
+        })
         .focusable()
         .focusEffectDisabled()
         .focused($focused)
         .onKeyPress(keys: [.upArrow, .downArrow, .leftArrow, .rightArrow]) { press in
             nudge(press)
         }
-        .onDeleteCommand { deleteSelection() }
+        .onKeyPress(.return) {
+            guard !pen.anchors.isEmpty else { return .ignored }
+            finishPen(closed: false)
+            return .handled
+        }
+        .onKeyPress(characters: CharacterSet(charactersIn: "vtfpVTFP"), phases: .down) { press in
+            guard press.modifiers.isEmpty || press.modifiers == .shift,
+                  let picked = DrawingTool.allCases.first(where: { String($0.key) == press.characters.lowercased() })
+            else { return .ignored }
+            tool = picked
+            return .handled
+        }
+        .onExitCommand {
+            if !pen.anchors.isEmpty { finishPen(closed: false) } else { tool = .select }
+        }
+        .onChange(of: tool) {
+            if !pen.anchors.isEmpty { finishPen(closed: false) }
+            freehand = []
+            if hover != nil { updateCursor() }
+        }
+        .onContinuousHover { phase in
+            switch phase {
+            case .active(let p):
+                hover = p
+                updateCursor()
+            case .ended:
+                hover = nil
+                if !MatNavigator.handActive { NSCursor.arrow.set() }
+            }
+        }
+        .contextMenu { contextMenu(vp) }
+        .onDeleteCommand {
+            if !pen.anchors.isEmpty { pen.anchors.removeLast() } else { deleteSelection() }
+        }
         .accessibilityLabel(Text("Cutting mat"))
     }
 
@@ -114,9 +178,9 @@ struct MatCanvasView: View {
         ctx.stroke(Path(rect), with: .color(gridStrongColor), lineWidth: 1)
     }
 
-    private func path(for shape: CutShape, _ vp: MatViewport) -> Path {
+    private func path(for shape: CutShape, _ vp: MatViewport, closedOnly: Bool = false) -> Path {
         var p = Path()
-        for line in shape.paths {
+        for line in shape.paths where !closedOnly || line.closed {
             guard let first = line.points.first else { continue }
             p.move(to: first)
             for pt in line.points.dropFirst() { p.addLine(to: pt) }
@@ -129,7 +193,9 @@ struct MatCanvasView: View {
         let p = path(for: shape, vp)
         let outside = !shape.fits(in: document.data.mat.size)
         let color: Color = !shape.cutEnabled ? .gray : (outside ? .orange : .red)
-        ctx.fill(p, with: .color(color.opacity(0.10)), style: FillStyle(eoFill: true))
+        let fill = shape.colorHex.flatMap(RGB.init(hex:)).map { Color(red: $0.r, green: $0.g, blue: $0.b).opacity(0.55) }
+            ?? color.opacity(0.10)
+        ctx.fill(path(for: shape, vp, closedOnly: true), with: .color(fill), style: FillStyle(eoFill: true))
         if shape.cutEnabled {
             ctx.stroke(p, with: .color(color), lineWidth: 1)
         } else {
@@ -137,12 +203,55 @@ struct MatCanvasView: View {
         }
     }
 
-    private func drawSelection(_ shape: CutShape, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
+    /// Freehand line and curve while they are being drawn.
+    private func drawToolPreview(_ ctx: inout GraphicsContext, _ vp: MatViewport) {
+        let ink = Color.accentColor
+        if freehand.count > 1 {
+            var p = Path()
+            p.addLines(freehand.map(vp.view))
+            ctx.stroke(p, with: .color(ink), lineWidth: 1.5)
+        }
+        guard tool == .curve, !pen.anchors.isEmpty else { return }
+        let curve = Path(pen.path(closed: false)).applying(vp.matToView)
+        ctx.stroke(curve, with: .color(ink), lineWidth: 1.5)
+        // Rubber line to the mouse
+        if !penDragging, let hover, let last = pen.anchors.last {
+            var next = PenCurve(anchors: [last, PenCurve.Anchor(point: vp.mat(hover))])
+            next.anchors[1].handle = .zero
+            ctx.stroke(Path(next.path(closed: false)).applying(vp.matToView), with: .color(ink.opacity(0.5)),
+                       style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+        }
+        let r: CGFloat = 3.5
+        for (i, a) in pen.anchors.enumerated() {
+            let c = vp.view(a.point)
+            if a.handle != .zero {
+                let hOut = vp.view(CGPoint(x: a.point.x + a.handle.x, y: a.point.y + a.handle.y))
+                let hIn = vp.view(CGPoint(x: a.point.x - a.handle.x, y: a.point.y - a.handle.y))
+                var stem = Path()
+                stem.move(to: hIn); stem.addLine(to: hOut)
+                ctx.stroke(stem, with: .color(ink.opacity(0.6)), lineWidth: 0.8)
+                for h in [hIn, hOut] {
+                    ctx.fill(Path(ellipseIn: CGRect(x: h.x - 2.5, y: h.y - 2.5, width: 5, height: 5)), with: .color(ink))
+                }
+            }
+            let box = Path(CGRect(x: c.x - r, y: c.y - r, width: 2 * r, height: 2 * r))
+            // The first point gets bigger under the mouse: a click closes the curve
+            let closing = i == 0 && pen.anchors.count >= 2 && hover.map { $0.distance(to: c) <= Self.handleRadius + 3 } == true
+            let shown = closing ? Path(CGRect(x: c.x - r - 2, y: c.y - r - 2, width: 2 * r + 4, height: 2 * r + 4)) : box
+            ctx.fill(shown, with: .color(i == 0 ? ink : .white))
+            ctx.stroke(shown, with: .color(ink), lineWidth: 1.2)
+        }
+    }
+
+    /// Selection frame; with `handles`, also the scale and rotate handles
+    /// (only shown when exactly one object is selected).
+    private func drawSelection(_ shape: CutShape, handles: Bool, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
         let corners = shape.matCorners.map(vp.view)
         var frame = Path()
         frame.addLines(corners)
         frame.closeSubpath()
-        ctx.stroke(frame, with: .color(.accentColor), style: StrokeStyle(lineWidth: 1, dash: [5, 3]))
+        ctx.stroke(frame, with: .color(shape.isLocked ? .gray : .accentColor), style: StrokeStyle(lineWidth: 1, dash: [5, 3]))
+        guard handles else { return }
 
         let rotate = rotateHandle(shape, vp)
         var stem = Path()
@@ -175,14 +284,16 @@ struct MatCanvasView: View {
     // MARK: - Mouse
 
     private enum DragKind {
-        case move(startPosition: CGPoint)
-        case scale(startScaleX: Double, startScaleY: Double, startDistance: CGFloat)
-        case rotate(startRotation: Double, startAngle: CGFloat)
+        /// Moves all selected objects; start position per object.
+        case move(startPositions: [UUID: CGPoint])
+        case scale(id: UUID, startScaleX: Double, startScaleY: Double, startDistance: CGFloat)
+        case rotate(id: UUID, startRotation: Double, startAngle: CGFloat)
+        /// Rubber band; `base` stays selected (shift/command held).
+        case marquee(base: Set<UUID>)
         case none
     }
 
     private struct DragState {
-        let shapeID: UUID?
         let kind: DragKind
         let before: ProjectData
         let startMat: CGPoint
@@ -191,20 +302,29 @@ struct MatCanvasView: View {
     private func dragGesture(_ vp: MatViewport) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .local)
             .onChanged { value in
+                if tool != .select {
+                    toolDragChanged(value, vp)
+                    return
+                }
                 if drag == nil { beginDrag(at: value.startLocation, vp) }
                 continueDrag(to: value.location, vp)
             }
-            .onEnded { _ in
+            .onEnded { value in
+                if tool != .select {
+                    toolDragEnded(value, vp)
+                    return
+                }
                 guard let d = drag else { return }
                 let name: String
                 switch d.kind {
                 case .move: name = String(localized: "Move")
                 case .scale: name = String(localized: "Resize")
                 case .rotate: name = String(localized: "Rotate")
-                case .none: name = ""
+                case .marquee, .none: name = ""
                 }
                 document.commitChange(from: d.before, actionName: name, undoManager: undoManager)
                 drag = nil
+                marquee = nil
             }
     }
 
@@ -213,50 +333,69 @@ struct MatCanvasView: View {
         let matPoint = vp.mat(point)
         let before = document.data
         let hit = Self.handleRadius + 3
+        let flags = NSEvent.modifierFlags
+        let extend = flags.contains(.shift) || flags.contains(.command)
 
-        // 1. Handles of the selected object
-        if let id = selection, let shape = document.data.shapes.first(where: { $0.id == id }) {
+        // 1. Handles of the selected object (only with one selected)
+        if selection.count == 1, let id = selection.first,
+           let shape = document.data.shapes.first(where: { $0.id == id }), !shape.isLocked {
             if rotateHandle(shape, vp).distance(to: point) <= hit {
                 let angle = atan2(matPoint.y - shape.position.y, matPoint.x - shape.position.x)
-                drag = DragState(shapeID: id, kind: .rotate(startRotation: shape.rotation, startAngle: angle),
+                drag = DragState(kind: .rotate(id: id, startRotation: shape.rotation, startAngle: angle),
                                  before: before, startMat: matPoint)
                 return
             }
             if shape.matCorners.map(vp.view).contains(where: { $0.distance(to: point) <= hit }) {
-                drag = DragState(shapeID: id,
-                                 kind: .scale(startScaleX: shape.scaleX, startScaleY: shape.scaleY,
+                drag = DragState(kind: .scale(id: id, startScaleX: shape.scaleX, startScaleY: shape.scaleY,
                                               startDistance: max(matPoint.distance(to: shape.position), 0.1)),
                                  before: before, startMat: matPoint)
                 return
             }
         }
         // 2. Topmost object under the mouse
-        if let shape = document.data.shapes.last(where: { $0.contains(matPoint: matPoint, slop: 4 / vp.pxPerMM) }) {
-            selection = shape.id
-            drag = DragState(shapeID: shape.id, kind: .move(startPosition: shape.position),
-                             before: before, startMat: matPoint)
+        //    (locked objects are ignored; a click takes the whole group)
+        if let shape = topmostUnlocked(at: matPoint, vp) {
+            let members = document.data.expandedToGroups([shape.id])
+            if extend {
+                // Shift/command click adds or removes one object (or group)
+                if selection.contains(shape.id) {
+                    selection.subtract(members)
+                    drag = DragState(kind: .none, before: before, startMat: matPoint)
+                    return
+                }
+                selection.formUnion(members)
+            } else if !selection.contains(shape.id) {
+                selection = members
+            }
+            let starts = Dictionary(document.data.shapes
+                .filter { selection.contains($0.id) && !$0.isLocked }.map { ($0.id, $0.position) },
+                uniquingKeysWith: { first, _ in first })
+            drag = DragState(kind: .move(startPositions: starts), before: before, startMat: matPoint)
             return
         }
-        // 3. Empty mat: deselect
-        selection = nil
-        drag = DragState(shapeID: nil, kind: .none, before: before, startMat: matPoint)
+        // 3. Empty mat: rubber band selection
+        if !extend { selection = [] }
+        drag = DragState(kind: .marquee(base: selection), before: before, startMat: matPoint)
     }
 
     private func continueDrag(to point: CGPoint, _ vp: MatViewport) {
-        guard let d = drag, let id = d.shapeID,
-              let index = document.data.shapes.firstIndex(where: { $0.id == id }) else { return }
+        guard let d = drag else { return }
         let matPoint = vp.mat(point)
-        var shape = document.data.shapes[index]
         let shift = NSEvent.modifierFlags.contains(.shift)
 
         switch d.kind {
-        case .move(let start):
+        case .move(let starts):
             var dx = matPoint.x - d.startMat.x, dy = matPoint.y - d.startMat.y
             if shift { // only horizontal or vertical
                 if abs(dx) > abs(dy) { dy = 0 } else { dx = 0 }
             }
-            shape.position = CGPoint(x: start.x + dx, y: start.y + dy)
-        case .scale(let sx, let sy, let startDistance):
+            for i in document.data.shapes.indices {
+                guard let start = starts[document.data.shapes[i].id] else { continue }
+                document.data.shapes[i].position = CGPoint(x: start.x + dx, y: start.y + dy)
+            }
+        case .scale(let id, let sx, let sy, let startDistance):
+            guard let index = document.data.shapes.firstIndex(where: { $0.id == id }) else { return }
+            var shape = document.data.shapes[index]
             var factor = matPoint.distance(to: shape.position) / startDistance
             // At least 1 mm in both directions
             let base = shape.localBounds
@@ -264,21 +403,195 @@ struct MatCanvasView: View {
             factor = max(factor, min(minFactor, 1))
             shape.scaleX = sx * factor
             shape.scaleY = sy * factor
-        case .rotate(let startRotation, let startAngle):
+            document.data.shapes[index] = shape
+        case .rotate(let id, let startRotation, let startAngle):
+            guard let index = document.data.shapes.firstIndex(where: { $0.id == id }) else { return }
+            let shape = document.data.shapes[index]
             let angle = atan2(matPoint.y - shape.position.y, matPoint.x - shape.position.x)
             var r = startRotation + Double((angle - startAngle) * 180 / .pi)
             if shift { r = (r / 15).rounded() * 15 }
-            shape.rotation = normalizedDegrees(r)
+            document.data.shapes[index].rotation = normalizedDegrees(r)
+        case .marquee(let base):
+            let rect = CGRect(x: min(d.startMat.x, matPoint.x), y: min(d.startMat.y, matPoint.y),
+                              width: abs(matPoint.x - d.startMat.x), height: abs(matPoint.y - d.startMat.y))
+            marquee = rect
+            let hits = document.data.shapes.filter { !$0.isLocked && $0.matBounds.intersects(rect) }.map(\.id)
+            selection = base.union(document.data.expandedToGroups(Set(hits)))
         case .none:
             return
         }
-        document.data.shapes[index] = shape
+    }
+
+    // MARK: - Drawing tools
+
+    private func toolDragChanged(_ value: DragGesture.Value, _ vp: MatViewport) {
+        let start = vp.mat(value.startLocation), now = vp.mat(value.location)
+        switch tool {
+        case .select, .text:
+            return
+        case .freehand:
+            if freehand.isEmpty {
+                focused = true
+                freehand = [start]
+            }
+            // Skip points closer than about one screen pixel
+            if let last = freehand.last, last.distance(to: now) >= 1 / vp.pxPerMM {
+                freehand.append(now)
+            }
+        case .curve:
+            if !penDragging {
+                focused = true
+                penDragging = true
+                pen.anchors.append(PenCurve.Anchor(point: start))
+            }
+            // Dragging pulls out the handles: a round point
+            guard let i = pen.anchors.indices.last else { return }
+            let d = CGPoint(x: now.x - start.x, y: now.y - start.y)
+            pen.anchors[i].handle = hypot(d.x, d.y) * vp.pxPerMM >= 3 ? d : .zero
+        }
+    }
+
+    private func toolDragEnded(_ value: DragGesture.Value, _ vp: MatViewport) {
+        let start = vp.mat(value.startLocation)
+        switch tool {
+        case .select:
+            return
+        case .text:
+            focused = true
+            guard let shape = CutShape.text(FontCatalog.defaultSpec(), at: start) else { return }
+            add(shape, actionName: String(localized: "Add text"))
+            tool = .select
+            onEditText(shape.id)
+        case .freehand:
+            let points = freehand
+            freehand = []
+            let px = 1 / vp.pxPerMM
+            guard let line = FreehandBuilder.polyline(from: points, tolerance: 1.2 * px, closeDistance: 10 * px)
+            else { return }
+            add(.drawn(line, name: String(localized: "Freehand")), actionName: String(localized: "Draw"))
+        case .curve:
+            penDragging = false
+            let count = pen.anchors.count
+            guard count >= 2 else { return }
+            let new = pen.anchors[count - 1]
+            let hit = (Self.handleRadius + 3) / vp.pxPerMM
+            // Click on the first point: close the curve
+            if count >= 3, new.point.distance(to: pen.anchors[0].point) <= hit {
+                pen.anchors.removeLast()
+                if new.handle != .zero { pen.anchors[0].handle = new.handle }
+                finishPen(closed: true)
+            // Click on the last point again (double-click): end the curve
+            } else if new.point.distance(to: pen.anchors[count - 2].point) <= hit {
+                pen.anchors.removeLast()
+                if new.handle != .zero { pen.anchors[count - 2].handle = new.handle }
+                if new.handle == .zero { finishPen(closed: false) }
+            }
+        }
+    }
+
+    private func finishPen(closed: Bool) {
+        let curve = pen
+        pen = PenCurve()
+        penDragging = false
+        guard let line = curve.polyline(closed: closed) else { return }
+        add(.drawn(line, name: String(localized: "Curve")), actionName: String(localized: "Draw"))
+    }
+
+    /// Cursor for the current tool (the hand wins while moving the mat).
+    private func updateCursor() {
+        guard !MatNavigator.handActive else { return }
+        switch tool {
+        case .select: NSCursor.arrow.set()
+        case .text: NSCursor.iBeam.set()
+        case .freehand, .curve: NSCursor.crosshair.set()
+        }
+    }
+
+    // MARK: - Context menu
+
+    /// Objects the context menu works on: the selection if the pointer is
+    /// over it, else the object (and its group) under the pointer.
+    /// Locked objects count here, so they can be unlocked.
+    private func contextTargets(_ vp: MatViewport) -> Set<UUID> {
+        guard let hover else { return selection }
+        let p = vp.mat(hover)
+        guard let shape = document.data.shapes.last(where: { $0.contains(matPoint: p, slop: 4 / vp.pxPerMM) })
+        else { return [] }
+        if selection.contains(shape.id) { return selection }
+        return document.data.expandedToGroups([shape.id])
+    }
+
+    @ViewBuilder
+    private func contextMenu(_ vp: MatViewport) -> some View {
+        let ids = contextTargets(vp)
+        let data = document.data
+        let targets = data.shapes.filter { ids.contains($0.id) }
+        let editable = data.unlocked(ids)
+        let um = undoManager
+        if targets.isEmpty {
+            Button("Select all") { selection = data.unlocked(Set(data.shapes.map(\.id))) }
+                .disabled(data.unlocked(Set(data.shapes.map(\.id))).isEmpty)
+            if data.shapes.contains(where: \.isLocked) {
+                Button("Unlock all") {
+                    document.setLocked(false, ids: Set(data.shapes.map(\.id)), undoManager: um)
+                }
+            }
+        } else {
+            if targets.count == 1, let t = targets.first, t.text != nil, !t.isLocked {
+                Button("Edit text…") { selection = [t.id]; onEditText(t.id) }
+                Divider()
+            }
+            Button("Duplicate") {
+                let copies = document.duplicate(ids, undoManager: um)
+                if !copies.isEmpty { selection = copies }
+            }
+            Button("Delete", role: .destructive) {
+                selection.subtract(document.delete(ids, undoManager: um))
+            }
+            .disabled(editable.isEmpty)
+            Divider()
+            if data.canGroup(editable) {
+                Button("Group") { document.group(ids, undoManager: um); selection = ids }
+            }
+            if data.canUngroup(editable) {
+                Button("Ungroup") { document.ungroup(ids, undoManager: um); selection = ids }
+            }
+            if !editable.isEmpty {
+                Button("Lock") {
+                    document.setLocked(true, ids: ids, undoManager: um)
+                    selection.subtract(ids)
+                }
+            }
+            if editable.count < ids.count {
+                Button("Unlock") { document.setLocked(false, ids: ids, undoManager: um); selection = ids }
+            }
+            if !editable.isEmpty {
+                Divider()
+                let allCut = targets.filter { !$0.isLocked }.allSatisfy(\.cutEnabled)
+                Button(allCut ? "Turn cutting off" : "Turn cutting on") {
+                    document.setCutEnabled(!allCut, ids: ids, undoManager: um)
+                }
+                Button("Bring to front") { document.reorder(editable, toFront: true, undoManager: um) }
+                Button("Send to back") { document.reorder(editable, toFront: false, undoManager: um) }
+            }
+        }
+    }
+
+    /// Topmost object under the point that is not locked.
+    private func topmostUnlocked(at matPoint: CGPoint, _ vp: MatViewport) -> CutShape? {
+        document.data.shapes.last { !$0.isLocked && $0.contains(matPoint: matPoint, slop: 4 / vp.pxPerMM) }
+    }
+
+    private func add(_ shape: CutShape, actionName: String) {
+        document.update(actionName, undoManager: undoManager) { $0.shapes.append(shape) }
+        selection = [shape.id]
+        onCreated()
     }
 
     // MARK: - Keyboard
 
     private func nudge(_ press: KeyPress) -> KeyPress.Result {
-        guard let id = selection else { return .ignored }
+        guard !selection.isEmpty else { return .ignored }
         let step: CGFloat = press.modifiers.contains(.shift) ? 10 : 1
         var dx: CGFloat = 0, dy: CGFloat = 0
         switch press.key {
@@ -288,20 +601,24 @@ struct MatCanvasView: View {
         case .downArrow: dy = step
         default: return .ignored
         }
+        let ids = document.data.unlocked(selection)
+        guard !ids.isEmpty else { return .ignored }
         document.update(String(localized: "Move"), undoManager: undoManager) { data in
-            guard let i = data.shapes.firstIndex(where: { $0.id == id }) else { return }
-            data.shapes[i].position.x += dx
-            data.shapes[i].position.y += dy
+            for i in data.shapes.indices where ids.contains(data.shapes[i].id) {
+                data.shapes[i].position.x += dx
+                data.shapes[i].position.y += dy
+            }
         }
         return .handled
     }
 
     private func deleteSelection() {
-        guard let id = selection else { return }
+        let ids = document.data.unlocked(selection)
+        guard !ids.isEmpty else { return }
         document.update(String(localized: "Delete"), undoManager: undoManager) { data in
-            data.shapes.removeAll { $0.id == id }
+            data.shapes.removeAll { ids.contains($0.id) }
         }
-        selection = nil
+        selection.subtract(ids)
     }
 }
 

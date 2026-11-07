@@ -5,23 +5,59 @@ import SwiftUI
 /// Right side panel: position, size, rotation and text of the selected object.
 struct InspectorView: View {
     @ObservedObject var document: CutDocument
-    let selection: UUID?
+    @Binding var selection: Set<UUID>
 
     @Environment(\.undoManager) private var undoManager
     @AppStorage("inspector.lockAspect") private var lockAspect = true
+    @State private var combineFailed = false
+    @State private var offsetFailed = false
+    @AppStorage("offset.distance") private var offsetDistance = 3.0
+    @AppStorage("offset.roundCorners") private var offsetRound = true
+
+    /// Number of locked objects in the selection, nil if none.
+    private var lockedInSelection: Int? {
+        let n = document.data.shapes.filter { selection.contains($0.id) && $0.isLocked }.count
+        return n > 0 ? n : nil
+    }
+
+    /// The one selected object; nil with none or several selected.
+    private var selectedID: UUID? { selection.count == 1 ? selection.first : nil }
 
     private var index: Int? {
-        guard let selection else { return nil }
-        return document.data.shapes.firstIndex { $0.id == selection }
+        guard let selectedID else { return nil }
+        return document.data.shapes.firstIndex { $0.id == selectedID }
     }
 
     var body: some View {
         Form {
-            if let index {
+            if let locked = lockedInSelection {
+                Section {
+                    Label(locked == 1 && selection.count == 1 ? "This object is locked." : "\(locked) locked objects selected.",
+                          systemImage: "lock.fill")
+                    Button("Unlock") {
+                        let ids = selection
+                        document.update(String(localized: "Unlock"), undoManager: undoManager) {
+                            $0.setLocked(false, ids: ids)
+                        }
+                    }
+                }
+            } else if let index {
                 objectSection(index)
                 if document.data.shapes[index].text != nil {
                     textSection(index)
                 }
+                if let spec = document.data.shapes[index].effectiveShapeSpec {
+                    shapeSection(spec)
+                }
+                alignSection
+                offsetSection
+            } else if selection.count > 1 {
+                Section {
+                    Text("\(selection.count) objects selected")
+                }
+                alignSection
+                combineSection
+                offsetSection
             } else {
                 Section {
                     Text("Select an object on the mat, or import a file.")
@@ -30,12 +66,97 @@ struct InspectorView: View {
             }
         }
         .formStyle(.grouped)
+        .alert("Nothing left", isPresented: $combineFailed) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("The result would be empty. Check that the objects overlap.")
+        }
+        .alert("Nothing left", isPresented: $offsetFailed) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("The object is too small for this inner offset.")
+        }
+    }
+
+    // MARK: - Align
+
+    private var alignSection: some View {
+        Section(selection.count == 1 ? "Align on mat" : "Align") {
+            HStack {
+                ForEach(AlignEdge.allCases) { edge in
+                    Button { document.align(edge, ids: selection, undoManager: undoManager) } label: {
+                        Label(edge.title, systemImage: edge.systemImage)
+                    }
+                    .help(edge.title)
+                }
+            }
+            .labelStyle(.iconOnly)
+            if selection.count > 1 {
+                HStack {
+                    ForEach(DistributeAxis.allCases) { axis in
+                        Button { document.distribute(axis, ids: selection, undoManager: undoManager) } label: {
+                            Label(axis.title, systemImage: axis.systemImage)
+                        }
+                        .help(axis.title)
+                        .disabled(selection.count < 3)
+                    }
+                }
+                .labelStyle(.iconOnly)
+            }
+        }
+    }
+
+    // MARK: - Offset
+
+    private var offsetSection: some View {
+        Section("Offset") {
+            TextField("Distance (mm)", value: $offsetDistance,
+                      format: .number.precision(.fractionLength(0...2)))
+                .help("Positive values go outwards, negative values inwards")
+            Picker("Corners", selection: $offsetRound) {
+                Text("Round").tag(true)
+                Text("Sharp").tag(false)
+            }
+            .pickerStyle(.segmented)
+            Button {
+                let d = CGFloat(min(max(offsetDistance, -100), 100))
+                if let id = document.addOffset(ids: selection, distance: d, roundCorners: offsetRound,
+                                               undoManager: undoManager) {
+                    selection = [id]
+                } else {
+                    offsetFailed = true
+                }
+            } label: {
+                Label("Add offset", systemImage: "circle.dashed")
+            }
+            .disabled(!offsetDistance.isFinite || abs(offsetDistance) < 0.01)
+            .help("Add an outline at this distance, e.g. for stickers")
+        }
+    }
+
+    // MARK: - Several objects
+
+    private var combineSection: some View {
+        Section("Combine") {
+            ForEach(PathOperation.allCases) { op in
+                Button { combine(op) } label: { Label(op.title, systemImage: op.systemImage) }
+                    .help(op.help)
+            }
+        }
+    }
+
+    private func combine(_ op: PathOperation) {
+        if let id = document.combine(op, ids: selection, undoManager: undoManager) {
+            selection = [id]
+        } else {
+            combineFailed = true
+        }
     }
 
     // MARK: - Changes
 
     private func change(_ action: String, _ body: @escaping (inout CutShape) -> Void) {
-        guard let id = selection else { return }
+        guard let id = selectedID else { return }
         document.update(action, undoManager: undoManager) { data in
             guard let i = data.shapes.firstIndex(where: { $0.id == id }) else { return }
             body(&data.shapes[i])
@@ -128,16 +249,58 @@ struct InspectorView: View {
     }
 
     private func resize(_ s: inout CutShape, width: Double?, height: Double?) {
-        let base = s.localBounds
-        if let width, width > 0, base.width > 0 {
-            let f = width / (base.width * abs(s.scaleX))
-            s.scaleX *= f
-            if lockAspect { s.scaleY *= f }
+        s.resize(width: width, height: height, keepProportions: lockAspect)
+    }
+
+    // MARK: - Basic shape
+
+    @ViewBuilder
+    private func shapeSection(_ spec: ShapeSpec) -> some View {
+        let mm = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0...1))
+        Section(spec.kind.title) {
+            switch spec.kind {
+            case .rectangle:
+                TextField("Corner radius (mm)", value: Binding(
+                    get: { spec.cornerRadiusMM },
+                    set: { v in guard v.isFinite else { return }; updateShape { $0.cornerRadiusMM = v } }
+                ), format: mm)
+            case .ellipse:
+                Button("Make it a circle") {
+                    updateShape { s in
+                        let d = max(s.widthMM, s.heightMM)
+                        s.widthMM = d
+                        s.heightMM = d
+                    }
+                }
+            case .polygon, .star:
+                Stepper(value: Binding(
+                    get: { spec.sides },
+                    set: { n in updateShape { $0.sides = n } }
+                ), in: ShapeSpec.sidesRange) {
+                    Text(spec.kind == .star ? "Points: \(spec.sides)" : "Corners: \(spec.sides)")
+                }
+                if spec.kind == .star {
+                    // Depth = 1 − inner ratio, so dragging right makes deeper points
+                    Slider(value: Binding(
+                        get: { 1 - spec.innerRatio },
+                        set: { d in updateShape { $0.innerRatio = 1 - d } }
+                    ), in: (1 - ShapeSpec.innerRatioRange.upperBound)...(1 - ShapeSpec.innerRatioRange.lowerBound)) {
+                        Text("Point depth")
+                    } minimumValueLabel: {
+                        Text(verbatim: "")
+                    } maximumValueLabel: {
+                        Text(verbatim: "\(Int((1 - spec.innerRatio) * 100)) %")
+                    }
+                }
+            }
         }
-        if let height, height > 0, base.height > 0 {
-            let f = height / (base.height * abs(s.scaleY))
-            s.scaleY *= f
-            if lockAspect { s.scaleX *= f }
+    }
+
+    private func updateShape(_ edit: @escaping (inout ShapeSpec) -> Void) {
+        change(String(localized: "Edit shape")) { shape in
+            guard var spec = shape.effectiveShapeSpec else { return }
+            edit(&spec)
+            shape.updateShapeSpec(spec)
         }
     }
 
