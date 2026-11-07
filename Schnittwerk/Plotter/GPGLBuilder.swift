@@ -1,6 +1,7 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 //
-// Builds the Graphtec/GPGL command stream for plotters of the Cameo 4 line.
+// Builds the Graphtec/GPGL command stream for Silhouette plotters: the
+// Cameo 4 line, the Cameo 3 and older machines (Cameo 1/2, Portrait 1/2).
 // Protocol facts (units, command order) were learned from the
 // open-source project inkscape-silhouette; no code was copied.
 //
@@ -112,39 +113,77 @@ enum GPGLBuilder {
         area.width = min(area.width, model.widthMM)
         var c: [String] = []
 
-        // Mat and cutting area
-        c.append("TG\(mat.tgIndex)")
-        c.append("FN0")
-        c.append("TB50,0")
-        c.append("\\0,0")
-        c.append("Z\(units(area.height)),\(units(area.width))")
+        let speed = min(s.speed, model.maxSpeed)
+        // Blade tip offset 0.9 mm (18 units); a pen has none
+        let offset = s.tool.isBlade ? "FC18,1,\(h)" : "FC0,1,\(h)"
+
+        if model.family == .classic {
+            // Older machines: no mat command, no tool holder, no AutoBlade.
+            // FW300 = custom media, the values below apply.
+            c.append("FW300")
+            c.append("!\(speed)")
+            c.append("FX\(s.pressure)")
+            c.append(s.tool.isBlade ? "FC18" : "FC0")
+            c.append("FY1")
+            c.append("FN0")
+            c.append("TB50,0")
+            c.append("FE0,0")
+            c.append("\\0,0")
+            c.append("Z\(units(area.height)),\(units(area.width))")
+            c.append("L0")
+            c.append("FE0,0")
+            c.append("FF0,0,0")
+        } else {
+            // Mat and cutting area
+            c.append("TG\(mat.tgIndex)")
+            c.append("FN0")
+            c.append("TB50,0")
+            c.append("\\0,0")
+            c.append("Z\(units(area.height)),\(units(area.width))")
+            if model.twoTools { c.append("J\(h)") }
+        }
 
         // Tool
-        if model.twoTools { c.append("J\(h)") }
-        if s.tool == .autoBlade {
-            c.append("TF\(s.depth),\(h)")
+        switch model.family {
+        case .classic:
+            break
+        case .cameo4:
+            if s.tool == .autoBlade {
+                c.append("TF\(s.depth),\(h)")
+            }
+            c.append("FX\(s.pressure),\(h)")
+            c.append("TJ0")
+            c.append("!\(speed),\(h)")
+            c.append("FC0,1,\(h)")
+            c.append("FE0,\(h)")
+            c.append("FF1,0,\(h)")
+            c.append("FF1,1,\(h)")
+            c.append("FX\(s.pressure),\(h)")
+            c.append("TJ3")
+            c.append(offset)
+        case .cameo3:
+            // Same values, set once, without the acceleration command TJ
+            c.append("!\(speed),\(h)")
+            c.append("FX\(s.pressure),\(h)")
+            c.append("FE0,\(h)")
+            c.append("FF1,0,\(h)")
+            c.append("FF1,1,\(h)")
+            c.append("FC0,1,\(h)")
+            if s.tool.isBlade { c.append(offset) }
+            if s.tool == .autoBlade {
+                c.append("TF\(s.depth),\(h)")
+            }
         }
-        c.append("FX\(s.pressure),\(h)")
-        c.append("TJ0")
-        c.append("!\(s.speed),\(h)")
-        c.append("FC0,1,\(h)")
-        c.append("FE0,\(h)")
-        c.append("FF1,0,\(h)")
-        c.append("FF1,1,\(h)")
-        c.append("FX\(s.pressure),\(h)")
-        c.append("TJ3")
-        // Blade tip offset 0.9 mm (18 units); a pen has none
-        c.append(s.tool.isBlade ? "FC18,1,\(h)" : "FC0,1,\(h)")
 
         // Lines
         var maxY: CGFloat = 0
         var length: CGFloat = 0
-        func clampPoint(_ p: CGPoint) -> CGPoint {
-            CGPoint(x: min(max(p.x, 0), area.width), y: min(max(p.y, 0), area.height))
-        }
+        // Parts outside the cutting area are left out, so the blade never
+        // runs along the edge of the mat
+        let pieces = paths.flatMap { clip($0, to: CGRect(origin: .zero, size: area)) }
         for _ in 0..<s.passes {
-            for line in paths {
-                var pts = line.points.map(clampPoint)
+            for line in pieces {
+                var pts = line.points
                 if line.closed, let first = pts.first { pts.append(first) }
                 guard let first = pts.first, pts.count >= 2 else { continue }
                 c.append("M\(units(first.y)),\(units(first.x))")
@@ -157,10 +196,70 @@ enum GPGLBuilder {
             }
         }
 
-        // Move the head below the cut and finish
-        c.append("M\(units(maxY)),0")
-        c.append("SO0")
+        switch model.family {
+        case .cameo4:
+            // Move the head below the cut and finish
+            c.append("M\(units(maxY)),0")
+            c.append("SO0")
+        case .cameo3, .classic:
+            // Back to the origin, as Silhouette Studio does: a new origin
+            // below the cut (SO0) makes the Cameo 3 keep the mat on unload
+            // and moves the next job.
+            c.append("L0")
+            c.append("\\0,0")
+            c.append("M0,0")
+            if model.twoTools { c.append("J0") }
+            c.append("FN0")
+            c.append("TB50,0")
+        }
         return GPGLJob(commands: c, pathCount: paths.count, cutLengthMM: length)
+    }
+
+    /// The parts of `line` that lie inside `rect`. A line fully inside comes
+    /// back unchanged; otherwise each inside stretch becomes an open line.
+    static func clip(_ line: Polyline, to rect: CGRect) -> [Polyline] {
+        let box = rect.insetBy(dx: -0.001, dy: -0.001)
+        if line.points.allSatisfy({ box.contains($0) }) { return [line] }
+        var pts = line.points
+        if line.closed, let first = pts.first { pts.append(first) }
+
+        var result: [Polyline] = []
+        var current: [CGPoint] = []
+        func flush() {
+            if current.count >= 2 { result.append(Polyline(points: current, closed: false)) }
+            current = []
+        }
+        for (a, b) in zip(pts, pts.dropFirst()) {
+            guard let (p, q) = clipSegment(a, b, to: rect) else { flush(); continue }
+            if let last = current.last, last.distance(to: p) > 1e-6 { flush() }
+            if current.isEmpty { current.append(p) }
+            current.append(q)
+            if q.distance(to: b) > 1e-6 { flush() } // left the area
+        }
+        flush()
+        return result
+    }
+
+    /// Liang–Barsky: the part of segment a→b inside `rect`, if any.
+    static func clipSegment(_ a: CGPoint, _ b: CGPoint, to rect: CGRect) -> (CGPoint, CGPoint)? {
+        let dx = b.x - a.x, dy = b.y - a.y
+        var t0: CGFloat = 0, t1: CGFloat = 1
+        let checks: [(CGFloat, CGFloat)] = [
+            (-dx, a.x - rect.minX), (dx, rect.maxX - a.x),
+            (-dy, a.y - rect.minY), (dy, rect.maxY - a.y),
+        ]
+        for (p, q) in checks {
+            if p == 0 {
+                if q < 0 { return nil }
+            } else {
+                let r = q / p
+                if p < 0 { t0 = max(t0, r) } else { t1 = min(t1, r) }
+                if t0 > t1 { return nil }
+            }
+        }
+        let p = CGPoint(x: a.x + t0 * dx, y: a.y + t0 * dy)
+        let q = CGPoint(x: a.x + t1 * dx, y: a.y + t1 * dy)
+        return p.distance(to: q) > 1e-6 ? (p, q) : nil
     }
 
     static func build(for data: ProjectData, model: PlotterModel = .cameo4) -> GPGLJob {
