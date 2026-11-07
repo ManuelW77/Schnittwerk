@@ -63,6 +63,8 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 - Replicate: copy next to the object, rows and columns, fill the mat, mirrored copies, rotated copies in a ring
 - Sketch and emboss fills (lines, cross-hatch, concentric) and stippling along the outline or inside the area
 - Offset outwards or inwards, round or sharp corners (e.g. sticker outlines)
+- **Weeding lines**: a box and lines through the free space
+- **Edit points** (move, delete, insert, split a line), **knife** and **eraser**
 - Align and distribute
 - **Group** objects so they move together, **lock** objects so they cannot be changed
 - Context menu (right click) with the actions that fit the selection

@@ -15,6 +15,8 @@ struct CutPanelView: View {
     @State private var askRename = false
     @State private var renameText = ""
     @State private var confirmDelete = false
+    @State private var showPreview = false
+    @AppStorage("printcut.outlines") private var printOutlines = false
     @AppStorage(ConnectionKind.storageKey) private var connection: ConnectionKind = .automatic
     /// Tool whose values are shown: 1 or 2.
     @Binding var slot: Int
@@ -243,6 +245,8 @@ struct CutPanelView: View {
                     .help("The plotter rolls the mat in and out a few times first, so the rollers grip better (e.g. for long or thick material)")
             }
 
+            printAndCutSection
+
             Section("Plotter") {
                 Picker("Connection", selection: $connection) {
                     ForEach(ConnectionKind.allCases) { Text($0.title).tag($0) }
@@ -266,6 +270,11 @@ struct CutPanelView: View {
         .formStyle(.grouped)
         // The cut button stays in reach, whatever is scrolled above it
         .safeAreaInset(edge: .bottom, spacing: 0) { cutBar }
+        .sheet(isPresented: $showPreview) {
+            CutPreviewSheet(data: document.data, model: plotter.lastModel) {
+                if outsideCount > 0 { confirmOutside = true } else { cut() }
+            }
+        }
         .confirmationDialog("Some objects lie outside the cutting area.", isPresented: $confirmOutside) {
             Button("Cut anyway") { cut() }
             Button("Cancel", role: .cancel) {}
@@ -301,6 +310,59 @@ struct CutPanelView: View {
         }
     }
 
+    // MARK: Print & Cut
+
+    private func setPrintCut(_ edit: @escaping (inout PrintAndCut) -> Void) {
+        document.update(String(localized: "Change Print & Cut"), undoManager: undoManager) { data in
+            var pc = data.printCut
+            edit(&pc)
+            data.printCut = pc
+        }
+    }
+
+    /// Objects to cut that lie outside the frame of the marks.
+    private var outsidePrintArea: Int {
+        let area = document.data.printCut.designArea
+        return document.data.shapes.filter { $0.cutEnabled && !area.contains($0.matBounds) }.count
+    }
+
+    private var printAndCutSection: some View {
+        let pc = document.data.printCut
+        return Section("Print & Cut") {
+            Toggle("Registration marks", isOn: Binding(get: { pc.enabled }, set: { on in setPrintCut { $0.enabled = on } }))
+                .help("Print the design with marks; the plotter finds them with its sensor and cuts exactly around the print")
+            if pc.enabled {
+                Picker("Paper", selection: Binding(get: { pc.paper }, set: { p in setPrintCut { $0.paper = p } })) {
+                    ForEach(PaperSize.allCases) { Text(verbatim: $0.title).tag($0) }
+                }
+                TextField("Mark inset (mm)", value: Binding(
+                    get: { pc.insetMM },
+                    set: { v in if v.isFinite { setPrintCut { $0.insetMM = min(max(v, PrintAndCut.insetRange.lowerBound), PrintAndCut.insetRange.upperBound) } } }
+                ), format: .number.precision(.fractionLength(0...1)))
+                Toggle("Print outlines", isOn: $printOutlines)
+                    .help("Also prints thin lines along the cut lines")
+                HStack {
+                    Button { PrintAndCutPrinter.print(document.data, outlines: printOutlines) } label: {
+                        Label("Print…", systemImage: "printer")
+                    }
+                    Button("Save as PDF…") { PrintAndCutPrinter.savePDF(for: document.data, outlines: printOutlines) }
+                }
+                if outsidePrintArea > 0 {
+                    Label("\(outsidePrintArea) object(s) lie outside the area between the marks.",
+                          systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                }
+                if plotter.lastModel.family == .classic {
+                    Label("This plotter cannot read registration marks.", systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                }
+                Text("Print at 100 % (no “fit to page”), lay the sheet straight at the top left of the mat, then cut. Cameo 3 and Cameo 4 line.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
     private var cutBar: some View {
         VStack(alignment: .leading, spacing: 8) {
             statusView
@@ -321,16 +383,24 @@ struct CutPanelView: View {
                 }
                 .controlSize(.large)
             } else {
-                Button {
-                    if outsideCount > 0 { confirmOutside = true } else { cut() }
-                } label: {
-                    Label("Cut (\(cutCount))", systemImage: "scissors")
-                        .frame(maxWidth: .infinity)
+                HStack(spacing: 8) {
+                    Button { showPreview = true } label: {
+                        Label("Preview", systemImage: "eye")
+                    }
+                    .controlSize(.large)
+                    .disabled(cutCount == 0)
+                    .help("Shows the order of the cut lines and the time, before cutting")
+                    Button {
+                        if outsideCount > 0 { confirmOutside = true } else { cut() }
+                    } label: {
+                        Label("Cut (\(cutCount))", systemImage: "scissors")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .disabled(cutCount == 0)
+                    .keyboardShortcut(.return, modifiers: .command)
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .disabled(cutCount == 0)
-                .keyboardShortcut(.return, modifiers: .command)
             }
         }
         .padding(.horizontal, 16)

@@ -17,6 +17,9 @@ struct GPGLJob: Equatable {
     let pathCount: Int
     /// Total cut length in mm (all passes).
     let cutLengthMM: CGFloat
+    /// Print & Cut: after this many commands the plotter searches the
+    /// marks; the rest may only be sent once it answers "0".
+    var replyAfter: Int? = nil
 
     static let etx: UInt8 = 0x03
 
@@ -127,7 +130,10 @@ enum GPGLBuilder {
     /// One job with one or two tools. Each run selects its holder (`J`),
     /// sets its values and cuts its lines. Machines with one holder cut
     /// everything with the values of the first run.
-    static func build(runs rawRuns: [ToolRun], mat: MatType, model: PlotterModel = .cameo4) -> GPGLJob {
+    static func build(runs rawRuns: [ToolRun], mat: MatType, model: PlotterModel = .cameo4,
+                      registration: PrintAndCut? = nil) -> GPGLJob {
+        // Marks are searched by the Cameo 3 and the Cameo 4 line only
+        let reg = model.family == .classic ? nil : registration
         var runs = rawRuns.filter { !$0.paths.isEmpty }
         if runs.isEmpty, let first = rawRuns.first { runs = [first] }
         if !model.twoTools, runs.count > 1 {
@@ -138,6 +144,14 @@ enum GPGLBuilder {
         }
         var area = mat.size
         area.width = min(area.width, model.widthMM)
+        // With marks, coordinates start at the top left mark and the
+        // cutting area is the mark frame
+        var shift = CGAffineTransform.identity
+        if let reg {
+            area = reg.frameSize
+            shift = CGAffineTransform(translationX: -reg.origin.x, y: -reg.origin.y)
+        }
+        var replyAfter: Int?
         var c: [String] = []
 
         let first = firstRun.settings.clamped
@@ -161,7 +175,12 @@ enum GPGLBuilder {
             // Mat and cutting area
             c.append("TG\(mat.tgIndex)")
             c.append("FN0")
-            c.append("TB50,0")
+            if let reg {
+                c.append(contentsOf: reg.searchCommands)
+                replyAfter = c.count
+            } else {
+                c.append("TB50,0")
+            }
             // Track enhancing: the rollers run over the mat first
             if runs.contains(where: { $0.settings.options.trackEnhancing }) { c.append("FY0") }
             c.append("\\0,0")
@@ -180,7 +199,7 @@ enum GPGLBuilder {
 
             // Parts outside the cutting area are left out, so the blade
             // never runs along the edge of the mat
-            let pieces = run.paths.flatMap { clip($0, to: box) }
+            let pieces = run.paths.map { $0.applying(shift) }.flatMap { clip($0, to: box) }
             for _ in 0..<s.passes {
                 for line in pieces {
                     for stroke in strokes(line, settings: s) {
@@ -214,7 +233,8 @@ enum GPGLBuilder {
             c.append("FN0")
             c.append("TB50,0")
         }
-        return GPGLJob(commands: c, pathCount: runs.reduce(0) { $0 + $1.paths.count }, cutLengthMM: length)
+        return GPGLJob(commands: c, pathCount: runs.reduce(0) { $0 + $1.paths.count }, cutLengthMM: length,
+                       replyAfter: replyAfter)
     }
 
     /// Blade offset in plotter units: 0.9 mm (18 units) plus the
@@ -376,7 +396,8 @@ enum GPGLBuilder {
     static func build(for data: ProjectData, model: PlotterModel = .cameo4) -> GPGLJob {
         let runs = runs(for: data)
         if runs.isEmpty { return build(paths: [], settings: data.settings(slot: 1), mat: data.mat, model: model) }
-        return build(runs: runs, mat: data.mat, model: model)
+        return build(runs: runs, mat: data.mat, model: model,
+                     registration: data.usesPrintAndCut ? data.printCut : nil)
     }
 
     /// Small test cut: 10 mm square with a triangle inside, at the top left.

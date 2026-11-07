@@ -18,6 +18,8 @@ struct ProjectData: Codable, Equatable {
     var settings = CutSettings()
     /// Settings of tool 2 (right holder); nil until first changed.
     var settings2: CutSettings?
+    /// Print & Cut with registration marks; nil = never switched on.
+    var printAndCut: PrintAndCut?
 
     /// Settings of tool 1 or 2, with the matching holder.
     func settings(slot: Int) -> CutSettings {

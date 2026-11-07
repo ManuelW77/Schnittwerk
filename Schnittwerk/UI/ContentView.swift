@@ -99,8 +99,25 @@ struct ContentView: View {
             .background(Color(nsColor: .underPageBackgroundColor))
             .overlay(alignment: .top) { outsideNotice }
             .overlay(alignment: .topLeading) {
-                ToolPalette(tool: $tool, addShape: addShape)
-                    .padding(12)
+                VStack(alignment: .leading, spacing: 10) {
+                    ToolPalette(tool: $tool, addShape: addShape)
+                    if tool == .eraser { EraserSizeControl() }
+                }
+                .padding(12)
+            }
+            .overlay(alignment: .bottomLeading) {
+                // How the editing tools work, while one is active
+                if [.points, .knife, .eraser].contains(tool) {
+                    Text(tool.help)
+                        .font(.callout)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: 360, alignment: .leading)
+                        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .padding(12)
+                        .padding(.bottom, 44)
+                        .allowsHitTesting(false)
+                }
             }
             .overlay(alignment: .bottom) {
                 if !document.data.shapes.isEmpty {
@@ -505,6 +522,27 @@ struct ToolPalette: View {
         }
         .padding(5)
         .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+}
+
+/// Size of the eraser, shown under the tool palette.
+struct EraserSizeControl: View {
+    @AppStorage("eraser.radius") private var radius = 2.0
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Image(systemName: "circle.fill")
+                .font(.system(size: CGFloat(4 + radius * 2)))
+                .foregroundStyle(.secondary)
+                .frame(width: 34, height: 30)
+            Stepper("Eraser size", value: $radius, in: 0.5...10, step: 0.5)
+                .labelsHidden()
+            Text(verbatim: radius.formatted(.number.precision(.fractionLength(1))) + " mm")
+                .font(.caption2.monospacedDigit())
+        }
+        .padding(6)
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .help("Eraser size (radius)")
     }
 }
 

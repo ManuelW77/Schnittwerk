@@ -8,7 +8,7 @@ import Foundation
 
 /// What a click on the mat does.
 enum DrawingTool: String, CaseIterable, Identifiable {
-    case select, text, freehand, curve
+    case select, points, text, freehand, curve, knife, eraser
     var id: String { rawValue }
 
     var title: String {
@@ -17,6 +17,9 @@ enum DrawingTool: String, CaseIterable, Identifiable {
         case .text: String(localized: "Text")
         case .freehand: String(localized: "Freehand")
         case .curve: String(localized: "Curve")
+        case .points: String(localized: "Edit points")
+        case .knife: String(localized: "Knife")
+        case .eraser: String(localized: "Eraser")
         }
     }
 
@@ -26,6 +29,9 @@ enum DrawingTool: String, CaseIterable, Identifiable {
         case .text: "textformat"
         case .freehand: "scribble"
         case .curve: "point.bottomleft.forward.to.point.topright.scurvepath"
+        case .points: "point.topleft.down.to.point.bottomright.curvepath"
+        case .knife: "line.diagonal"
+        case .eraser: "eraser"
         }
     }
 
@@ -36,6 +42,9 @@ enum DrawingTool: String, CaseIterable, Identifiable {
         case .text: "t"
         case .freehand: "f"
         case .curve: "p"
+        case .points: "a"
+        case .knife: "k"
+        case .eraser: "e"
         }
     }
 
@@ -45,6 +54,9 @@ enum DrawingTool: String, CaseIterable, Identifiable {
         case .text: String(localized: "Click on the mat to place text (T)")
         case .freehand: String(localized: "Draw a freehand line (F)")
         case .curve: String(localized: "Draw curves: click for corners, drag for round points. Return or double-click ends, click the first point to close (P)")
+        case .points: String(localized: "Edit the points of one object: drag a point, double-click a point to delete it, double-click a line to add a point, right-click a point to split the line there (A)")
+        case .knife: String(localized: "Drag a straight line across objects to cut them into pieces (K)")
+        case .eraser: String(localized: "Drag over objects to erase parts of them (E)")
         }
     }
 }

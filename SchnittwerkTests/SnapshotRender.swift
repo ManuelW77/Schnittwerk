@@ -111,4 +111,28 @@ final class SnapshotRender: XCTestCase {
         try saveInWindow(InspectorView(document: doc, selection: .constant([circle.id])), "object-panel.png",
                          size: CGSize(width: 340, height: 1000))
     }
+
+    func testRenderPrintCutPointsAndPreview() throws {
+        guard let dir = ProcessInfo.processInfo.environment["SW_SNAPSHOT_DIR"] else { throw XCTSkip("no SW_SNAPSHOT_DIR") }
+        let doc = CutDocument()
+        let star = CutShape.basic(.standard(.star), at: CGPoint(x: 40, y: 50))
+        let text = CutShape.text(TextSpec(text: "Hi", fontName: "HelveticaNeue-Bold", sizeMM: 40), at: CGPoint(x: 110, y: 50))!
+        doc.data.shapes = [star, text]
+        doc.data.printCut.enabled = true
+        doc.addWeedingLines(ids: [text.id], margin: 4, horizontal: 1, vertical: 1, undoManager: nil)
+        func shot(_ view: some View, _ name: String, _ size: CGSize) throws {
+            let host = NSHostingView(rootView: view.frame(width: size.width, height: size.height))
+            let window = NSWindow(contentRect: CGRect(origin: .zero, size: size), styleMask: [.borderless], backing: .buffered, defer: false)
+            window.contentView = host
+            host.layoutSubtreeIfNeeded()
+            RunLoop.main.run(until: Date().addingTimeInterval(0.5))
+            let rep = try XCTUnwrap(host.bitmapImageRepForCachingDisplay(in: host.bounds))
+            host.cacheDisplay(in: host.bounds, to: rep)
+            try XCTUnwrap(rep.representation(using: .png, properties: [:])).write(to: URL(fileURLWithPath: dir).appendingPathComponent(name))
+        }
+        try shot(MatCanvasView(document: doc, selection: .constant([star.id]), zoom: 1, tool: .constant(.points)), "printcut-points.png",
+                 CGSize(width: 860, height: 860))
+        try shot(CutPreviewSheet(data: doc.data, model: .cameo4, onCut: {}), "preview.png", CGSize(width: 640, height: 720))
+        try shot(CutPanelView(document: doc, slot: .constant(1)), "cut-printcut.png", CGSize(width: 340, height: 1500))
+    }
 }

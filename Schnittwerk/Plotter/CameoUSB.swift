@@ -31,9 +31,13 @@ enum PlotterError: LocalizedError, Equatable {
     case bluetoothOff
     case bluetoothDenied
     case bluetooth(String)
+    case marksNotFound(String)
 
     var errorDescription: String? {
         switch self {
+        case .marksNotFound(let reply):
+            let detail = reply.isEmpty ? "" : " (\(reply))"
+            return String(localized: "The plotter could not find the registration marks\(detail). Check that the sheet lies straight at the top left of the mat, the marks are printed black and the print was made at 100 %.")
         case .notFound:
             return String(localized: "No plotter found. Is it switched on and connected via USB or Bluetooth?")
         case .busy:

@@ -65,6 +65,8 @@ gleichzeitig mit einer anderen App verbunden sein.
 - Replizieren: neben das Objekt kopieren, Reihen und Spalten, Matte füllen, gespiegelte Kopien, Kopien im Kreis drehen
 - Skizzen- und Prägefüllung (Linien, Kreuzschraffur, konzentrisch) und Punktierung entlang der Kontur oder in der Fläche
 - Kontur nach außen oder innen, runde oder spitze Ecken (z. B. für Sticker)
+- **Entgitterlinien**: Rahmen und Trennlinien durch die freien Flächen
+- **Punkte bearbeiten** (verschieben, löschen, einfügen, Linie auftrennen), **Messer** und **Radiergummi**
 - Ausrichten und Verteilen
 - Objekte **gruppieren**, damit sie sich gemeinsam bewegen, und **sperren**, damit sie nicht verändert werden
 - Kontextmenü (Rechtsklick) mit den Aktionen, die zur Auswahl passen
@@ -80,6 +82,8 @@ gleichzeitig mit einer anderen App verbunden sein.
 - Werkzeuge: AutoBlade, Ratschenklinge, Kraft-Klinge (Leder, Filz, Graupappe), Stift, Prägewerkzeug, Stanzwerkzeug
 - Klingentiefe, Kraft, Geschwindigkeit, Durchgänge, Beschleunigung, Klingen-Offset, Überschnitt, spitze Ecken (Smart Cut), Spurverstärkung
 - Über 30 Material-Vorlagen (u. a. nach [michamade.de](https://michamade.de/schnitteinstellungen/)) und eigene Schnittprofile (Import / Export als `.schnittprofile`)
+- **Schnittvorschau** mit Reihenfolge, Leerfahrten und geschätzter Dauer
+- **Print & Cut** mit Passkreuzen (A4/Letter, Cameo 3 und Cameo-4-Reihe): drucken oder als PDF sichern, der Plotter sucht die Passkreuze vor dem Schneiden
 - Testschnitt, Verbindung prüfen, Plotter-Befehle als Text exportieren
 - Objekte lassen sich vom Schneiden ausnehmen; Linien außerhalb des Schneidbereichs werden gemeldet
 

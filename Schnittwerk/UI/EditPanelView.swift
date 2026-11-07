@@ -31,6 +31,10 @@ struct EditPanelView: View {
     @AppStorage("edit.open.offset") private var openOffset = false
     @AppStorage("edit.open.fill") private var openFill = false
     @AppStorage("edit.open.stipple") private var openStipple = false
+    @AppStorage("edit.open.weed") private var openWeed = true
+    @AppStorage("weed.margin") private var weedMargin = 4.0
+    @AppStorage("weed.horizontal") private var weedHorizontal = 1
+    @AppStorage("weed.vertical") private var weedVertical = 1
 
     private var editable: Set<UUID> { document.data.unlocked(selection) }
     private var hasSelection: Bool { !editable.isEmpty }
@@ -49,6 +53,7 @@ struct EditPanelView: View {
                 transformSection
                 replicateSection
                 modifySection
+                weedSection
                 offsetSection
                 fillSection
                 stippleSection
@@ -230,6 +235,30 @@ struct EditPanelView: View {
                orFail: op == .releaseCompound
                    ? String(localized: "The object has only one outline.")
                    : String(localized: "The result would be empty. Check that the objects overlap."))
+    }
+
+    // MARK: Weeding
+
+    private var weedSection: some View {
+        Section("Weeding lines", isExpanded: $openWeed) {
+            TextField("Box margin (mm)", value: $weedMargin, format: mm)
+            HStack {
+                Stepper("Across: \(weedHorizontal)", value: $weedHorizontal, in: 0...20)
+                Stepper("Down: \(weedVertical)", value: $weedVertical, in: 0...20)
+            }
+            Button {
+                if let id = document.addWeedingLines(ids: selection, margin: CGFloat(max(weedMargin, 0)),
+                                                     horizontal: weedHorizontal, vertical: weedVertical,
+                                                     undoManager: undoManager) {
+                    selection = [id]
+                } else {
+                    failure = String(localized: "Nothing to copy.")
+                }
+            } label: { Label("Add weeding lines", systemImage: "square.dashed").frame(maxWidth: .infinity) }
+            Text("A box around the motif and lines through the free space, so the waste vinyl comes off in small pieces.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
     }
 
     // MARK: Offset
