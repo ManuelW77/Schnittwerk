@@ -51,18 +51,22 @@ enum PlotterConnection {
         case .usb:
             return try opened(CameoUSB())
         case .bluetooth:
-            return try opened(CameoBluetooth())
+            return try openBluetooth()
         case .automatic:
             do {
                 return try opened(CameoUSB())
             } catch PlotterError.notFound {
                 do {
-                    return try opened(CameoBluetooth())
+                    return try openBluetooth()
                 } catch PlotterError.notFound, PlotterError.bluetoothOff {
                     throw PlotterError.notFound
                 }
             }
         }
+    }
+
+    private static func openBluetooth() throws -> PlotterTransport {
+        try opened(CameoBluetooth())
     }
 
     private static func opened(_ t: PlotterTransport) throws -> PlotterTransport {

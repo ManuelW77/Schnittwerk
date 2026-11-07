@@ -37,6 +37,27 @@ struct ContentView: View {
 
     private static let zoomSteps: [CGFloat] = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8]
 
+    /// Objects to cut that stick out over the cutting area.
+    private var outsideCount: Int {
+        let area = document.data.mat.size
+        return document.data.shapes.filter { $0.cutEnabled && !$0.fits(in: area) }.count
+    }
+
+    @ViewBuilder private var outsideNotice: some View {
+        let count = outsideCount
+        if count > 0 {
+            Label("\(count) object(s) stick out over the cutting area. Those parts are not cut, to protect the mat.",
+                  systemImage: "exclamationmark.triangle.fill")
+                .font(.callout)
+                .foregroundStyle(.orange)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(.regularMaterial, in: Capsule())
+                .padding(.top, 10)
+                .allowsHitTesting(false)
+        }
+    }
+
     var body: some View {
         NavigationSplitView {
             ObjectListView(document: document, selection: $selection)
@@ -54,6 +75,7 @@ struct ContentView: View {
                     .background(MatNavigator(zoom: $zoom, range: MatNavigator.zoomRange))
             }
             .background(Color(nsColor: .underPageBackgroundColor))
+            .overlay(alignment: .top) { outsideNotice }
             // Files from Finder, or drawings dragged straight out of another app
             .onDrop(of: [.fileURL, .svg, .pdf], isTargeted: nil) { providers in
                 handleDrop(providers)

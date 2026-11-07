@@ -20,6 +20,13 @@ struct MatViewport {
     func mat(_ p: CGPoint) -> CGPoint { CGPoint(x: (p.x - margin) / pxPerMM, y: (p.y - margin) / pxPerMM) }
 }
 
+/// The printed grid of Silhouette mats.
+enum MatGrid {
+    static let inch: CGFloat = 25.4
+    /// Thin lines per inch.
+    static let subdivisions = 4
+}
+
 struct MatCanvasView: View {
     @ObservedObject var document: CutDocument
     @Binding var selection: Set<UUID>
@@ -151,31 +158,39 @@ struct MatCanvasView: View {
         let rect = CGRect(origin: .zero, size: matSize).applying(vp.matToView)
         ctx.fill(Path(rect), with: .color(matColor))
 
-        // Grid: 10 mm thin, 50 mm stronger with cm labels
+        // Grid like the printed Silhouette mat: 1 inch squares numbered in
+        // inches, thin lines every quarter inch
         var thin = Path(), strong = Path()
-        var x: CGFloat = 0
-        while x <= matSize.width + 0.01 {
+        let step = MatGrid.inch / CGFloat(MatGrid.subdivisions)
+        var i = 0
+        while CGFloat(i) * step <= matSize.width + 0.01 {
+            let x = CGFloat(i) * step
             var p = Path()
             p.move(to: vp.view(CGPoint(x: x, y: 0)))
             p.addLine(to: vp.view(CGPoint(x: x, y: matSize.height)))
-            if Int(x.rounded()) % 50 == 0 { strong.addPath(p) } else { thin.addPath(p) }
-            if Int(x.rounded()) % 50 == 0 {
-                ctx.draw(Text(verbatim: "\(Int(x / 10))").font(.system(size: 9)).foregroundStyle(.secondary),
+            if i % MatGrid.subdivisions == 0 {
+                strong.addPath(p)
+                ctx.draw(Text(verbatim: "\(i / MatGrid.subdivisions)").font(.system(size: 9)).foregroundStyle(.secondary),
                          at: CGPoint(x: vp.view(CGPoint(x: x, y: 0)).x, y: vp.margin / 2))
+            } else {
+                thin.addPath(p)
             }
-            x += 10
+            i += 1
         }
-        var y: CGFloat = 0
-        while y <= matSize.height + 0.01 {
+        i = 0
+        while CGFloat(i) * step <= matSize.height + 0.01 {
+            let y = CGFloat(i) * step
             var p = Path()
             p.move(to: vp.view(CGPoint(x: 0, y: y)))
             p.addLine(to: vp.view(CGPoint(x: matSize.width, y: y)))
-            if Int(y.rounded()) % 50 == 0 { strong.addPath(p) } else { thin.addPath(p) }
-            if Int(y.rounded()) % 50 == 0 {
-                ctx.draw(Text(verbatim: "\(Int(y / 10))").font(.system(size: 9)).foregroundStyle(.secondary),
+            if i % MatGrid.subdivisions == 0 {
+                strong.addPath(p)
+                ctx.draw(Text(verbatim: "\(i / MatGrid.subdivisions)").font(.system(size: 9)).foregroundStyle(.secondary),
                          at: CGPoint(x: vp.margin / 2, y: vp.view(CGPoint(x: 0, y: y)).y))
+            } else {
+                thin.addPath(p)
             }
-            y += 10
+            i += 1
         }
         ctx.stroke(thin, with: .color(gridColor), lineWidth: 0.5)
         ctx.stroke(strong, with: .color(gridStrongColor), lineWidth: 0.8)

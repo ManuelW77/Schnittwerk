@@ -44,6 +44,23 @@ final class GPGLTests: XCTestCase {
         XCTAssertEqual(job.cutLengthMM, 240, accuracy: 1e-9)
     }
 
+    func testPartsOutsideTheMatAreLeftOut() {
+        // Square from x 290 to 320 on a 304.8 mm mat: the right part sticks out
+        let square = Polyline(points: [CGPoint(x: 290, y: 10), CGPoint(x: 320, y: 10),
+                                       CGPoint(x: 320, y: 40), CGPoint(x: 290, y: 40)], closed: true)
+        let job = GPGLBuilder.build(paths: [square], settings: CutSettings(), mat: .mat12x12)
+        let body = job.commands.filter { $0.hasPrefix("M") || $0.hasPrefix("D") }.dropLast()
+        // Top edge up to the mat edge, then the bottom and left edge; nothing along x = 304.8
+        XCTAssertEqual(Array(body), ["M200,5800", "D200,6096", "M800,6096", "D800,5800", "D200,5800"])
+        XCTAssertEqual(job.cutLengthMM, 14.8 + 14.8 + 30, accuracy: 1e-6)
+    }
+
+    func testLineFullyOutsideIsNotCut() {
+        let line = Polyline(points: [CGPoint(x: 310, y: 10), CGPoint(x: 330, y: 10)], closed: false)
+        let job = GPGLBuilder.build(paths: [line], settings: CutSettings(), mat: .mat12x12)
+        XCTAssertFalse(job.commands.contains { $0.hasPrefix("D") })
+    }
+
     func testPointsAreClampedToMat() {
         let line = Polyline(points: [CGPoint(x: -5, y: 10), CGPoint(x: 400, y: 10)], closed: false)
         let job = GPGLBuilder.build(paths: [line], settings: CutSettings(), mat: .mat12x12)

@@ -191,7 +191,7 @@ struct InspectorView: View {
                 set: { on in change(String(localized: "Cut on/off")) { $0.cutEnabled = on } }
             ))
             if !shape.fits(in: document.data.mat.size) {
-                Label("Lies outside the cutting area", systemImage: "exclamationmark.triangle.fill")
+                Label("Sticks out over the cutting area; that part is not cut", systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
             }
         }
