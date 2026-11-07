@@ -1,6 +1,6 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 //
-// Builds the Graphtec/GPGL command stream for the Cameo 4.
+// Builds the Graphtec/GPGL command stream for plotters of the Cameo 4 line.
 // Protocol facts (units, command order) were learned from the
 // open-source project inkscape-silhouette; no code was copied.
 //
@@ -103,10 +103,13 @@ enum GPGLBuilder {
         return result
     }
 
-    static func build(paths: [Polyline], settings rawSettings: CutSettings, mat: MatType) -> GPGLJob {
+    static func build(paths: [Polyline], settings rawSettings: CutSettings, mat: MatType,
+                      model: PlotterModel = .cameo4) -> GPGLJob {
         let s = rawSettings.clamped
-        let h = s.holder
-        let area = mat.size
+        // Machines with one tool holder (Portrait) know no holder 2
+        let h = model.twoTools ? s.holder : 1
+        var area = mat.size
+        area.width = min(area.width, model.widthMM)
         var c: [String] = []
 
         // Mat and cutting area
@@ -117,7 +120,7 @@ enum GPGLBuilder {
         c.append("Z\(units(area.height)),\(units(area.width))")
 
         // Tool
-        c.append("J\(h)")
+        if model.twoTools { c.append("J\(h)") }
         if s.tool == .autoBlade {
             c.append("TF\(s.depth),\(h)")
         }
@@ -160,17 +163,18 @@ enum GPGLBuilder {
         return GPGLJob(commands: c, pathCount: paths.count, cutLengthMM: length)
     }
 
-    static func build(for data: ProjectData) -> GPGLJob {
-        build(paths: cutPaths(data), settings: data.settings, mat: data.mat)
+    static func build(for data: ProjectData, model: PlotterModel = .cameo4) -> GPGLJob {
+        build(paths: cutPaths(data), settings: data.settings, mat: data.mat, model: model)
     }
 
     /// Small test cut: 10 mm square with a triangle inside, at the top left.
-    static func testCut(settings: CutSettings, mat: MatType, origin: CGPoint = CGPoint(x: 10, y: 10)) -> GPGLJob {
+    static func testCut(settings: CutSettings, mat: MatType, model: PlotterModel = .cameo4,
+                        origin: CGPoint = CGPoint(x: 10, y: 10)) -> GPGLJob {
         let o = origin
         let square = Polyline(points: [o, CGPoint(x: o.x + 10, y: o.y), CGPoint(x: o.x + 10, y: o.y + 10),
                                        CGPoint(x: o.x, y: o.y + 10)], closed: true)
         let triangle = Polyline(points: [CGPoint(x: o.x + 2, y: o.y + 8), CGPoint(x: o.x + 5, y: o.y + 2),
                                          CGPoint(x: o.x + 8, y: o.y + 8)], closed: true)
-        return build(paths: [triangle, square], settings: settings, mat: mat)
+        return build(paths: [triangle, square], settings: settings, mat: mat, model: model)
     }
 }

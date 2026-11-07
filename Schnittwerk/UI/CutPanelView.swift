@@ -3,7 +3,7 @@
 import AppKit
 import SwiftUI
 
-/// Cut settings, material presets and sending to the Cameo 4.
+/// Cut settings, material presets and sending to the plotter.
 struct CutPanelView: View {
     @ObservedObject var document: CutDocument
     @ObservedObject private var plotter = PlotterController.shared
@@ -15,6 +15,7 @@ struct CutPanelView: View {
     @State private var askRename = false
     @State private var renameText = ""
     @State private var confirmDelete = false
+    @AppStorage(ConnectionKind.storageKey) private var connection: ConnectionKind = .automatic
 
     private var settings: CutSettings { document.data.settings }
 
@@ -179,6 +180,11 @@ struct CutPanelView: View {
             }
 
             Section("Plotter") {
+                Picker("Connection", selection: $connection) {
+                    ForEach(ConnectionKind.allCases) { Text($0.title).tag($0) }
+                }
+                .disabled(plotter.isBusy)
+                .help("Automatic tries USB first, then Bluetooth. Supported: \(PlotterModel.supportedNames). Bluetooth: Cameo 4, 4 Plus and 4 Pro.")
                 statusView
                 if let p = plotter.progress {
                     ProgressView(value: p)
@@ -204,7 +210,8 @@ struct CutPanelView: View {
 
                     HStack {
                         Button("Test cut") {
-                            plotter.send(GPGLBuilder.testCut(settings: settings, mat: document.data.mat))
+                            let settings = settings, mat = document.data.mat
+                            plotter.send { GPGLBuilder.testCut(settings: settings, mat: mat, model: $0) }
                         }
                         .help("Cuts a 10 mm square with a triangle at the top left of the mat")
                         Button("Check connection") { plotter.checkConnection() }
@@ -266,7 +273,8 @@ struct CutPanelView: View {
     }
 
     private func cut() {
-        plotter.send(GPGLBuilder.build(for: document.data))
+        let data = document.data
+        plotter.send { GPGLBuilder.build(for: data, model: $0) }
     }
 
     private func exportCommands() {
@@ -274,6 +282,6 @@ struct CutPanelView: View {
         panel.nameFieldStringValue = "Schnittwerk-GPGL.txt"
         panel.allowedContentTypes = [.plainText]
         guard panel.runModal() == .OK, let url = panel.url else { return }
-        try? GPGLBuilder.build(for: document.data).text.write(to: url, atomically: true, encoding: .utf8)
+        try? GPGLBuilder.build(for: document.data, model: plotter.lastModel).text.write(to: url, atomically: true, encoding: .utf8)
     }
 }

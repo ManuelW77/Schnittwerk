@@ -1,6 +1,7 @@
 {
   "Cut File": "Schneidedatei",
   "DXF Drawing": "DXF-Zeichnung",
+  "NSBluetoothAlwaysUsageDescription": "Schnittwerk verbindet sich per Bluetooth mit deinem Silhouette-Plotter, um Schneideaufträge zu senden.",
   "Schnittwerk Cut Profiles": "Schnittwerk-Schnittprofile",
   "Schnittwerk Project": "Schnittwerk-Projekt"
 }
