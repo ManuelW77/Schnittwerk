@@ -1091,6 +1091,16 @@
         }
       }
     },
+    "Dropped" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hereingezogen"
+          }
+        }
+      }
+    },
     "Duplicate" : {
       "localizations" : {
         "de" : {
@@ -1371,6 +1381,16 @@
         }
       }
     },
+    "Images in the PDF were skipped." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder im PDF wurden ausgelassen."
+          }
+        }
+      }
+    },
     "Images in the SVG were skipped. Only lines can be cut." : {
       "localizations" : {
         "de" : {
@@ -1421,12 +1441,12 @@
         }
       }
     },
-    "Import SVG or DXF (⌘I)" : {
+    "Import SVG, DXF or PDF (⌘I)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SVG oder DXF importieren (⌘I)"
+            "value" : "SVG, DXF oder PDF importieren (⌘I)"
           }
         }
       }
@@ -1911,6 +1931,16 @@
         }
       }
     },
+    "Nothing to paste" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts zum Einfügen"
+          }
+        }
+      }
+    },
     "Object" : {
       "localizations" : {
         "de" : {
@@ -1957,6 +1987,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "Only the first page of the PDF was used." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur die erste Seite des PDF wurde verwendet."
           }
         }
       }
@@ -2037,6 +2077,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durchgänge"
+          }
+        }
+      }
+    },
+    "Paste" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einfügen"
+          }
+        }
+      }
+    },
+    "Paste failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einfügen fehlgeschlagen"
+          }
+        }
+      }
+    },
+    "Pasted" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eingefügt"
           }
         }
       }
@@ -2704,12 +2774,32 @@
         }
       }
     },
+    "Text was skipped. Convert text to curves in your design app first." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text wurde ausgelassen. Wandle Text vorher in deinem Grafikprogramm in Kurven um."
+          }
+        }
+      }
+    },
     "The AutoBlade only works in holder 1." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die AutoBlade funktioniert nur in Halter 1."
+          }
+        }
+      }
+    },
+    "The clipboard holds no vector drawing. Copy it as SVG or PDF in your design app." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Zwischenablage enthält keine Vektorzeichnung. Kopiere sie in deinem Grafikprogramm als SVG oder PDF."
           }
         }
       }
@@ -2774,12 +2864,12 @@
         }
       }
     },
-    "The file type “%@” is not supported. Use SVG or DXF." : {
+    "The file type “%@” is not supported. Use SVG, DXF or PDF." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Dateityp „%@“ wird nicht unterstützt. Bitte SVG oder DXF verwenden."
+            "value" : "Der Dateityp „%@“ wird nicht unterstützt. Verwende SVG, DXF oder PDF."
           }
         }
       }
