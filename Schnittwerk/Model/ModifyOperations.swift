@@ -25,8 +25,8 @@ enum ModifyOperation: String, CaseIterable, Identifiable {
         case .subtractAll: String(localized: "Subtract all")
         case .divide: String(localized: "Divide")
         case .crop: String(localized: "Crop")
-        case .makeCompound: String(localized: "Make compound path")
-        case .releaseCompound: String(localized: "Release compound path")
+        case .makeCompound: String(localized: "Join paths")
+        case .releaseCompound: String(localized: "Split paths")
         }
     }
 

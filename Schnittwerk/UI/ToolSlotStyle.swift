@@ -26,22 +26,34 @@ struct ToolSlotBadge: View {
     }
 }
 
-/// Picker for the tool of the selected objects.
+/// Picker for the tool of the selected objects: 1 or 2, with the tool
+/// name underneath.
 struct ToolSlotPicker: View {
     let current: Int?
     let data: ProjectData
     let onPick: (Int) -> Void
 
     var body: some View {
-        Picker("Cut with", selection: Binding(get: { current ?? 0 }, set: { if $0 != 0 { onPick($0) } })) {
-            if current == nil { Text("Mixed").tag(0) }
-            ForEach([1, 2], id: \.self) { slot in
-                Label {
-                    Text(verbatim: "\(ToolSlotStyle.title(slot)) · \(data.settings(slot: slot).tool.title)")
-                } icon: {
-                    Image(systemName: "\(slot).circle.fill").foregroundStyle(ToolSlotStyle.color(slot))
+        LabeledContent("Cut with") {
+            VStack(alignment: .trailing, spacing: 4) {
+                Picker("Cut with", selection: Binding(get: { current ?? 0 }, set: { if $0 != 0 { onPick($0) } })) {
+                    ForEach([1, 2], id: \.self) { slot in
+                        Text(ToolSlotStyle.title(slot)).tag(slot)
+                    }
                 }
-                .tag(slot)
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .fixedSize()
+                if let current {
+                    HStack(spacing: 4) {
+                        Circle().fill(ToolSlotStyle.color(current)).frame(width: 8, height: 8)
+                        Text(verbatim: data.settings(slot: current).tool.title)
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                } else {
+                    Text("Mixed").font(.caption).foregroundStyle(.secondary)
+                }
             }
         }
         .help("Which tool holder cuts, draws or embosses this object")
