@@ -26,7 +26,8 @@ Schnittwerk in den Programme-Ordner ziehen. Die App ist signiert und von Apple n
 | Verbindung | Modelle |
 |---|---|
 | USB | Cameo 4, Cameo 4 Plus, Cameo 4 Pro, Cameo 5, Cameo 5 Plus, Cameo 5 Alpha, Cameo 5 Alpha Plus, Cameo Pro MK-II, Portrait 3, Portrait 4 |
-| USB (experimentell, eigener Befehlssatz) | Cameo 3, Cameo 2, Cameo, Portrait 2, Portrait, Craft Robo CC200-20 |
+| USB, eigener Befehlssatz | Cameo 3 (am Gerät getestet) |
+| USB (experimentell, eigener Befehlssatz) | Cameo 2, Cameo, Portrait 2, Portrait, Craft Robo CC200-20 |
 | Bluetooth (experimentell) | Cameo 4, Cameo 4 Plus, Cameo 4 Pro |
 
 Getestet an einem echten **Cameo 4**. Die anderen Modelle wurden nach dem Open-Source-Projekt
