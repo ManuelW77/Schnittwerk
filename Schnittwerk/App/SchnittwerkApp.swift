@@ -51,5 +51,9 @@ struct SchnittwerkApp: App {
 
 /// Opens a new, empty project when the app starts without a file.
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        AppAppearance.stored.apply()
+    }
+
     func applicationShouldOpenUntitledFile(_ sender: NSApplication) -> Bool { true }
 }
