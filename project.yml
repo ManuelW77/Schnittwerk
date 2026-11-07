@@ -51,6 +51,8 @@ targets:
           DEVELOPMENT_TEAM: LWWM5RV3D9
           ENABLE_HARDENED_RUNTIME: YES
           OTHER_CODE_SIGN_FLAGS: --timestamp
+          # No debugger entitlement (get-task-allow): notarization rejects it
+          CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
     info:
       path: Schnittwerk/Support/Info.plist
       properties:
