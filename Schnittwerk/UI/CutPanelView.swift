@@ -78,7 +78,7 @@ struct CutPanelView: View {
 
     private var offsetText: String {
         let mm = Double(settings.options.offsetAdjust) * 0.05
-        return mm == 0 ? "0" : String(format: "%+.2f mm", mm)
+        return mm == 0 ? "0" : mm.formatted(.number.precision(.fractionLength(2)).sign(strategy: .always())) + " mm"
     }
 
     private var outsideCount: Int {
