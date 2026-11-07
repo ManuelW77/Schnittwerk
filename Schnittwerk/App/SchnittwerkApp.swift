@@ -36,6 +36,8 @@ struct SchnittwerkApp: App {
 
         Settings {
             TabView {
+                LanguageSettingsView()
+                    .tabItem { Label("General", systemImage: "gearshape") }
                 ProfilesSettingsView()
                     .tabItem { Label("Cut profiles", systemImage: "scissors") }
                 MCPSettingsView()
