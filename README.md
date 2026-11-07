@@ -22,10 +22,11 @@ Native macOS-App zum Schneiden auf dem **Silhouette Cameo 4** – ein schlanker 
 
 ## AI design via MCP / KI-Gestaltung über MCP
 Schnittwerk has a built-in [MCP](https://modelcontextprotocol.io) server, so an AI assistant can design on the mat.
-Off by default. Turn it on in Settings → AI (MCP); it listens on `127.0.0.1` only.
+Off by default. Turn it on in Settings → AI (MCP); it listens on `127.0.0.1` only and needs a secret key
+(`Authorization: Bearer …`). Copy the ready-made command from that settings tab, it looks like this:
 
 ```bash
-claude mcp add --transport http schnittwerk http://127.0.0.1:39170/mcp
+claude mcp add --transport http --scope user schnittwerk http://127.0.0.1:39170/mcp --header "Authorization: Bearer <key>"
 ```
 
 Tools: `get_document`, `render_preview`, `add_svg`, `add_text`, `add_shape`, `update_object`, `delete_objects`,

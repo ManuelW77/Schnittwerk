@@ -138,6 +138,7 @@ final class MCPTests: XCTestCase {
         XCTAssertTrue(call("update_object", ["id": "#1", "text": "x"]).1) // not a text object
         XCTAssertTrue(call("add_shape", ["kind": "blob"]).1)
         XCTAssertTrue(call("no_such_tool").1)
+        XCTAssertTrue(call("add_shape", ["kind": "polygon", "sides": 1e300]).1) // must not crash
     }
 
     func testCombineOffsetArrangeDelete() {
@@ -206,7 +207,8 @@ final class MCPHTTPTests: XCTestCase {
     func testServerAnswersOverHTTP() async throws {
         let doc = CutDocument()
         let controller = MCPServerController.shared
-        controller.start(port: 0) { DocumentContext(document: doc, undoManager: nil, select: nil) }
+        let token = String(repeating: "ab", count: 32)
+        controller.start(port: 0, token: token) { DocumentContext(document: doc, undoManager: nil, select: nil) }
         defer { controller.stop() }
         var port: UInt16 = 0
         for _ in 0..<50 {
@@ -215,12 +217,13 @@ final class MCPHTTPTests: XCTestCase {
         }
         XCTAssertNotEqual(port, 0)
 
-        func post(_ json: String, host: String? = nil, method: String = "POST") async throws -> (Int, Data) {
+        func post(_ json: String, host: String? = nil, method: String = "POST", auth: String? = "Bearer " + token) async throws -> (Int, Data) {
             var req = URLRequest(url: URL(string: "http://127.0.0.1:\(port)/mcp")!)
             req.httpMethod = method
             req.setValue("application/json", forHTTPHeaderField: "Content-Type")
             req.setValue("application/json, text/event-stream", forHTTPHeaderField: "Accept")
             if let host { req.setValue(host, forHTTPHeaderField: "Host") }
+            if let auth { req.setValue(auth, forHTTPHeaderField: "Authorization") }
             if method == "POST" { req.httpBody = Data(json.utf8) }
             let (data, response) = try await URLSession.shared.data(for: req)
             return ((response as? HTTPURLResponse)?.statusCode ?? 0, data)
@@ -237,5 +240,19 @@ final class MCPHTTPTests: XCTestCase {
         XCTAssertEqual(get, 405)
         let (forbidden, _) = try await post(#"{"jsonrpc":"2.0","id":2,"method":"ping"}"#, host: "evil.example")
         XCTAssertEqual(forbidden, 403)
+        let (noToken, _) = try await post(#"{"jsonrpc":"2.0","id":3,"method":"ping"}"#, auth: nil)
+        XCTAssertEqual(noToken, 401)
+        let (wrongToken, _) = try await post(#"{"jsonrpc":"2.0","id":4,"method":"ping"}"#, auth: "Bearer " + String(repeating: "cd", count: 32))
+        XCTAssertEqual(wrongToken, 401)
+    }
+
+    func testTokenComparison() {
+        XCTAssertTrue(MCPServerController.isAuthorized("Bearer abc", token: "abc"))
+        XCTAssertTrue(MCPServerController.isAuthorized("bearer abc", token: "abc"))
+        XCTAssertFalse(MCPServerController.isAuthorized("Bearer abd", token: "abc"))
+        XCTAssertFalse(MCPServerController.isAuthorized("Bearer ab", token: "abc"))
+        XCTAssertFalse(MCPServerController.isAuthorized("abc", token: "abc"))
+        XCTAssertFalse(MCPServerController.isAuthorized(nil, token: "abc"))
+        XCTAssertFalse(MCPServerController.isAuthorized("Bearer ", token: ""))
     }
 }

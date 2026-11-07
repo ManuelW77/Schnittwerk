@@ -461,6 +461,16 @@
         }
       }
     },
+    "Connected assistants stop working until you run the new command. Remove the old entry first: claude mcp remove schnittwerk -s user" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbundene Assistenten funktionieren erst wieder, wenn du den neuen Befehl ausführst. Vorher den alten Eintrag entfernen: claude mcp remove schnittwerk -s user"
+          }
+        }
+      }
+    },
     "Connected, no mat loaded" : {
       "localizations" : {
         "de" : {
@@ -547,6 +557,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start fehlgeschlagen: %@"
+          }
+        }
+      }
+    },
+    "Create a new key?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuen Schlüssel erzeugen?"
+          }
+        }
+      }
+    },
+    "Creates a new secret key. Assistants that are already connected stop working until you run the new command." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erzeugt einen neuen geheimen Schlüssel. Bereits verbundene Assistenten funktionieren erst wieder, wenn du den neuen Befehl ausführst."
           }
         }
       }
@@ -1301,6 +1331,26 @@
         }
       }
     },
+    "New key" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuer Schlüssel"
+          }
+        }
+      }
+    },
+    "New key …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neuer Schlüssel …"
+          }
+        }
+      }
+    },
     "New profile" : {
       "localizations" : {
         "de" : {
@@ -1980,6 +2030,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die AutoBlade funktioniert nur in Halter 1."
+          }
+        }
+      }
+    },
+    "The command contains a secret key. Do not share it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Befehl enthält einen geheimen Schlüssel. Gib ihn nicht weiter."
           }
         }
       }

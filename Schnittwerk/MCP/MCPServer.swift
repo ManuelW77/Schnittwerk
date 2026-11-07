@@ -143,6 +143,7 @@ final class MCPServerController: ObservableObject {
     static let defaultPort: UInt16 = 39170
     static let enabledKey = "mcp.enabled"
     static let portKey = "mcp.port"
+    static let tokenKey = "mcp.token"
 
     enum Status: Equatable {
         case off
@@ -163,20 +164,46 @@ final class MCPServerController: ObservableObject {
 
     var endpoint: String { "http://127.0.0.1:\(port)/mcp" }
 
+    /// Secret every request must send as `Authorization: Bearer …`, so that
+    /// other programs on this Mac cannot use the server without it.
+    var token: String {
+        if let t = UserDefaults.standard.string(forKey: Self.tokenKey), t.count >= 32 { return t }
+        return renewToken()
+    }
+
+    /// Creates a new secret; connected assistants must be set up again.
+    @discardableResult
+    func renewToken() -> String {
+        var bytes = [UInt8](repeating: 0, count: 32)
+        guard SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes) == errSecSuccess else {
+            fatalError("No secure random numbers available")
+        }
+        let t = bytes.map { String(format: "%02x", $0) }.joined()
+        UserDefaults.standard.set(t, forKey: Self.tokenKey)
+        objectWillChange.send()
+        return t
+    }
+
+    /// Command that connects Claude Code, including the secret.
+    var claudeCommand: String {
+        "claude mcp add --transport http --scope user schnittwerk \(endpoint) --header \"Authorization: Bearer \(token)\""
+    }
+
     /// Applies the current settings (call after a change and at launch).
     func apply() {
         guard enabled else { stop(); return }
         start(port: port)
     }
 
-    func start(port: UInt16, context: (() -> DocumentContext?)? = nil) {
+    func start(port: UInt16, token: String? = nil, context: (() -> DocumentContext?)? = nil) {
         server?.stop()
         status = .starting
         let context = context ?? { DocumentRegistry.shared.current }
+        let secret = token ?? self.token
         let server = LocalHTTPServer { request, respond in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated {
-                    MCPServerController.route(request, context: context, respond: respond)
+                    MCPServerController.route(request, token: secret, context: context, respond: respond)
                 }
             }
         }
@@ -200,12 +227,18 @@ final class MCPServerController: ObservableObject {
     /// Checks Host and Origin (protection against DNS rebinding: a web page
     /// in the browser must not be able to talk to the server) and hands
     /// POST /mcp to the protocol handler.
-    static func route(_ request: HTTPRequest, context: @escaping () -> DocumentContext?,
+    static func route(_ request: HTTPRequest, token: String, context: @escaping () -> DocumentContext?,
                       respond: @escaping (HTTPResponse) -> Void) {
         guard request.path == "/mcp" else { respond(.text(404, "Not found")); return }
         guard isLocal(hostHeader: request.headers["host"]) else { respond(.text(403, "Forbidden host")); return }
         if let origin = request.headers["origin"], !isLocal(origin: origin) {
             respond(.text(403, "Forbidden origin"))
+            return
+        }
+        guard isAuthorized(request.headers["authorization"], token: token) else {
+            var r = HTTPResponse.text(401, "Missing or wrong token. Copy the command from Schnittwerk → Settings → AI (MCP).")
+            r.headers["WWW-Authenticate"] = "Bearer"
+            respond(r)
             return
         }
         guard request.method == "POST" else {
@@ -218,6 +251,15 @@ final class MCPServerController: ObservableObject {
         MCPProtocol.handle(body: request.body, context: context) { body in
             if let body { respond(.json(body)) } else { respond(HTTPResponse(status: 202)) }
         }
+    }
+
+    /// Compares the bearer token in constant time.
+    static func isAuthorized(_ header: String?, token: String) -> Bool {
+        guard let header, header.lowercased().hasPrefix("bearer "), !token.isEmpty else { return false }
+        let given = Array(header.dropFirst(7).trimmingCharacters(in: .whitespaces).utf8)
+        let expected = Array(token.utf8)
+        guard given.count == expected.count else { return false }
+        return zip(given, expected).reduce(0) { $0 | ($1.0 ^ $1.1) } == 0
     }
 
     static func isLocal(hostHeader: String?) -> Bool {
