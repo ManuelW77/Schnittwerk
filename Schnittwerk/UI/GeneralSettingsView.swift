@@ -215,7 +215,7 @@ struct GeneralSettingsView: View {
                     ForEach(LengthUnit.allCases) { Text($0.title).tag($0) }
                 }
                 .pickerStyle(.segmented)
-                .help("Unit for all lengths you type in. Projects keep their sizes.")
+                .tip("Unit for all lengths you type in. Projects keep their sizes.")
             }
             Section {
                 Picker("Mat", selection: $newMat) {

@@ -96,7 +96,7 @@ struct EditPanelView: View {
                             let v = d.step
                             document.move(editable, dx: v.dx * moveDistance, dy: v.dy * moveDistance, undoManager: undoManager)
                         } label: { Label(d.title, systemImage: d.systemImage) }
-                            .help(d.title)
+                            .tip(d.title)
                     }
                 }
                 .labelStyle(.iconOnly)
@@ -130,7 +130,7 @@ struct EditPanelView: View {
                 .labelStyle(.iconOnly)
                 .controlSize(.small)
             }
-            .help("Mirror, e.g. for heat transfer vinyl")
+            .tip("Mirror, e.g. for heat transfer vinyl")
         }
     }
 
@@ -166,7 +166,7 @@ struct EditPanelView: View {
                     select(document.fillMat(selection, gap: CGFloat(gap), undoManager: undoManager),
                            orFail: String(localized: "The objects are too large to fill the mat."))
                 } label: { Label("Fill mat", systemImage: "square.grid.4x3.fill").frame(maxWidth: .infinity) }
-                    .help("As many copies as fit onto the mat")
+                    .tip("As many copies as fit onto the mat")
             }
             LabeledContent("Rotate copies") {
                 HStack(spacing: 4) {
@@ -179,7 +179,7 @@ struct EditPanelView: View {
                 }
                 .controlSize(.small)
             }
-            .help("Copies turned evenly in a ring, e.g. for flowers and mandalas")
+            .tip("Copies turned evenly in a ring, e.g. for flowers and mandalas")
         }
     }
 
@@ -187,7 +187,7 @@ struct EditPanelView: View {
         HStack(spacing: 4) {
             ForEach(ReplicateDirection.allCases) { d in
                 Button { action(d) } label: { Label(d.title, systemImage: d.systemImage) }
-                    .help(d.title)
+                    .tip(d.title)
             }
         }
         .labelStyle(.iconOnly)
@@ -202,12 +202,12 @@ struct EditPanelView: View {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 6) {
                 ForEach(PathOperation.allCases) { op in
                     Button { combine(op) } label: { Label(op.title, systemImage: op.systemImage).frame(maxWidth: .infinity, alignment: .leading) }
-                        .help(op.help)
+                        .tip(op.help)
                         .disabled(count < 2)
                 }
                 ForEach(ModifyOperation.allCases) { op in
                     Button { modify(op) } label: { Label(op.title, systemImage: op.systemImage).frame(maxWidth: .infinity, alignment: .leading) }
-                        .help(op.help)
+                        .tip(op.help)
                         .disabled(count < op.minimumCount)
                 }
             }
@@ -272,9 +272,9 @@ struct EditPanelView: View {
             .pickerStyle(.segmented)
             HStack {
                 Button { addOffset(inner: false) } label: { Label("Offset", systemImage: "circle.dashed") }
-                    .help("Add an outline at this distance, e.g. for stickers")
+                    .tip("Add an outline at this distance, e.g. for stickers")
                 Button { addOffset(inner: true) } label: { Label("Inner offset", systemImage: "circle.dashed.inset.filled") }
-                    .help("Add an outline at this distance inside the object")
+                    .tip("Add an outline at this distance inside the object")
             }
             .disabled(!offsetDistance.isFinite || abs(offsetDistance) < 0.01)
         }

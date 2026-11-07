@@ -20,7 +20,7 @@ struct MCPSettingsView: View {
                 Toggle("Allow AI assistants to design in Schnittwerk", isOn: $enabled)
                 TextField("Port", value: $port, format: .number.grouping(.never))
                     .disabled(enabled)
-                    .help("Turn the server off to change the port")
+                    .tip("Turn the server off to change the port")
                 statusLine
             } footer: {
                 Text("The server is only reachable from this Mac. An assistant can read and change the project in the front window; every change can be undone with ⌘Z. Cutting is only started by you.")
@@ -38,7 +38,7 @@ struct MCPSettingsView: View {
                     }
                     Spacer()
                     Button("New key …") { confirmRenew = true }
-                        .help("Creates a new secret key. Assistants that are already connected stop working until you run the new command.")
+                        .tip("Creates a new secret key. Assistants that are already connected stop working until you run the new command.")
                 }
             } header: {
                 Text("Connect Claude Code")

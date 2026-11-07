@@ -180,3 +180,17 @@ final class EditToolsTests: XCTestCase {
         XCTAssertTrue(doc.data.settings(slot: 1).options.overcut)
     }
 }
+
+final class TooltipTests: XCTestCase {
+    func testShortcutIsSplitOff() {
+        let a = TipContent(text: "Duplicate (⌘D)")
+        XCTAssertEqual(a.text, "Duplicate")
+        XCTAssertEqual(a.shortcut, "⌘D")
+        let b = TipContent(text: "Select and move objects (V)")
+        XCTAssertEqual(b.shortcut, "V")
+        let c = TipContent(text: "Mirror, e.g. for heat transfer vinyl (HTV)")
+        XCTAssertNil(c.shortcut, "a word in brackets is not a key")
+        let d = TipContent(text: "Keep this (here)")
+        XCTAssertNil(d.shortcut)
+    }
+}

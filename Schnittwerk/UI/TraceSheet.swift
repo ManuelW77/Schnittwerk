@@ -68,7 +68,7 @@ struct TraceSheet: View {
                 .pickerStyle(.segmented)
                 .labelsHidden()
                 .frame(width: 220)
-                .help("Outline: one cut line around the motif. Colours: one layer per colour, e.g. for vinyl in several colours.")
+                .tip("Outline: one cut line around the motif. Colours: one layer per colour, e.g. for vinyl in several colours.")
             }
             HStack(alignment: .top, spacing: 18) {
                 preview
@@ -168,11 +168,11 @@ struct TraceSheet: View {
                 LabeledContent("Smoothing") {
                     Slider(value: $settings.smoothing, in: 0...1)
                 }
-                .help("Left: follow the pixels. Right: rounder lines. Sharp corners stay.")
+                .tip("Left: follow the pixels. Right: rounder lines. Sharp corners stay.")
                 LabeledContent("Remove specks") {
                     Slider(value: $settings.minSizeMM, in: 0...10)
                 }
-                .help("Outlines smaller than \(settings.minSizeMM.formatted(.number.precision(.fractionLength(1)))) mm are left out")
+                .tip("Outlines smaller than \(settings.minSizeMM.formatted(.number.precision(.fractionLength(1)))) mm are left out")
                 Toggle("Show image", isOn: $showImage)
             }
             Section {
@@ -196,15 +196,15 @@ struct TraceSheet: View {
                     Text("Transparency").tag(true)
                     Text("Brightness").tag(false)
                 }
-                .help("The image has see-through parts. Transparency usually works best for logos.")
+                .tip("The image has see-through parts. Transparency usually works best for logos.")
             }
             LabeledContent("Threshold") {
                 Slider(value: $settings.threshold, in: 0.05...0.95)
             }
             .disabled(settings.useTransparency)
-            .help("Which brightness counts as part of the motif")
+            .tip("Which brightness counts as part of the motif")
             Toggle("Invert", isOn: $settings.invert)
-                .help("Trace the light parts instead of the dark ones")
+                .tip("Trace the light parts instead of the dark ones")
         }
     }
 
@@ -214,9 +214,9 @@ struct TraceSheet: View {
             Stepper(value: $colorCount, in: ColorTracer.colorRange) {
                 LabeledContent("Colours", value: "\(colorCount)")
             }
-            .help("How many colours the image is reduced to")
+            .tip("How many colours the image is reduced to")
             Toggle("Outline as base layer", isOn: $addOutline)
-                .help("Adds the outline of the whole motif, e.g. as a base for layered vinyl")
+                .tip("Adds the outline of the whole motif, e.g. as a base for layered vinyl")
         }
         Section {
             if let analysis {

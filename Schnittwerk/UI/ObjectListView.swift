@@ -23,23 +23,23 @@ struct ObjectListView: View {
                         Spacer()
                         ToolSlotBadge(slot: shape.toolSlot)
                             .opacity(shape.cutEnabled ? 1 : 0.35)
-                            .help(ToolSlotStyle.title(shape.toolSlot))
+                            .tip(ToolSlotStyle.title(shape.toolSlot))
                         if shape.groupID != nil {
                             Image(systemName: "link")
                                 .foregroundStyle(.secondary)
-                                .help("In a group")
+                                .tip("In a group")
                         }
                         Button { setLocked(!shape.isLocked, id: shape.id) } label: {
                             Image(systemName: shape.isLocked ? "lock.fill" : "lock.open")
                                 .foregroundStyle(shape.isLocked ? Color.primary : Color.secondary.opacity(0.4))
                         }
                         .buttonStyle(.borderless)
-                        .help(shape.isLocked ? "Locked: click to unlock" : "Lock so it cannot be changed")
+                        .tip(shape.isLocked ? "Locked: click to unlock" : "Lock so it cannot be changed")
                         if !shape.cutEnabled {
                             Image(systemName: "scissors")
                                 .foregroundStyle(.secondary)
                                 .overlay(Image(systemName: "line.diagonal").foregroundStyle(.secondary))
-                                .help("Not cut")
+                                .tip("Not cut")
                         }
                     }
                     .tag(shape.id)
