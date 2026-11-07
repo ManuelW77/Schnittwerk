@@ -1,0 +1,37 @@
+# Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
+# Builds and runs all unit tests on every push and pull request.
+name: Tests
+
+on:
+  push:
+    branches: [main, devel, "feature/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use the newest stable Xcode
+        run: |
+          XCODE="$(ls -d /Applications/Xcode_*.app | grep -vi beta | sort -V | tail -1)"
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - name: Install XcodeGen and libusb
+        run: brew install xcodegen libusb
+
+      - name: Generate the Xcode project
+        run: xcodegen generate
+
+      - name: Run tests
+        run: xcodebuild test -project Schnittwerk.xcodeproj -scheme Schnittwerk -derivedDataPath build
