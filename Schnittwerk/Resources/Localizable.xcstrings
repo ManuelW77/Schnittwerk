@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ offset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Kontur"
+          }
+        }
+      }
+    },
     "%lld objects selected" : {
       "localizations" : {
         "de" : {
@@ -47,6 +57,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Grundform hinzufügen"
+          }
+        }
+      }
+    },
+    "Add an outline at this distance, e.g. for stickers" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einen Umriss in diesem Abstand hinzufügen, z. B. für Sticker"
+          }
+        }
+      }
+    },
+    "Add offset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontur hinzufügen"
           }
         }
       }
@@ -361,6 +391,16 @@
         }
       }
     },
+    "Corners" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ecken"
+          }
+        }
+      }
+    },
     "Corners: %lld" : {
       "localizations" : {
         "de" : {
@@ -557,6 +597,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Löschen…"
+          }
+        }
+      }
+    },
+    "Distance (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abstand (mm)"
           }
         }
       }
@@ -1181,6 +1231,16 @@
         }
       }
     },
+    "Offset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontur"
+          }
+        }
+      }
+    },
     "OK" : {
       "localizations" : {
         "de" : {
@@ -1287,6 +1347,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Position (mm, links oben)"
+          }
+        }
+      }
+    },
+    "Positive values go outwards, negative values inwards" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Positive Werte gehen nach außen, negative nach innen"
           }
         }
       }
@@ -1431,6 +1501,16 @@
         }
       }
     },
+    "Round" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rund"
+          }
+        }
+      }
+    },
     "Save" : {
       "localizations" : {
         "de" : {
@@ -1560,6 +1640,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Form"
+          }
+        }
+      }
+    },
+    "Sharp" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spitz"
           }
         }
       }
@@ -1750,6 +1840,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Dateityp „%@“ wird nicht unterstützt. Bitte SVG oder DXF verwenden."
+          }
+        }
+      }
+    },
+    "The object is too small for this inner offset." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Objekt ist für diese Innenkontur zu klein."
           }
         }
       }
