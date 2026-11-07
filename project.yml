@@ -8,8 +8,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "0.4.0"
-    CURRENT_PROJECT_VERSION: "4"
+    MARKETING_VERSION: "0.4.1"
+    CURRENT_PROJECT_VERSION: "5"
     # Homebrew libusb (linked statically) is arm64-only and built for macOS 26
     MACOSX_DEPLOYMENT_TARGET: "26.0"
     ARCHS: arm64
