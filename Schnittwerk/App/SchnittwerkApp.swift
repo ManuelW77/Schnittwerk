@@ -12,6 +12,10 @@ import SwiftUI
 
 @main
 struct SchnittwerkApp: App {
+    init() {
+        MCPServerController.shared.apply()
+    }
+
     var body: some Scene {
         DocumentGroup(newDocument: { CutDocument() }) { file in
             ContentView(document: file.document)
@@ -23,6 +27,8 @@ struct SchnittwerkApp: App {
             TabView {
                 ProfilesSettingsView()
                     .tabItem { Label("Cut profiles", systemImage: "scissors") }
+                MCPSettingsView()
+                    .tabItem { Label("AI (MCP)", systemImage: "sparkles") }
             }
         }
     }

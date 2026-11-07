@@ -111,6 +111,26 @@
         }
       }
     },
+    "AI (MCP)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KI (MCP)"
+          }
+        }
+      }
+    },
+    "AI edit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KI-Änderung"
+          }
+        }
+      }
+    },
     "Align" : {
       "localizations" : {
         "de" : {
@@ -187,6 +207,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Oben ausrichten"
+          }
+        }
+      }
+    },
+    "Allow AI assistants to design in Schnittwerk" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "KI-Assistenten dürfen in Schnittwerk gestalten"
           }
         }
       }
@@ -421,6 +451,16 @@
         }
       }
     },
+    "Connect Claude Code" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code verbinden"
+          }
+        }
+      }
+    },
     "Connected, no mat loaded" : {
       "localizations" : {
         "de" : {
@@ -447,6 +487,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbinde…"
+          }
+        }
+      }
+    },
+    "Copy command" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Befehl kopieren"
           }
         }
       }
@@ -487,6 +537,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ecken: %lld"
+          }
+        }
+      }
+    },
+    "Could not start: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start fehlgeschlagen: %@"
           }
         }
       }
@@ -1331,6 +1391,16 @@
         }
       }
     },
+    "Off" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus"
+          }
+        }
+      }
+    },
     "Offset" : {
       "localizations" : {
         "de" : {
@@ -1437,6 +1507,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vieleck"
+          }
+        }
+      }
+    },
+    "Port" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port"
           }
         }
       }
@@ -1607,6 +1687,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rund"
+          }
+        }
+      }
+    },
+    "Running on port %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Läuft auf Port %@"
           }
         }
       }
@@ -1804,6 +1894,16 @@
         }
       }
     },
+    "Starting …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startet …"
+          }
+        }
+      }
+    },
     "Sticker paper" : {
       "localizations" : {
         "de" : {
@@ -1984,6 +2084,16 @@
         }
       }
     },
+    "The server is only reachable from this Mac. An assistant can read and change the project in the front window; every change can be undone with ⌘Z. Cutting is only started by you." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Server ist nur von diesem Mac aus erreichbar. Ein Assistent kann das Projekt im vordersten Fenster lesen und ändern; jede Änderung lässt sich mit ⌘Z rückgängig machen. Schneiden startest nur du."
+          }
+        }
+      }
+    },
     "This file contained a Schnittwerk project instead of SVG/DXF. It was opened as a project. Save it as a .schnittwerk file." : {
       "localizations" : {
         "de" : {
@@ -2000,6 +2110,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Werkzeug"
+          }
+        }
+      }
+    },
+    "Turn the server off to change the port" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Ändern des Ports den Server ausschalten"
           }
         }
       }

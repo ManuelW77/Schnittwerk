@@ -107,4 +107,21 @@ struct CutShape: Identifiable, Codable, Equatable {
         copy.position.y += offset
         return copy
     }
+
+    /// Sets the size without rotation (mm). With `keepProportions`, the
+    /// other side follows. Basic shapes keep their real corner radii.
+    mutating func resize(width: Double?, height: Double?, keepProportions: Bool) {
+        let base = localBounds
+        if let width, width.isFinite, width > 0, base.width > 0 {
+            let f = width / (base.width * abs(scaleX))
+            scaleX *= f
+            if keepProportions { scaleY *= f }
+        }
+        if let height, height.isFinite, height > 0, base.height > 0 {
+            let f = height / (base.height * abs(scaleY))
+            scaleY *= f
+            if keepProportions { scaleX *= f }
+        }
+        bakeShapeScale()
+    }
 }
