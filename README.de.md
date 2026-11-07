@@ -28,7 +28,7 @@ Schnittwerk in den Programme-Ordner ziehen. Die App ist signiert und von Apple n
 | USB | Cameo 4, Cameo 4 Plus, Cameo 4 Pro, Cameo 5, Cameo 5 Plus, Cameo 5 Alpha, Cameo 5 Alpha Plus, Cameo Pro MK-II, Portrait 3, Portrait 4 |
 | USB, eigener Befehlssatz | Cameo 3 (am Gerät getestet) |
 | USB (experimentell, eigener Befehlssatz) | Cameo 2, Cameo, Portrait 2, Portrait, Craft Robo CC200-20 |
-| Bluetooth (experimentell) | Cameo 3 (vorher in den Systemeinstellungen koppeln), Cameo 4, Cameo 4 Plus, Cameo 4 Pro |
+| Bluetooth (experimentell) | Cameo 3, Cameo 4, Cameo 4 Plus, Cameo 4 Pro |
 
 Getestet an einem echten **Cameo 3**. Die anderen Modelle wurden nach dem Open-Source-Projekt
 [inkscape-silhouette](https://github.com/fablabnbg/inkscape-silhouette) ergänzt. Cameo 3 und ältere Geräte

@@ -26,7 +26,7 @@ struct PlotterModel: Equatable, Hashable, Sendable {
     let widthMM: Double
     /// Two tool holders (tool select command `J`).
     let twoTools: Bool
-    /// Bluetooth with the Cameo 4 protocol.
+    /// Bluetooth LE with the Silhouette GATT service.
     let bluetooth: Bool
     var family: Family = .cameo4
 
@@ -41,7 +41,7 @@ struct PlotterModel: Equatable, Hashable, Sendable {
                                      widthMM: 304.8, twoTools: true, bluetooth: true)
 
     static let cameo3 = PlotterModel(name: "Cameo 3", vendorID: silhouetteVendor, productID: 0x112F,
-                                     widthMM: 304.8, twoTools: true, bluetooth: false, family: .cameo3)
+                                     widthMM: 304.8, twoTools: true, bluetooth: true, family: .cameo3)
 
     static let all: [PlotterModel] = [
         cameo4,

@@ -1,10 +1,12 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 //
-// Bluetooth LE connection to plotters of the Cameo 4 line. The plotter
+// Bluetooth LE connection to the Cameo 3 and the Cameo 4 line. The plotter
 // takes the same GPGL commands as over USB, through a vendor GATT
 // service. Facts (UUIDs, "write with response only", ETX at the end of
 // every write) were learned from the Inkcut project (pull request 441,
-// tested on a Cameo 4 Plus); no code was copied.
+// tested on a Cameo 4 Plus); the start handshake and the 20-byte writes
+// of the Cameo 3 from inkscape-silhouette (BLETransport.py). No code was
+// copied. Tested on a Cameo 3.
 //
 // CoreBluetooth calls back on its own queue; the blocking methods below
 // run on the plotter queue and wait for those callbacks.
@@ -49,6 +51,7 @@ final class CameoBluetooth: NSObject, PlotterTransport {
     private let wrote = DispatchSemaphore(value: 0)
     private let dataArrived = DispatchSemaphore(value: 0)
     private let disconnected = DispatchSemaphore(value: 0)
+    private let subscribed = DispatchSemaphore(value: 0)
 
     private let lock = NSLock()
     private var incoming = Data()
@@ -90,7 +93,8 @@ final class CameoBluetooth: NSObject, PlotterTransport {
         guard let p = cbQueue.sync(execute: { peripheral }) else { throw PlotterError.notFound }
         p.delegate = self
         deviceName = p.name ?? ""
-        model = PlotterModel.bluetooth(name: deviceName)
+        model = PlotterModel.named(deviceName).flatMap { $0.bluetooth ? $0 : nil }
+            ?? PlotterModel.bluetooth(name: deviceName)
 
         central.connect(p, options: nil)
         guard connected.wait(timeout: .now() + 10) == .success, p.state == .connected else {
@@ -110,12 +114,29 @@ final class CameoBluetooth: NSObject, PlotterTransport {
         notifyChar = chars.first { $0.uuid == Self.notifyID }
         guard writeChar != nil else { throw PlotterError.bluetooth("write characteristic") }
 
-        for c in [readChar, notifyChar].compactMap({ $0 })
-        where c.properties.contains(.notify) || c.properties.contains(.indicate) {
-            p.setNotifyValue(true, for: c)
+        let listening = [readChar, notifyChar].compactMap { $0 }
+            .filter { $0.properties.contains(.notify) || $0.properties.contains(.indicate) }
+        for c in listening { p.setNotifyValue(true, for: c) }
+        for _ in listening { _ = subscribed.wait(timeout: .now() + 5) }
+
+        // Start handshake: ESC EOT on every characteristic, then a short
+        // pause. Without it the plotter takes commands but never answers.
+        for c in [notifyChar, readChar, writeChar].compactMap({ $0 }) where c.properties.contains(.write) {
+            writeError = nil
+            p.writeValue(Data([Self.escape, 0x04]), for: c, type: .withResponse)
+            guard wrote.wait(timeout: .now() + 5) == .success, p.state == .connected else {
+                throw PlotterError.bluetooth("handshake")
+            }
         }
-        // Each write must end with ETX, so chunks may be at most one write long
-        preferredChunkSize = max(min(p.maximumWriteValueLength(for: .withResponse), 512), 20)
+        Thread.sleep(forTimeInterval: 1)
+        drain()
+
+        if model.family == .cameo4 {
+            // Each write must end with ETX, so chunks may be at most one write long
+            preferredChunkSize = max(min(p.maximumWriteValueLength(for: .withResponse), 512), 20)
+        } else {
+            preferredChunkSize = 20
+        }
         UserDefaults.standard.set(p.identifier.uuidString, forKey: Self.rememberedKey)
     }
 
@@ -244,11 +265,7 @@ extension CameoBluetooth: CBCentralManagerDelegate, CBPeripheralDelegate {
         if let current = self.peripheral, current.identifier == remembered || peripheral.identifier != remembered { return }
         let services = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] ?? []
         let name = (peripheral.name ?? advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "").lowercased()
-        // The Cameo 3 offers this service too, but gave no answer to status queries
-        // over it; it is reached over classic Bluetooth instead (CameoSerial)
-        let classic = name.replacingOccurrences(of: " ", with: "").hasPrefix("cameo3")
-        guard services.contains(Self.serviceID) || ((name.contains("cameo") || name.contains("silhouette")) && !classic)
-        else { return }
+        guard services.contains(Self.serviceID) || name.contains("cameo") || name.contains("silhouette") else { return }
         let first = self.peripheral == nil
         self.peripheral = peripheral
         if first { found.signal() }
@@ -276,6 +293,11 @@ extension CameoBluetooth: CBCentralManagerDelegate, CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         discovered.signal()
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic,
+                    error: Error?) {
+        subscribed.signal()
     }
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {

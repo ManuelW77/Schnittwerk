@@ -28,7 +28,7 @@ Schnittwerk into Applications. The app is signed and notarized by Apple.
 | USB | Cameo 4, Cameo 4 Plus, Cameo 4 Pro, Cameo 5, Cameo 5 Plus, Cameo 5 Alpha, Cameo 5 Alpha Plus, Cameo Pro MK-II, Portrait 3, Portrait 4 |
 | USB, own command set | Cameo 3 (tested on the machine) |
 | USB (experimental, own command set) | Cameo 2, Cameo, Portrait 2, Portrait, Craft Robo CC200-20 |
-| Bluetooth (experimental) | Cameo 3 (pair it in System Settings first), Cameo 4, Cameo 4 Plus, Cameo 4 Pro |
+| Bluetooth (experimental) | Cameo 3, Cameo 4, Cameo 4 Plus, Cameo 4 Pro |
 
 Tested on a real **Cameo 3**. The other models were added following the open-source project
 [inkscape-silhouette](https://github.com/fablabnbg/inkscape-silhouette). The Cameo 3 and older machines get their
