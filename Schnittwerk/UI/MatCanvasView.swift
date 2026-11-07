@@ -21,12 +21,14 @@ struct MatViewport {
 
 struct MatCanvasView: View {
     @ObservedObject var document: CutDocument
-    @Binding var selection: UUID?
+    @Binding var selection: Set<UUID>
     let zoom: CGFloat
 
     @Environment(\.undoManager) private var undoManager
     @Environment(\.colorScheme) private var colorScheme
     @State private var drag: DragState?
+    /// Rubber band while dragging on the empty mat (mat coordinates).
+    @State private var marquee: CGRect?
     @FocusState private var focused: Bool
 
     static let basePxPerMM: CGFloat = 2.6
@@ -56,8 +58,14 @@ struct MatCanvasView: View {
             for shape in document.data.shapes {
                 drawShape(shape, &ctx, vp)
             }
-            if let id = selection, let shape = document.data.shapes.first(where: { $0.id == id }) {
-                drawSelection(shape, &ctx, vp)
+            let selected = document.data.shapes.filter { selection.contains($0.id) }
+            for shape in selected {
+                drawSelection(shape, handles: selected.count == 1, &ctx, vp)
+            }
+            if let marquee {
+                let r = Path(marquee.applying(vp.matToView))
+                ctx.fill(r, with: .color(.accentColor.opacity(0.08)))
+                ctx.stroke(r, with: .color(.accentColor), style: StrokeStyle(lineWidth: 1, dash: [3, 2]))
             }
         }
         .frame(width: size.width, height: size.height)
@@ -137,12 +145,15 @@ struct MatCanvasView: View {
         }
     }
 
-    private func drawSelection(_ shape: CutShape, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
+    /// Selection frame; with `handles`, also the scale and rotate handles
+    /// (only shown when exactly one object is selected).
+    private func drawSelection(_ shape: CutShape, handles: Bool, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
         let corners = shape.matCorners.map(vp.view)
         var frame = Path()
         frame.addLines(corners)
         frame.closeSubpath()
         ctx.stroke(frame, with: .color(.accentColor), style: StrokeStyle(lineWidth: 1, dash: [5, 3]))
+        guard handles else { return }
 
         let rotate = rotateHandle(shape, vp)
         var stem = Path()
@@ -175,14 +186,16 @@ struct MatCanvasView: View {
     // MARK: - Mouse
 
     private enum DragKind {
-        case move(startPosition: CGPoint)
-        case scale(startScaleX: Double, startScaleY: Double, startDistance: CGFloat)
-        case rotate(startRotation: Double, startAngle: CGFloat)
+        /// Moves all selected objects; start position per object.
+        case move(startPositions: [UUID: CGPoint])
+        case scale(id: UUID, startScaleX: Double, startScaleY: Double, startDistance: CGFloat)
+        case rotate(id: UUID, startRotation: Double, startAngle: CGFloat)
+        /// Rubber band; `base` stays selected (shift/command held).
+        case marquee(base: Set<UUID>)
         case none
     }
 
     private struct DragState {
-        let shapeID: UUID?
         let kind: DragKind
         let before: ProjectData
         let startMat: CGPoint
@@ -201,10 +214,11 @@ struct MatCanvasView: View {
                 case .move: name = String(localized: "Move")
                 case .scale: name = String(localized: "Resize")
                 case .rotate: name = String(localized: "Rotate")
-                case .none: name = ""
+                case .marquee, .none: name = ""
                 }
                 document.commitChange(from: d.before, actionName: name, undoManager: undoManager)
                 drag = nil
+                marquee = nil
             }
     }
 
@@ -213,18 +227,20 @@ struct MatCanvasView: View {
         let matPoint = vp.mat(point)
         let before = document.data
         let hit = Self.handleRadius + 3
+        let flags = NSEvent.modifierFlags
+        let extend = flags.contains(.shift) || flags.contains(.command)
 
-        // 1. Handles of the selected object
-        if let id = selection, let shape = document.data.shapes.first(where: { $0.id == id }) {
+        // 1. Handles of the selected object (only with one selected)
+        if selection.count == 1, let id = selection.first,
+           let shape = document.data.shapes.first(where: { $0.id == id }) {
             if rotateHandle(shape, vp).distance(to: point) <= hit {
                 let angle = atan2(matPoint.y - shape.position.y, matPoint.x - shape.position.x)
-                drag = DragState(shapeID: id, kind: .rotate(startRotation: shape.rotation, startAngle: angle),
+                drag = DragState(kind: .rotate(id: id, startRotation: shape.rotation, startAngle: angle),
                                  before: before, startMat: matPoint)
                 return
             }
             if shape.matCorners.map(vp.view).contains(where: { $0.distance(to: point) <= hit }) {
-                drag = DragState(shapeID: id,
-                                 kind: .scale(startScaleX: shape.scaleX, startScaleY: shape.scaleY,
+                drag = DragState(kind: .scale(id: id, startScaleX: shape.scaleX, startScaleY: shape.scaleY,
                                               startDistance: max(matPoint.distance(to: shape.position), 0.1)),
                                  before: before, startMat: matPoint)
                 return
@@ -232,31 +248,45 @@ struct MatCanvasView: View {
         }
         // 2. Topmost object under the mouse
         if let shape = document.data.shapes.last(where: { $0.contains(matPoint: matPoint, slop: 4 / vp.pxPerMM) }) {
-            selection = shape.id
-            drag = DragState(shapeID: shape.id, kind: .move(startPosition: shape.position),
-                             before: before, startMat: matPoint)
+            if extend {
+                // Shift/command click adds or removes one object
+                if selection.contains(shape.id) {
+                    selection.remove(shape.id)
+                    drag = DragState(kind: .none, before: before, startMat: matPoint)
+                    return
+                }
+                selection.insert(shape.id)
+            } else if !selection.contains(shape.id) {
+                selection = [shape.id]
+            }
+            let starts = Dictionary(uniqueKeysWithValues: document.data.shapes
+                .filter { selection.contains($0.id) }.map { ($0.id, $0.position) })
+            drag = DragState(kind: .move(startPositions: starts), before: before, startMat: matPoint)
             return
         }
-        // 3. Empty mat: deselect
-        selection = nil
-        drag = DragState(shapeID: nil, kind: .none, before: before, startMat: matPoint)
+        // 3. Empty mat: rubber band selection
+        if !extend { selection = [] }
+        drag = DragState(kind: .marquee(base: selection), before: before, startMat: matPoint)
     }
 
     private func continueDrag(to point: CGPoint, _ vp: MatViewport) {
-        guard let d = drag, let id = d.shapeID,
-              let index = document.data.shapes.firstIndex(where: { $0.id == id }) else { return }
+        guard let d = drag else { return }
         let matPoint = vp.mat(point)
-        var shape = document.data.shapes[index]
         let shift = NSEvent.modifierFlags.contains(.shift)
 
         switch d.kind {
-        case .move(let start):
+        case .move(let starts):
             var dx = matPoint.x - d.startMat.x, dy = matPoint.y - d.startMat.y
             if shift { // only horizontal or vertical
                 if abs(dx) > abs(dy) { dy = 0 } else { dx = 0 }
             }
-            shape.position = CGPoint(x: start.x + dx, y: start.y + dy)
-        case .scale(let sx, let sy, let startDistance):
+            for i in document.data.shapes.indices {
+                guard let start = starts[document.data.shapes[i].id] else { continue }
+                document.data.shapes[i].position = CGPoint(x: start.x + dx, y: start.y + dy)
+            }
+        case .scale(let id, let sx, let sy, let startDistance):
+            guard let index = document.data.shapes.firstIndex(where: { $0.id == id }) else { return }
+            var shape = document.data.shapes[index]
             var factor = matPoint.distance(to: shape.position) / startDistance
             // At least 1 mm in both directions
             let base = shape.localBounds
@@ -264,21 +294,29 @@ struct MatCanvasView: View {
             factor = max(factor, min(minFactor, 1))
             shape.scaleX = sx * factor
             shape.scaleY = sy * factor
-        case .rotate(let startRotation, let startAngle):
+            document.data.shapes[index] = shape
+        case .rotate(let id, let startRotation, let startAngle):
+            guard let index = document.data.shapes.firstIndex(where: { $0.id == id }) else { return }
+            let shape = document.data.shapes[index]
             let angle = atan2(matPoint.y - shape.position.y, matPoint.x - shape.position.x)
             var r = startRotation + Double((angle - startAngle) * 180 / .pi)
             if shift { r = (r / 15).rounded() * 15 }
-            shape.rotation = normalizedDegrees(r)
+            document.data.shapes[index].rotation = normalizedDegrees(r)
+        case .marquee(let base):
+            let rect = CGRect(x: min(d.startMat.x, matPoint.x), y: min(d.startMat.y, matPoint.y),
+                              width: abs(matPoint.x - d.startMat.x), height: abs(matPoint.y - d.startMat.y))
+            marquee = rect
+            let hits = document.data.shapes.filter { $0.matBounds.intersects(rect) }.map(\.id)
+            selection = base.union(hits)
         case .none:
             return
         }
-        document.data.shapes[index] = shape
     }
 
     // MARK: - Keyboard
 
     private func nudge(_ press: KeyPress) -> KeyPress.Result {
-        guard let id = selection else { return .ignored }
+        guard !selection.isEmpty else { return .ignored }
         let step: CGFloat = press.modifiers.contains(.shift) ? 10 : 1
         var dx: CGFloat = 0, dy: CGFloat = 0
         switch press.key {
@@ -288,20 +326,23 @@ struct MatCanvasView: View {
         case .downArrow: dy = step
         default: return .ignored
         }
+        let ids = selection
         document.update(String(localized: "Move"), undoManager: undoManager) { data in
-            guard let i = data.shapes.firstIndex(where: { $0.id == id }) else { return }
-            data.shapes[i].position.x += dx
-            data.shapes[i].position.y += dy
+            for i in data.shapes.indices where ids.contains(data.shapes[i].id) {
+                data.shapes[i].position.x += dx
+                data.shapes[i].position.y += dy
+            }
         }
         return .handled
     }
 
     private func deleteSelection() {
-        guard let id = selection else { return }
+        guard !selection.isEmpty else { return }
+        let ids = selection
         document.update(String(localized: "Delete"), undoManager: undoManager) { data in
-            data.shapes.removeAll { $0.id == id }
+            data.shapes.removeAll { ids.contains($0.id) }
         }
-        selection = nil
+        selection = []
     }
 }
 

@@ -5,7 +5,7 @@ import SwiftUI
 /// Left side panel: all objects on the mat.
 struct ObjectListView: View {
     @ObservedObject var document: CutDocument
-    @Binding var selection: UUID?
+    @Binding var selection: Set<UUID>
     @Environment(\.undoManager) private var undoManager
 
     var body: some View {
@@ -54,14 +54,14 @@ struct ObjectListView: View {
             newID = copy.id
             data.shapes.append(copy)
         }
-        if let newID { selection = newID }
+        if let newID { selection = [newID] }
     }
 
     private func delete(_ id: UUID) {
         document.update(String(localized: "Delete"), undoManager: undoManager) { data in
             data.shapes.removeAll { $0.id == id }
         }
-        if selection == id { selection = nil }
+        selection.remove(id)
     }
 
     private func reorder(_ id: UUID, toFront: Bool) {

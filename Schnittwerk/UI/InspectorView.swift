@@ -5,14 +5,17 @@ import SwiftUI
 /// Right side panel: position, size, rotation and text of the selected object.
 struct InspectorView: View {
     @ObservedObject var document: CutDocument
-    let selection: UUID?
+    let selection: Set<UUID>
 
     @Environment(\.undoManager) private var undoManager
     @AppStorage("inspector.lockAspect") private var lockAspect = true
 
+    /// The one selected object; nil with none or several selected.
+    private var selectedID: UUID? { selection.count == 1 ? selection.first : nil }
+
     private var index: Int? {
-        guard let selection else { return nil }
-        return document.data.shapes.firstIndex { $0.id == selection }
+        guard let selectedID else { return nil }
+        return document.data.shapes.firstIndex { $0.id == selectedID }
     }
 
     var body: some View {
@@ -24,6 +27,10 @@ struct InspectorView: View {
                 }
                 if let spec = document.data.shapes[index].effectiveShapeSpec {
                     shapeSection(spec)
+                }
+            } else if selection.count > 1 {
+                Section {
+                    Text("\(selection.count) objects selected")
                 }
             } else {
                 Section {
@@ -38,7 +45,7 @@ struct InspectorView: View {
     // MARK: - Changes
 
     private func change(_ action: String, _ body: @escaping (inout CutShape) -> Void) {
-        guard let id = selection else { return }
+        guard let id = selectedID else { return }
         document.update(action, undoManager: undoManager) { data in
             guard let i = data.shapes.firstIndex(where: { $0.id == id }) else { return }
             body(&data.shapes[i])

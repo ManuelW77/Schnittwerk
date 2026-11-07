@@ -20,7 +20,7 @@ final class SnapshotRender: XCTestCase {
         off.position = CGPoint(x: 290, y: 250)
         doc.data.shapes = [shape, text, off]
 
-        let canvas = MatCanvasView(document: doc, selection: .constant(shape.id), zoom: 1)
+        let canvas = MatCanvasView(document: doc, selection: .constant([shape.id]), zoom: 1)
         let r = ImageRenderer(content: canvas.background(Color.white))
         r.scale = 1
         let img = try XCTUnwrap(r.nsImage)
@@ -28,7 +28,7 @@ final class SnapshotRender: XCTestCase {
         let png = try XCTUnwrap(NSBitmapImageRep(data: tiff)?.representation(using: .png, properties: [:]))
         try png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("canvas.png"))
 
-        let inspector = InspectorView(document: doc, selection: text.id).frame(width: 320, height: 900)
+        let inspector = InspectorView(document: doc, selection: [text.id]).frame(width: 320, height: 900)
         let r2 = ImageRenderer(content: inspector.background(Color.white))
         let png2 = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r2.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
         try png2.write(to: URL(fileURLWithPath: dir).appendingPathComponent("inspector.png"))
@@ -47,13 +47,13 @@ final class SnapshotRender: XCTestCase {
             CutShape.basic(.standard(.star), at: CGPoint(x: 250, y: 20)),
         ]
         doc.data.shapes = shapes
-        let canvas = MatCanvasView(document: doc, selection: .constant(shapes[3].id), zoom: 1)
+        let canvas = MatCanvasView(document: doc, selection: .constant([shapes[3].id]), zoom: 1)
         let r = ImageRenderer(content: canvas.background(Color.white))
         let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
         try png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("shapes.png"))
 
         for (i, name) in [(0, "inspector-rect"), (3, "inspector-star")] {
-            let inspector = InspectorView(document: doc, selection: shapes[i].id).frame(width: 320, height: 900)
+            let inspector = InspectorView(document: doc, selection: [shapes[i].id]).frame(width: 320, height: 900)
             let r2 = ImageRenderer(content: inspector.background(Color.white))
             let png2 = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r2.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
             try png2.write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(name).png"))
