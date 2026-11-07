@@ -19,6 +19,7 @@ struct SchnittwerkApp: App {
         // Start with an empty mat instead of the "Open" panel
         UserDefaults.standard.register(defaults: ["NSShowAppCentricOpenPanelInsteadOfUntitledFile": false])
         MCPServerController.shared.apply()
+        UpdateChecker.shared.start()
     }
 
     var body: some Scene {
@@ -27,6 +28,11 @@ struct SchnittwerkApp: App {
                 .frame(minWidth: 900, minHeight: 600)
         }
         .defaultSize(width: 1280, height: 820)
+        .commands {
+            CommandGroup(after: .appInfo) {
+                Button("Check for Updates …") { UpdateChecker.shared.check(userInitiated: true) }
+            }
+        }
 
         Settings {
             TabView {
@@ -34,6 +40,8 @@ struct SchnittwerkApp: App {
                     .tabItem { Label("Cut profiles", systemImage: "scissors") }
                 MCPSettingsView()
                     .tabItem { Label("AI (MCP)", systemImage: "sparkles") }
+                UpdateSettingsView()
+                    .tabItem { Label("Updates", systemImage: "arrow.down.circle") }
             }
         }
     }
