@@ -43,7 +43,10 @@ struct ToolArgs {
     }
 
     func int(_ key: String) throws -> Int? {
-        try double(key).map { Int($0.rounded()) }
+        guard let d = try double(key) else { return nil }
+        // Int(1e300) would crash; no tool needs more than this
+        guard abs(d) <= 1_000_000 else { throw ToolError("“\(key)” is too large.") }
+        return Int(d.rounded())
     }
 
     func bool(_ key: String) throws -> Bool? {

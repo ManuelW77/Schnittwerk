@@ -33,6 +33,7 @@ struct HTTPResponse {
         case 200: reason = "OK"
         case 202: reason = "Accepted"
         case 400: reason = "Bad Request"
+        case 401: reason = "Unauthorized"
         case 403: reason = "Forbidden"
         case 404: reason = "Not Found"
         case 405: reason = "Method Not Allowed"

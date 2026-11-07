@@ -10,9 +10,9 @@ struct MCPSettingsView: View {
     @AppStorage(MCPServerController.enabledKey) private var enabled = false
     @AppStorage(MCPServerController.portKey) private var port = Int(MCPServerController.defaultPort)
 
-    private var command: String {
-        "claude mcp add --transport http schnittwerk \(server.endpoint)"
-    }
+    @State private var confirmRenew = false
+
+    private var command: String { server.claudeCommand }
 
     var body: some View {
         Form {
@@ -27,19 +27,37 @@ struct MCPSettingsView: View {
                     .foregroundStyle(.secondary)
             }
 
-            Section("Connect Claude Code") {
+            Section {
                 Text(verbatim: command)
                     .font(.system(.body, design: .monospaced))
                     .textSelection(.enabled)
-                Button("Copy command") {
-                    NSPasteboard.general.clearContents()
-                    NSPasteboard.general.setString(command, forType: .string)
+                HStack {
+                    Button("Copy command") {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(command, forType: .string)
+                    }
+                    Spacer()
+                    Button("New key …") { confirmRenew = true }
+                        .help("Creates a new secret key. Assistants that are already connected stop working until you run the new command.")
                 }
+            } header: {
+                Text("Connect Claude Code")
+            } footer: {
+                Text("The command contains a secret key. Do not share it.")
+                    .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
         .frame(width: 520)
         .onChange(of: enabled) { server.apply() }
+        .confirmationDialog("Create a new key?", isPresented: $confirmRenew) {
+            Button("New key", role: .destructive) {
+                server.renewToken()
+                server.apply()
+            }
+        } message: {
+            Text("Connected assistants stop working until you run the new command. Remove the old entry first: claude mcp remove schnittwerk -s user")
+        }
         .onChange(of: port) {
             if !(1024...65535).contains(port) { port = Int(MCPServerController.defaultPort) }
         }
