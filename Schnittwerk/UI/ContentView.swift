@@ -33,12 +33,6 @@ struct ContentView: View {
         var text: String
     }
 
-    init(document: CutDocument, initialSelection: Set<UUID> = [], initialTab: Int = 0) {
-        self.document = document
-        _selection = State(initialValue: initialSelection)
-        _inspectorTab = State(initialValue: InspectorTab.allCases[min(max(initialTab, 0), InspectorTab.allCases.count - 1)])
-    }
-
     enum InspectorTab: Hashable, CaseIterable {
         case object, edit, cut
 
@@ -133,7 +127,7 @@ struct ContentView: View {
                             inspectorTab = .cut
                             showInspector = true
                         }
-                        .help("Which colour is cut with which tool. Click for the cut settings.")
+                        .tip("Which colour is cut with which tool. Click for the cut settings.")
                 }
             }
             // Files from Finder, or drawings dragged straight out of another app
@@ -228,13 +222,13 @@ struct ContentView: View {
                 showImporter = true
             } label: { Label("Import", systemImage: "square.and.arrow.down") }
                 .keyboardShortcut("i", modifiers: .command)
-                .help("Import SVG, DXF or PDF (⌘I)")
+                .tip(title: "Import", "Add SVG, DXF or PDF files to the mat. You can also drag files onto the mat.", shortcut: "⌘I")
             Button {
                 importKind = .image
                 showImporter = true
             } label: { Label("Trace image", systemImage: "photo.badge.plus") }
                 .keyboardShortcut("i", modifiers: [.command, .shift])
-                .help("Trace an image (PNG, JPG …) into cut lines (⇧⌘I)")
+                .tip(title: "Trace image", "Turns a picture (PNG, JPG, HEIC …) into cut lines, in black and white or by colour.", shortcut: "⇧⌘I")
             .background {
                 // ⌘T picks the text tool
                 Button("Text") { tool = .text }
@@ -259,16 +253,16 @@ struct ContentView: View {
             } label: {
                 Label("Arrange", systemImage: "square.3.layers.3d")
             }
-            .help("Group objects so they move together (⌘G), or lock them (⌘L)")
+            .tip(title: "Arrange", "Group objects so they move together (⌘G), ungroup (⇧⌘G), lock them so they cannot change (⌘L).")
             .background { arrangeShortcuts }
 
             Button(action: duplicateSelection) { Label("Duplicate", systemImage: "plus.square.on.square") }
                 .keyboardShortcut("d", modifiers: .command)
                 .disabled(selection.isEmpty)
-                .help("Duplicate (⌘D)")
+                .tip(title: "Duplicate", "Copies the selected objects, slightly offset.", shortcut: "⌘D")
             Button(role: .destructive, action: deleteSelection) { Label("Delete", systemImage: "trash") }
                 .disabled(editableSelection.isEmpty)
-                .help("Delete (⌫)")
+                .tip(title: "Delete", "Removes the selected objects. Locked objects stay.", shortcut: "⌫")
 
             Picker("Mat", selection: Binding(
                 get: { document.data.mat },
@@ -276,26 +270,28 @@ struct ContentView: View {
             )) {
                 ForEach(MatType.allCases) { Text($0.title).tag($0) }
             }
-            .help("Mat or roll in the plotter")
+            .tip(title: "Mat", "The mat or roll in the plotter. It sets the cutting area.")
 
             ControlGroup {
                 Button { zoomBy(-1) } label: { Label("Zoom out", systemImage: "minus.magnifyingglass") }
+                    .tip(title: "Zoom out", shortcut: "⌘−")
                     .keyboardShortcut("-", modifiers: .command)
                 Button { zoom = 1 } label: { Text(verbatim: "\(Int((zoom * 100).rounded())) %") }
                     .keyboardShortcut("0", modifiers: .command)
-                    .help("Reset zoom (⌘0)")
+                    .tip(title: "Actual size", "Back to actual size. Zoom with pinch, or ⌘ and the scroll wheel.", shortcut: "⌘0")
                 Button { zoomBy(1) } label: { Label("Zoom in", systemImage: "plus.magnifyingglass") }
+                    .tip(title: "Zoom in", shortcut: "⌘+")
                     .keyboardShortcut("+", modifiers: .command)
             }
 
             Button { showInspector.toggle() } label: { Label("Settings", systemImage: "sidebar.right") }
-                .help("Show or hide settings")
+                .tip(title: "Inspector", "Shows or hides the panel with Object, Edit and Cut.")
 
             Button {
                 inspectorTab = .cut
                 showInspector = true
             } label: { Label("Cut", systemImage: "scissors") }
-                .help("Cut settings and send to the plotter")
+                .tip(title: "Cut", "Opens the cut settings: tools, profiles, preview and sending to the plotter.")
         }
     }
 
@@ -500,16 +496,10 @@ struct ToolPalette: View {
         VStack(spacing: 2) {
             ForEach(DrawingTool.allCases) { t in
                 Button { tool = t } label: {
-                    Image(systemName: t.systemImage)
-                        .font(.system(size: 15, weight: .medium))
-                        .frame(width: 34, height: 34)
-                        .foregroundStyle(tool == t ? Color.white : Color.primary)
-                        .background(tool == t ? Color.accentColor : Color.clear,
-                                    in: RoundedRectangle(cornerRadius: 9, style: .continuous))
-                        .contentShape(Rectangle())
+                    PaletteCell(systemImage: t.systemImage, selected: tool == t)
                 }
                 .buttonStyle(.plain)
-                .help(t.help)
+                .tip(TipContent(title: t.title, text: t.help))
                 .accessibilityLabel(Text(t.title))
                 .accessibilityAddTraits(tool == t ? .isSelected : [])
             }
@@ -519,19 +509,41 @@ struct ToolPalette: View {
                     Button { addShape(kind) } label: { Label(kind.title, systemImage: kind.systemImage) }
                 }
             } label: {
-                Image(systemName: "square.on.circle")
-                    .font(.system(size: 15, weight: .medium))
-                    .frame(width: 34, height: 34)
-                    .contentShape(Rectangle())
+                PaletteCell(systemImage: "square.on.circle", selected: false)
             }
-            .menuStyle(.borderlessButton)
+            .menuStyle(.button)
+            .buttonStyle(.plain)
             .menuIndicator(.hidden)
             .frame(width: 34, height: 34)
-            .help("Add a basic shape")
+            .tip(title: "Shape", "Adds a rectangle, ellipse, polygon or star. Its size and corners stay editable.")
             .accessibilityLabel(Text("Shape"))
         }
         .padding(5)
         .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+}
+
+/// One cell of the tool palette: accent colour when chosen, a light
+/// shade under the mouse, a darker one while pressed.
+struct PaletteCell: View {
+    let systemImage: String
+    let selected: Bool
+    @State private var hovering = false
+
+    var body: some View {
+        Image(systemName: systemImage)
+            .font(.system(size: 15, weight: .medium))
+            .frame(width: 34, height: 34)
+            .foregroundStyle(selected ? Color.white : Color.primary)
+            .background(background, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .contentShape(Rectangle())
+            .onHover { hovering = $0 }
+            .animation(.easeOut(duration: 0.12), value: hovering)
+    }
+
+    private var background: Color {
+        if selected { return hovering ? Color.accentColor.opacity(0.85) : Color.accentColor }
+        return hovering ? Color.primary.opacity(0.12) : Color.clear
     }
 }
 
@@ -552,7 +564,7 @@ struct EraserSizeControl: View {
         }
         .padding(6)
         .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .help("Eraser size (radius)")
+        .tip("Eraser size (radius)")
     }
 }
 
@@ -615,10 +627,10 @@ struct UndoRedoButtons: View {
         ControlGroup {
             Button { undoManager?.undo() } label: { Label("Undo", systemImage: "arrow.uturn.backward") }
                 .disabled(!(undoManager?.canUndo ?? false))
-                .help(help(undo: true))
+                .tip(help(undo: true))
             Button { undoManager?.redo() } label: { Label("Redo", systemImage: "arrow.uturn.forward") }
                 .disabled(!(undoManager?.canRedo ?? false))
-                .help(help(undo: false))
+                .tip(help(undo: false))
         }
         .onReceive(Self.changes.receive(on: RunLoop.main)) { _ in tick &+= 1 }
     }

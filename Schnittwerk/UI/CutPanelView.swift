@@ -127,21 +127,8 @@ struct CutPanelView: View {
             }
 
             Section("Cut profile") {
-                Picker("Profile", selection: Binding(get: { pickerValue }, set: select)) {
-                    ForEach(MaterialPreset.Category.allCases) { category in
-                        Section(category.title) {
-                            ForEach(MaterialPreset.all.filter { $0.category == category }) { Text($0.title).tag($0.id) }
-                        }
-                    }
-                    if !store.profiles.isEmpty {
-                        Section("My profiles") {
-                            ForEach(store.profiles) { Text(verbatim: $0.name).tag($0.settingsID) }
-                        }
-                    }
-                    if pickerValue == "custom" {
-                        Text("Custom").tag("custom")
-                    }
-                }
+                ProfileMenu(title: "Profile", selection: Binding(get: { pickerValue }, set: select),
+                            showCustom: pickerValue == "custom")
 
                 if isModified {
                     HStack {
@@ -155,7 +142,7 @@ struct CutPanelView: View {
                                 updated.id = p.id
                                 store.update(updated)
                             }
-                            .help("Saves the current values into “\(p.name)”")
+                            .tip("Saves the current values into “\(p.name)”")
                         }
                     }
                 }
@@ -187,11 +174,11 @@ struct CutPanelView: View {
                     }
                     .menuStyle(.borderlessButton)
                     .fixedSize()
-                    .help("Rename, delete, import or export profiles")
+                    .tip("Rename, delete, import or export profiles")
                     SettingsLink {
                         Image(systemName: "list.bullet.rectangle")
                     }
-                    .help("Manage all cut profiles")
+                    .tip("Manage all cut profiles")
                 }
 
                 if let error = store.lastError {
@@ -231,19 +218,19 @@ struct CutPanelView: View {
                 Stepper(value: optionBinding(\.acceleration), in: CutOptions.accelerationRange) {
                     LabeledContent("Acceleration", value: "\(settings.options.acceleration)")
                 }
-                .help("Lower values move the head more gently, e.g. for thick or delicate material. Cameo 4 line only.")
+                .tip("Lower values move the head more gently, e.g. for thick or delicate material. Cameo 4 line only.")
                 if settings.tool.isBlade {
                     Stepper(value: optionBinding(\.offsetAdjust), in: CutOptions.offsetAdjustRange) {
                         LabeledContent("Blade offset", value: offsetText)
                     }
-                    .help("Correction of the blade tip offset in 0.05 mm steps. Raise it if corners come out round.")
+                    .tip("Correction of the blade tip offset in 0.05 mm steps. Raise it if corners come out round.")
                     Toggle("Overcut", isOn: optionBinding(\.overcut))
-                        .help("Closed lines are cut 1 mm past their start, so the piece comes out cleanly")
+                        .tip("Closed lines are cut 1 mm past their start, so the piece comes out cleanly")
                     Toggle("Sharp corners (Smart Cut)", isOn: optionBinding(\.sharpCorners))
-                        .help("At sharp corners the blade runs a little past the corner and starts again, for crisp corners in thick material")
+                        .tip("At sharp corners the blade runs a little past the corner and starts again, for crisp corners in thick material")
                 }
                 Toggle("Track enhancing", isOn: optionBinding(\.trackEnhancing))
-                    .help("The plotter rolls the mat in and out a few times first, so the rollers grip better (e.g. for long or thick material)")
+                    .tip("The plotter rolls the mat in and out a few times first, so the rollers grip better (e.g. for long or thick material)")
             }
 
             printAndCutSection
@@ -253,18 +240,18 @@ struct CutPanelView: View {
                     ForEach(ConnectionKind.allCases) { Text($0.title).tag($0) }
                 }
                 .disabled(plotter.isBusy)
-                .help("Automatic tries USB first, then Bluetooth. Supported: \(PlotterModel.supportedNames). Bluetooth: Cameo 3, Cameo 4, 4 Plus and 4 Pro. Cameo 3 and older machines cut at speed 10 at most.")
+                .tip("Automatic tries USB first, then Bluetooth. Supported: \(PlotterModel.supportedNames). Bluetooth: Cameo 3, Cameo 4, 4 Plus and 4 Pro. Cameo 3 and older machines cut at speed 10 at most.")
                 if !plotter.isBusy {
                     HStack {
                         Button("Test cut") {
                             let settings = settings, mat = document.data.mat // the tool shown
                             plotter.send { GPGLBuilder.testCut(settings: settings, mat: mat, model: $0) }
                         }
-                        .help("Cuts a 10 mm square with a triangle at the top left of the mat")
+                        .tip("Cuts a 10 mm square with a triangle at the top left of the mat")
                         Button("Check connection") { plotter.checkConnection() }
                     }
                     Button("Export commands…", action: exportCommands)
-                        .help("Saves the plotter commands as a text file, to check them without a plotter")
+                        .tip("Saves the plotter commands as a text file, to check them without a plotter")
                 }
             }
         }
@@ -331,7 +318,7 @@ struct CutPanelView: View {
         let pc = document.data.printCut
         return Section("Print & Cut") {
             Toggle("Registration marks", isOn: Binding(get: { pc.enabled }, set: { on in setPrintCut { $0.enabled = on } }))
-                .help("Print the design with marks; the plotter finds them with its sensor and cuts exactly around the print")
+                .tip("Print the design with marks; the plotter finds them with its sensor and cuts exactly around the print")
             if pc.enabled {
                 Picker("Paper", selection: Binding(get: { pc.paper }, set: { p in setPrintCut { $0.paper = p } })) {
                     ForEach(PaperSize.allCases) { Text(verbatim: $0.title).tag($0) }
@@ -341,7 +328,7 @@ struct CutPanelView: View {
                     set: { v in if v.isFinite { setPrintCut { $0.insetMM = min(max(v, PrintAndCut.insetRange.lowerBound), PrintAndCut.insetRange.upperBound) } } }
                 ))
                 Toggle("Print outlines", isOn: $printOutlines)
-                    .help("Also prints thin lines along the cut lines")
+                    .tip("Also prints thin lines along the cut lines")
                 HStack {
                     Button { PrintAndCutPrinter.print(document.data, outlines: printOutlines) } label: {
                         Label("Print…", systemImage: "printer")
@@ -390,7 +377,7 @@ struct CutPanelView: View {
                     }
                     .controlSize(.large)
                     .disabled(cutCount == 0)
-                    .help("Shows the order of the cut lines and the time, before cutting")
+                    .tip("Shows the order of the cut lines and the time, before cutting")
                     Button {
                         if previewFirst { showPreview = true }
                         else if outsideCount > 0 { confirmOutside = true } else { cut() }

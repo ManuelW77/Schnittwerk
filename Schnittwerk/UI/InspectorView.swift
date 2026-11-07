@@ -77,7 +77,7 @@ struct InspectorView: View {
                     Button { document.align(edge, ids: selection, undoManager: undoManager) } label: {
                         Label(edge.title, systemImage: edge.systemImage)
                     }
-                    .help(edge.title)
+                    .tip(edge.title)
                 }
             }
             .labelStyle(.iconOnly)
@@ -87,7 +87,7 @@ struct InspectorView: View {
                         Button { document.distribute(axis, ids: selection, undoManager: undoManager) } label: {
                             Label(axis.title, systemImage: axis.systemImage)
                         }
-                        .help(axis.title)
+                        .tip(axis.title)
                         .disabled(selection.count < 3)
                     }
                 }
@@ -197,7 +197,7 @@ struct InspectorView: View {
                 }
             }
             .labelStyle(.iconOnly)
-            .help("Mirror, e.g. for heat transfer vinyl")
+            .tip("Mirror, e.g. for heat transfer vinyl")
         }
     }
 

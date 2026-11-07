@@ -56,7 +56,7 @@ struct ToolSlotPicker: View {
                 }
             }
         }
-        .help("Which tool holder cuts, draws or embosses this object")
+        .tip("Which tool holder cuts, draws or embosses this object")
     }
 }
 

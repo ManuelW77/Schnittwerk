@@ -151,30 +151,6 @@ extension CutDocument {
     }
 }
 
-/// Picker of all built-in presets and own profiles, by id.
-struct ProfileIDPicker: View {
-    let title: LocalizedStringKey
-    @Binding var id: String
-    @ObservedObject private var store = ProfileStore.shared
-
-    var body: some View {
-        Picker(title, selection: $id) {
-            Text("Last used").tag(NewProjectDefaults.lastUsed)
-            Divider()
-            ForEach(MaterialPreset.Category.allCases) { category in
-                Section(category.title) {
-                    ForEach(MaterialPreset.all.filter { $0.category == category }) { Text($0.title).tag($0.id) }
-                }
-            }
-            if !store.profiles.isEmpty {
-                Section("My profiles") {
-                    ForEach(store.profiles) { Text(verbatim: $0.name).tag($0.settingsID) }
-                }
-            }
-        }
-    }
-}
-
 struct GeneralSettingsView: View {
     @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
     @AppStorage(LengthUnit.storageKey) private var unit: LengthUnit = .mm
@@ -215,7 +191,7 @@ struct GeneralSettingsView: View {
                     ForEach(LengthUnit.allCases) { Text($0.title).tag($0) }
                 }
                 .pickerStyle(.segmented)
-                .help("Unit for all lengths you type in. Projects keep their sizes.")
+                .tip("Unit for all lengths you type in. Projects keep their sizes.")
             }
             Section {
                 Picker("Mat", selection: $newMat) {
@@ -223,8 +199,8 @@ struct GeneralSettingsView: View {
                     Divider()
                     ForEach(MatType.allCases) { Text($0.title).tag($0.rawValue) }
                 }
-                ProfileIDPicker(title: "Tool 1", id: $newProfile1)
-                ProfileIDPicker(title: "Tool 2", id: $newProfile2)
+                ProfileMenu(title: "Tool 1", selection: $newProfile1, allowLast: true)
+                ProfileMenu(title: "Tool 2", selection: $newProfile2, allowLast: true)
             } header: {
                 Text("New projects")
             } footer: {
