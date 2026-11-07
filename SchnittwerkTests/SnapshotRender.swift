@@ -47,6 +47,11 @@ final class SnapshotRender: XCTestCase {
             CutShape.basic(.standard(.star), at: CGPoint(x: 250, y: 20)),
         ]
         doc.data.shapes = shapes
+        let text = CutShape.text(TextSpec(text: "Hallo", fontName: "HelveticaNeue-Bold", sizeMM: 25), at: CGPoint(x: 30, y: 110))!
+        doc.data.shapes.append(text)
+        doc.addOffset(ids: [text.id], distance: 3, roundCorners: true, undoManager: nil)
+        doc.addOffset(ids: [shapes[3].id], distance: 4, roundCorners: false, undoManager: nil)
+        doc.combine(.subtract, ids: [shapes[0].id, shapes[1].id], undoManager: nil)
         let canvas = MatCanvasView(document: doc, selection: .constant([shapes[3].id]), zoom: 1)
         let r = ImageRenderer(content: canvas.background(Color.white))
         let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))

@@ -10,6 +10,9 @@ struct InspectorView: View {
     @Environment(\.undoManager) private var undoManager
     @AppStorage("inspector.lockAspect") private var lockAspect = true
     @State private var combineFailed = false
+    @State private var offsetFailed = false
+    @AppStorage("offset.distance") private var offsetDistance = 3.0
+    @AppStorage("offset.roundCorners") private var offsetRound = true
 
     /// The one selected object; nil with none or several selected.
     private var selectedID: UUID? { selection.count == 1 ? selection.first : nil }
@@ -29,11 +32,13 @@ struct InspectorView: View {
                 if let spec = document.data.shapes[index].effectiveShapeSpec {
                     shapeSection(spec)
                 }
+                offsetSection
             } else if selection.count > 1 {
                 Section {
                     Text("\(selection.count) objects selected")
                 }
                 combineSection
+                offsetSection
             } else {
                 Section {
                     Text("Select an object on the mat, or import a file.")
@@ -46,6 +51,39 @@ struct InspectorView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text("The result would be empty. Check that the objects overlap.")
+        }
+        .alert("Nothing left", isPresented: $offsetFailed) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("The object is too small for this inner offset.")
+        }
+    }
+
+    // MARK: - Offset
+
+    private var offsetSection: some View {
+        Section("Offset") {
+            TextField("Distance (mm)", value: $offsetDistance,
+                      format: .number.precision(.fractionLength(0...2)))
+                .help("Positive values go outwards, negative values inwards")
+            Picker("Corners", selection: $offsetRound) {
+                Text("Round").tag(true)
+                Text("Sharp").tag(false)
+            }
+            .pickerStyle(.segmented)
+            Button {
+                let d = CGFloat(min(max(offsetDistance, -100), 100))
+                if let id = document.addOffset(ids: selection, distance: d, roundCorners: offsetRound,
+                                               undoManager: undoManager) {
+                    selection = [id]
+                } else {
+                    offsetFailed = true
+                }
+            } label: {
+                Label("Add offset", systemImage: "circle.dashed")
+            }
+            .disabled(!offsetDistance.isFinite || abs(offsetDistance) < 0.01)
+            .help("Add an outline at this distance, e.g. for stickers")
         }
     }
 

@@ -105,3 +105,46 @@ extension CutDocument {
         return result.id
     }
 }
+
+// MARK: - Offset
+
+extension PathOps {
+    /// Outline at a fixed distance around the objects (all together).
+    /// Positive `distance` goes outwards, negative inwards (mm).
+    /// `roundCorners` rounds outer corners; otherwise they stay sharp.
+    static func offset(_ shapes: [CutShape], by distance: CGFloat, roundCorners: Bool) -> [Polyline] {
+        guard distance.isFinite, abs(distance) >= 0.01 else { return [] }
+        let lines = shapes.flatMap(\.matPaths)
+        let filled = area(of: lines)
+        // Stroke along every line, closed and open, at the given distance
+        let outline = CGMutablePath()
+        for line in lines where line.points.count >= 2 {
+            outline.addLines(between: line.points)
+            if line.closed { outline.closeSubpath() }
+        }
+        let band = outline.copy(strokingWithWidth: abs(distance) * 2, lineCap: .round,
+                                lineJoin: roundCorners ? .round : .miter, miterLimit: 10)
+        let result = distance > 0 ? filled.union(band) : filled.subtracting(band)
+        return result.polylines(tolerance: ShapeImporter.tolerance)
+            .filter { $0.closed && max($0.bounds.width, $0.bounds.height) >= minPartSize }
+    }
+}
+
+extension CutDocument {
+    /// Adds an offset outline behind the selected objects. Returns its id,
+    /// or nil if the outline would be empty (then nothing is changed).
+    @discardableResult
+    func addOffset(ids: Set<UUID>, distance: CGFloat, roundCorners: Bool, undoManager: UndoManager?) -> UUID? {
+        let selected = data.shapes.filter { ids.contains($0.id) }
+        guard let first = selected.first else { return nil }
+        let lines = PathOps.offset(selected, by: distance, roundCorners: roundCorners)
+        guard !lines.isEmpty else { return nil }
+        let name = selected.count == 1 ? String(localized: "\(first.name) offset") : String(localized: "Offset")
+        let result = CutShape(name: name, matPaths: lines)
+        update(String(localized: "Add offset"), undoManager: undoManager) { data in
+            let at = data.shapes.firstIndex { ids.contains($0.id) } ?? 0
+            data.shapes.insert(result, at: at)
+        }
+        return result.id
+    }
+}

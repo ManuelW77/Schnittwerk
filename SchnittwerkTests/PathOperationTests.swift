@@ -74,3 +74,48 @@ final class PathOperationTests: XCTestCase {
         XCTAssertEqual(doc.data, before)
     }
 }
+
+final class OffsetTests: XCTestCase {
+    private func square(_ size: CGFloat = 20) -> CutShape {
+        CutShape.basic(ShapeSpec(kind: .rectangle, widthMM: size, heightMM: size), at: CGPoint(x: 50, y: 50))
+    }
+
+    func testOutwardOffsetGrowsByDistance() {
+        let lines = PathOps.offset([square()], by: 3, roundCorners: true)
+        XCTAssertEqual(lines.count, 1)
+        XCTAssertEqual(lines.bounds.minX, 47, accuracy: 0.05)
+        XCTAssertEqual(lines.bounds.width, 26, accuracy: 0.05)
+    }
+
+    func testSharpCornersReachTheCorner() {
+        let lines = PathOps.offset([square()], by: 3, roundCorners: false)
+        // The corner point (47, 47) lies on the outline
+        XCTAssertTrue(lines[0].points.contains { $0.distance(to: CGPoint(x: 47, y: 47)) < 0.05 })
+    }
+
+    func testInwardOffsetShrinks() {
+        let lines = PathOps.offset([square()], by: -2, roundCorners: true)
+        XCTAssertEqual(lines.bounds.minX, 52, accuracy: 0.05)
+        XCTAssertEqual(lines.bounds.width, 16, accuracy: 0.05)
+    }
+
+    func testInwardOffsetTooLargeIsEmpty() {
+        XCTAssertTrue(PathOps.offset([square()], by: -15, roundCorners: true).isEmpty)
+    }
+
+    func testOffsetAroundOpenLine() {
+        let line = CutShape(name: "l", matPaths: [Polyline(points: [CGPoint(x: 0, y: 0), CGPoint(x: 10, y: 0)], closed: false)])
+        let lines = PathOps.offset([line], by: 1, roundCorners: true)
+        XCTAssertEqual(lines.count, 1)
+        XCTAssertEqual(lines.bounds.width, 12, accuracy: 0.05)
+        XCTAssertEqual(lines.bounds.height, 2, accuracy: 0.05)
+    }
+
+    func testAddOffsetGoesBehindAndKeepsOriginal() {
+        let doc = CutDocument()
+        let s = square()
+        doc.data.shapes = [s]
+        let id = doc.addOffset(ids: [s.id], distance: 2, roundCorners: true, undoManager: nil)
+        XCTAssertEqual(doc.data.shapes.map(\.id), [id!, s.id])
+    }
+}
