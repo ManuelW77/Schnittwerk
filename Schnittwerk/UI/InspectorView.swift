@@ -32,11 +32,13 @@ struct InspectorView: View {
                 if let spec = document.data.shapes[index].effectiveShapeSpec {
                     shapeSection(spec)
                 }
+                alignSection
                 offsetSection
             } else if selection.count > 1 {
                 Section {
                     Text("\(selection.count) objects selected")
                 }
+                alignSection
                 combineSection
                 offsetSection
             } else {
@@ -56,6 +58,34 @@ struct InspectorView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text("The object is too small for this inner offset.")
+        }
+    }
+
+    // MARK: - Align
+
+    private var alignSection: some View {
+        Section(selection.count == 1 ? "Align on mat" : "Align") {
+            HStack {
+                ForEach(AlignEdge.allCases) { edge in
+                    Button { document.align(edge, ids: selection, undoManager: undoManager) } label: {
+                        Label(edge.title, systemImage: edge.systemImage)
+                    }
+                    .help(edge.title)
+                }
+            }
+            .labelStyle(.iconOnly)
+            if selection.count > 1 {
+                HStack {
+                    ForEach(DistributeAxis.allCases) { axis in
+                        Button { document.distribute(axis, ids: selection, undoManager: undoManager) } label: {
+                            Label(axis.title, systemImage: axis.systemImage)
+                        }
+                        .help(axis.title)
+                        .disabled(selection.count < 3)
+                    }
+                }
+                .labelStyle(.iconOnly)
+            }
         }
     }
 

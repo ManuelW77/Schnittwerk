@@ -111,6 +111,86 @@
         }
       }
     },
+    "Align" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausrichten"
+          }
+        }
+      }
+    },
+    "Align bottom" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unten ausrichten"
+          }
+        }
+      }
+    },
+    "Align centres horizontally" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horizontal mittig ausrichten"
+          }
+        }
+      }
+    },
+    "Align centres vertically" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertikal mittig ausrichten"
+          }
+        }
+      }
+    },
+    "Align left" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Links ausrichten"
+          }
+        }
+      }
+    },
+    "Align on mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf der Matte ausrichten"
+          }
+        }
+      }
+    },
+    "Align right" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechts ausrichten"
+          }
+        }
+      }
+    },
+    "Align top" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oben ausrichten"
+          }
+        }
+      }
+    },
     "Already there: %lld" : {
       "localizations" : {
         "de" : {
@@ -607,6 +687,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abstand (mm)"
+          }
+        }
+      }
+    },
+    "Distribute horizontally" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Horizontal verteilen"
+          }
+        }
+      }
+    },
+    "Distribute vertically" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertikal verteilen"
           }
         }
       }

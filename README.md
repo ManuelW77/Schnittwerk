@@ -13,6 +13,13 @@ Native macOS-App zum Schneiden auf dem **Silhouette Cameo 4** – ein schlanker 
 - Cut settings: blade, force, speed, passes, material presets, test cut
 - Send directly via USB (GPGL)
 
+## Design tools / Gestaltung
+- Basic shapes: rectangle (rounded corners), ellipse, polygon, star – editable afterwards
+- Multiple selection: shift/⌘ click, rubber band
+- Weld, subtract, intersect
+- Offset outwards or inwards, round or sharp corners
+- Align and distribute
+
 Languages: English, Deutsch.
 
 ## Build
