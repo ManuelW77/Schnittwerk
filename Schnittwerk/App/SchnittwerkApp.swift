@@ -8,11 +8,16 @@
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version. See LICENSE.
 
+import AppKit
 import SwiftUI
 
 @main
 struct SchnittwerkApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     init() {
+        // Start with an empty mat instead of the "Open" panel
+        UserDefaults.standard.register(defaults: ["NSShowAppCentricOpenPanelInsteadOfUntitledFile": false])
         MCPServerController.shared.apply()
     }
 
@@ -32,4 +37,9 @@ struct SchnittwerkApp: App {
             }
         }
     }
+}
+
+/// Opens a new, empty project when the app starts without a file.
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldOpenUntitledFile(_ sender: NSApplication) -> Bool { true }
 }

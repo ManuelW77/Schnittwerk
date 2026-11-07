@@ -20,7 +20,7 @@ final class SnapshotRender: XCTestCase {
         off.position = CGPoint(x: 290, y: 250)
         doc.data.shapes = [shape, text, off]
 
-        let canvas = MatCanvasView(document: doc, selection: .constant([shape.id]), zoom: 1)
+        let canvas = MatCanvasView(document: doc, selection: .constant([shape.id]), zoom: 1, tool: .constant(.select))
         let r = ImageRenderer(content: canvas.background(Color.white))
         r.scale = 1
         let img = try XCTUnwrap(r.nsImage)
@@ -52,7 +52,7 @@ final class SnapshotRender: XCTestCase {
         doc.addOffset(ids: [text.id], distance: 3, roundCorners: true, undoManager: nil)
         doc.addOffset(ids: [shapes[3].id], distance: 4, roundCorners: false, undoManager: nil)
         doc.combine(.subtract, ids: [shapes[0].id, shapes[1].id], undoManager: nil)
-        let canvas = MatCanvasView(document: doc, selection: .constant([shapes[3].id]), zoom: 1)
+        let canvas = MatCanvasView(document: doc, selection: .constant([shapes[3].id]), zoom: 1, tool: .constant(.select))
         let r = ImageRenderer(content: canvas.background(Color.white))
         let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
         try png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("shapes.png"))
