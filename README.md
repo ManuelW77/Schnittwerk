@@ -35,7 +35,10 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 ## Features
 
 ### Import and tracing
-- Import **SVG** and **DXF** (button, drag & drop, or File → Open)
+- Import **SVG**, **DXF** and **PDF** (button, drag & drop, or File → Open for SVG/DXF)
+- **Paste from other apps** with ⌘V: copy a drawing in Affinity, Illustrator, Inkscape, Figma … and paste it on the
+  mat – no need to save a file first. SVG is used when the app offers it, otherwise the PDF on the clipboard.
+  Drawings can also be dragged straight from another app onto the mat. Convert text to curves first.
 - **Trace images** (PNG, JPG, HEIC, …) into cut lines, with live preview:
   - *Outline*: one cut line around the motif, by brightness threshold or by transparency (great for logos)
   - *Colours*: the image is reduced to 2–8 colours; each colour becomes its own coloured layer, e.g. for vinyl in
@@ -94,7 +97,8 @@ and cutting is not available through MCP.
 |---|---|
 | V · T · F · P | Select · Text · Freehand · Curve tool (on the mat) |
 | ⌘T | Text tool |
-| ⌘I · ⇧⌘I | Import SVG/DXF · Trace image |
+| ⌘I · ⇧⌘I | Import SVG/DXF/PDF · Trace image |
+| ⌘V | Paste a drawing from another app |
 | ⌘D · ⌫ | Duplicate · Delete |
 | ⌘G · ⇧⌘G | Group · Ungroup |
 | ⌘L · ⌥⌘L | Lock · Unlock all |

@@ -36,7 +36,11 @@ gleichzeitig mit einer anderen App verbunden sein.
 ## Funktionen
 
 ### Importieren und Nachzeichnen
-- **SVG** und **DXF** importieren (Button, Drag & Drop oder Ablage → Öffnen)
+- **SVG**, **DXF** und **PDF** importieren (Button, Drag & Drop oder Ablage → Öffnen für SVG/DXF)
+- **Aus anderen Apps einfügen** mit ⌘V: Zeichnung in Affinity, Illustrator, Inkscape, Figma … kopieren und auf der
+  Matte einfügen – ohne vorher eine Datei zu speichern. Bietet die App SVG an, wird das genommen, sonst das PDF aus
+  der Zwischenablage. Zeichnungen lassen sich auch direkt aus einer anderen App auf die Matte ziehen. Text vorher in
+  Kurven umwandeln.
 - **Bilder nachzeichnen** (PNG, JPG, HEIC …) als Schnittlinien, mit Live-Vorschau:
   - *Umriss*: eine Schnittlinie um das Motiv, nach Helligkeits-Schwellwert oder nach Transparenz (ideal für Logos)
   - *Farben*: das Bild wird auf 2–8 Farben reduziert; jede Farbe wird eine eigene, farbige Ebene, z. B. für
@@ -96,7 +100,8 @@ Gesperrte Objekte bleiben unverändert, und Schneiden ist über MCP nicht mögli
 |---|---|
 | V · T · F · P | Werkzeug Auswählen · Text · Freihand · Kurve (auf der Matte) |
 | ⌘T | Text-Werkzeug |
-| ⌘I · ⇧⌘I | SVG/DXF importieren · Bild nachzeichnen |
+| ⌘I · ⇧⌘I | SVG/DXF/PDF importieren · Bild nachzeichnen |
+| ⌘V | Zeichnung aus einer anderen App einfügen |
 | ⌘D · ⌫ | Duplizieren · Löschen |
 | ⌘G · ⇧⌘G | Gruppieren · Gruppierung aufheben |
 | ⌘L · ⌥⌘L | Sperren · Alle entsperren |

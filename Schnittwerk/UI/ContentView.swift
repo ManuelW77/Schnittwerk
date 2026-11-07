@@ -48,13 +48,15 @@ struct ContentView: View {
                                   inspectorTab = .object
                                   showInspector = true
                               },
-                              onEditText: beginTextEdit)
+                              onEditText: beginTextEdit,
+                              onPaste: pasteFromClipboard)
                     .padding(8)
                     .background(MatNavigator(zoom: $zoom, range: MatNavigator.zoomRange))
             }
             .background(Color(nsColor: .underPageBackgroundColor))
-            .dropDestination(for: URL.self) { urls, _ in
-                importFiles(urls)
+            // Files from Finder, or drawings dragged straight out of another app
+            .onDrop(of: [.fileURL, .svg, .pdf], isTargeted: nil) { providers in
+                handleDrop(providers)
                 return true
             }
         }
@@ -77,7 +79,7 @@ struct ContentView: View {
         }
         .toolbar { toolbar }
         .fileImporter(isPresented: $showImporter,
-                      allowedContentTypes: importKind == .vector ? [.svg, .dxf] : ImageTracer.contentTypes,
+                      allowedContentTypes: importKind == .vector ? [.svg, .dxf, .pdf] : ImageTracer.contentTypes,
                       allowsMultipleSelection: importKind == .vector) { result in
             switch result {
             case .success(let urls): importFiles(urls)
@@ -132,7 +134,7 @@ struct ContentView: View {
                 showImporter = true
             } label: { Label("Import", systemImage: "square.and.arrow.down") }
                 .keyboardShortcut("i", modifiers: .command)
-                .help("Import SVG or DXF (⌘I)")
+                .help("Import SVG, DXF or PDF (⌘I)")
             Button {
                 importKind = .image
                 showImporter = true
@@ -298,6 +300,57 @@ struct ContentView: View {
             message = AlertMessage(title: String(localized: "Import failed"), text: (failures + notes).joined(separator: "\n"))
         } else if !notes.isEmpty {
             message = AlertMessage(title: String(localized: "Imported with notes"), text: notes.joined(separator: "\n"))
+        }
+    }
+
+    /// ⌘V on the mat: a drawing copied in another app.
+    private func pasteFromClipboard() {
+        do {
+            guard let (shape, warnings) = try PasteboardImport.shape() else {
+                message = AlertMessage(title: String(localized: "Nothing to paste"),
+                                       text: String(localized: "The clipboard holds no vector drawing. Copy it as SVG or PDF in your design app."))
+                return
+            }
+            addImported(shape, warnings: warnings, actionName: String(localized: "Paste"))
+        } catch {
+            message = AlertMessage(title: String(localized: "Paste failed"), text: error.localizedDescription)
+        }
+    }
+
+    private func handleDrop(_ providers: [NSItemProvider]) {
+        for provider in providers {
+            if provider.hasItemConformingToTypeIdentifier(UTType.fileURL.identifier) {
+                _ = provider.loadObject(ofClass: URL.self) { url, _ in
+                    guard let url else { return }
+                    DispatchQueue.main.async { importFiles([url]) }
+                }
+            } else if let type = [UTType.svg, .pdf].first(where: { provider.hasItemConformingToTypeIdentifier($0.identifier) }) {
+                provider.loadDataRepresentation(forTypeIdentifier: type.identifier) { data, _ in
+                    guard let data else { return }
+                    DispatchQueue.main.async { importDropped(data, format: type == .svg ? "svg" : "pdf") }
+                }
+            }
+        }
+    }
+
+    private func importDropped(_ data: Data, format: String) {
+        do {
+            let (shape, warnings) = try ShapeImporter.importShape(data: data, fileExtension: format,
+                                                                  name: String(localized: "Dropped"))
+            addImported(shape, warnings: warnings, actionName: String(localized: "Import"))
+        } catch {
+            message = AlertMessage(title: String(localized: "Import failed"), text: error.localizedDescription)
+        }
+    }
+
+    private func addImported(_ shape: CutShape, warnings: [String], actionName: String) {
+        var shape = shape
+        shape.placeInside(document.data.mat.displaySize)
+        document.update(actionName, undoManager: undoManager) { $0.shapes.append(shape) }
+        selection = [shape.id]
+        tool = .select
+        if !warnings.isEmpty {
+            message = AlertMessage(title: String(localized: "Imported with notes"), text: warnings.joined(separator: "\n"))
         }
     }
 

@@ -21,7 +21,7 @@ enum ImportError: LocalizedError, Equatable {
         case .unreadable:
             return String(localized: "The file could not be read.")
         case .unsupportedFormat(let ext):
-            return String(localized: "The file type “\(ext)” is not supported. Use SVG or DXF.")
+            return String(localized: "The file type “\(ext)” is not supported. Use SVG, DXF or PDF.")
         case .noGeometry(let skipped):
             let base = String(localized: "The file contains no lines that can be cut.")
             return ([base] + skipped).joined(separator: "\n")
@@ -32,7 +32,7 @@ enum ImportError: LocalizedError, Equatable {
 enum ShapeImporter {
     static let tolerance: CGFloat = 0.02
 
-    /// Reads an SVG or DXF file and returns one object for the mat.
+    /// Reads an SVG, DXF or PDF file and returns one object for the mat.
     static func importShape(from url: URL) throws -> (shape: CutShape, warnings: [String]) {
         let data: Data
         do { data = try Data(contentsOf: url) } catch { throw ImportError.unreadable }
@@ -48,6 +48,8 @@ enum ShapeImporter {
             result = try SVGImporter.parse(data)
         case "dxf":
             result = try DXFImporter.parse(data)
+        case "pdf":
+            result = try PDFImporter.parse(data)
         default:
             throw ImportError.unsupportedFormat(ext)
         }
