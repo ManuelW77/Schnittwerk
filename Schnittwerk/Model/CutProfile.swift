@@ -14,6 +14,7 @@ struct CutProfile: Codable, Identifiable, Equatable, Hashable {
     var pressure: Int
     var speed: Int
     var passes: Int
+    var options = CutOptions()
 
     /// Value stored in CutSettings.materialID.
     var settingsID: String { Self.prefix + id.uuidString }
@@ -27,6 +28,7 @@ struct CutProfile: Codable, Identifiable, Equatable, Hashable {
         pressure = s.pressure
         speed = s.speed
         passes = s.passes
+        options = s.options
     }
 
     init(name: String, preset: MaterialPreset) {
@@ -36,6 +38,7 @@ struct CutProfile: Codable, Identifiable, Equatable, Hashable {
         pressure = preset.pressure
         speed = preset.speed
         passes = preset.passes
+        options = preset.options
     }
 
     func apply(to settings: inout CutSettings) {
@@ -44,16 +47,17 @@ struct CutProfile: Codable, Identifiable, Equatable, Hashable {
         settings.pressure = pressure
         settings.speed = speed
         settings.passes = passes
+        settings.options = options
         settings.materialID = settingsID
     }
 
     /// True if the cut values equal this profile (holder is not part of a profile).
     func matches(_ s: CutSettings) -> Bool {
         s.tool == tool && s.pressure == pressure && s.speed == speed && s.passes == passes
-            && (tool != .autoBlade || s.depth == depth)
+            && (!tool.setsDepth || s.depth == depth) && s.options == options
     }
 
-    private enum CodingKeys: String, CodingKey { case id, name, tool, depth, pressure, speed, passes }
+    private enum CodingKeys: String, CodingKey { case id, name, tool, depth, pressure, speed, passes, options }
 
     /// Missing id (hand-written files) gets a new one; missing depth/passes get defaults.
     init(from decoder: Decoder) throws {
@@ -65,6 +69,7 @@ struct CutProfile: Codable, Identifiable, Equatable, Hashable {
         pressure = try c.decode(Int.self, forKey: .pressure)
         speed = try c.decode(Int.self, forKey: .speed)
         passes = try c.decodeIfPresent(Int.self, forKey: .passes) ?? 1
+        options = try c.decodeIfPresent(CutOptions.self, forKey: .options) ?? CutOptions()
     }
 
     var clamped: CutProfile {
@@ -73,6 +78,7 @@ struct CutProfile: Codable, Identifiable, Equatable, Hashable {
         p.pressure = min(max(pressure, CutSettings.pressureRange.lowerBound), CutSettings.pressureRange.upperBound)
         p.speed = min(max(speed, CutSettings.speedRange.lowerBound), CutSettings.speedRange.upperBound)
         p.passes = min(max(passes, CutSettings.passesRange.lowerBound), CutSettings.passesRange.upperBound)
+        p.options = options.clamped
         return p
     }
 }
@@ -80,7 +86,7 @@ struct CutProfile: Codable, Identifiable, Equatable, Hashable {
 extension MaterialPreset {
     func matches(_ s: CutSettings) -> Bool {
         s.tool == tool && s.pressure == pressure && s.speed == speed && s.passes == passes
-            && (tool != .autoBlade || s.depth == depth)
+            && (!tool.setsDepth || s.depth == depth) && s.options == options
     }
 }
 
@@ -224,7 +230,7 @@ final class ProfileStore: ObservableObject {
 extension CutProfile {
     func matchesValues(_ other: CutProfile) -> Bool {
         tool == other.tool && depth == other.depth && pressure == other.pressure
-            && speed == other.speed && passes == other.passes
+            && speed == other.speed && passes == other.passes && options == other.options
     }
 }
 

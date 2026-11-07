@@ -9,10 +9,6 @@ struct InspectorView: View {
 
     @Environment(\.undoManager) private var undoManager
     @AppStorage("inspector.lockAspect") private var lockAspect = true
-    @State private var combineFailed = false
-    @State private var offsetFailed = false
-    @AppStorage("offset.distance") private var offsetDistance = 3.0
-    @AppStorage("offset.roundCorners") private var offsetRound = true
 
     /// Number of locked objects in the selection, nil if none.
     private var lockedInSelection: Int? {
@@ -50,14 +46,17 @@ struct InspectorView: View {
                     shapeSection(spec)
                 }
                 alignSection
-                offsetSection
             } else if selection.count > 1 {
                 Section {
                     Text("\(selection.count) objects selected")
+                    toolPicker
                 }
                 alignSection
-                combineSection
-                offsetSection
+                Section {
+                    Text("Transform, replicate, combine and offset in the Edit panel.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             } else {
                 Section {
                     Text("Select an object on the mat, or import a file.")
@@ -66,16 +65,7 @@ struct InspectorView: View {
             }
         }
         .formStyle(.grouped)
-        .alert("Nothing left", isPresented: $combineFailed) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("The result would be empty. Check that the objects overlap.")
-        }
-        .alert("Nothing left", isPresented: $offsetFailed) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("The object is too small for this inner offset.")
-        }
+
     }
 
     // MARK: - Align
@@ -106,50 +96,13 @@ struct InspectorView: View {
         }
     }
 
-    // MARK: - Offset
+    // MARK: - Tool
 
-    private var offsetSection: some View {
-        Section("Offset") {
-            TextField("Distance (mm)", value: $offsetDistance,
-                      format: .number.precision(.fractionLength(0...2)))
-                .help("Positive values go outwards, negative values inwards")
-            Picker("Corners", selection: $offsetRound) {
-                Text("Round").tag(true)
-                Text("Sharp").tag(false)
-            }
-            .pickerStyle(.segmented)
-            Button {
-                let d = CGFloat(min(max(offsetDistance, -100), 100))
-                if let id = document.addOffset(ids: selection, distance: d, roundCorners: offsetRound,
-                                               undoManager: undoManager) {
-                    selection = [id]
-                } else {
-                    offsetFailed = true
-                }
-            } label: {
-                Label("Add offset", systemImage: "circle.dashed")
-            }
-            .disabled(!offsetDistance.isFinite || abs(offsetDistance) < 0.01)
-            .help("Add an outline at this distance, e.g. for stickers")
-        }
-    }
-
-    // MARK: - Several objects
-
-    private var combineSection: some View {
-        Section("Combine") {
-            ForEach(PathOperation.allCases) { op in
-                Button { combine(op) } label: { Label(op.title, systemImage: op.systemImage) }
-                    .help(op.help)
-            }
-        }
-    }
-
-    private func combine(_ op: PathOperation) {
-        if let id = document.combine(op, ids: selection, undoManager: undoManager) {
-            selection = [id]
-        } else {
-            combineFailed = true
+    /// Tool 1 or 2 of the selection; nil if mixed.
+    private var toolPicker: some View {
+        let slots = Set(document.data.shapes.filter { selection.contains($0.id) }.map(\.toolSlot))
+        return ToolSlotPicker(current: slots.count == 1 ? slots.first : nil, data: document.data) { slot in
+            document.setToolSlot(slot, ids: selection, undoManager: undoManager)
         }
     }
 
@@ -190,6 +143,7 @@ struct InspectorView: View {
                 get: { shape.cutEnabled },
                 set: { on in change(String(localized: "Cut on/off")) { $0.cutEnabled = on } }
             ))
+            toolPicker
             if !shape.fits(in: document.data.mat.size) {
                 Label("Sticks out over the cutting area; that part is not cut", systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)

@@ -36,6 +36,13 @@ struct CutShape: Identifiable, Codable, Equatable {
     var colorHex: String?
     /// Stored as optional so older project files still open.
     private var lock: Bool?
+    private var slot: Int?
+
+    /// Tool (holder) that cuts this object: 1 or 2.
+    var toolSlot: Int {
+        get { slot == 2 ? 2 : 1 }
+        set { slot = newValue == 2 ? 2 : nil }
+    }
 
     /// A locked object cannot be selected on the mat, moved or edited.
     var isLocked: Bool {

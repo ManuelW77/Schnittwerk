@@ -1,12 +1,62 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ fill" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Füllung"
+          }
+        }
+      }
+    },
     "%@ offset" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ Kontur"
+          }
+        }
+      }
+    },
+    "%@ only fits into holder %lld (Cameo 4 line). Choose it for tool %lld instead." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ passt nur in Halter %lld (Cameo-4-Reihe). Wähle es stattdessen für Werkzeug %lld."
+          }
+        }
+      }
+    },
+    "%@ stipple" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Punktierung"
+          }
+        }
+      }
+    },
+    "%@ · %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %@"
+          }
+        }
+      }
+    },
+    "%lld %%" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld %%"
           }
         }
       }
@@ -61,6 +111,36 @@
         }
       }
     },
+    "%lld°" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld°"
+          }
+        }
+      }
+    },
+    "%lld×" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld×"
+          }
+        }
+      }
+    },
+    "+%lld°" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld°"
+          }
+        }
+      }
+    },
     "+90°" : {
       "localizations" : {
         "de" : {
@@ -91,6 +171,26 @@
         }
       }
     },
+    "Above" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oben"
+          }
+        }
+      }
+    },
+    "Acceleration" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beschleunigung"
+          }
+        }
+      }
+    },
     "Add a basic shape" : {
       "localizations" : {
         "de" : {
@@ -101,12 +201,32 @@
         }
       }
     },
+    "Add an outline at this distance inside the object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einen Umriss in diesem Abstand innerhalb des Objekts hinzufügen"
+          }
+        }
+      }
+    },
     "Add an outline at this distance, e.g. for stickers" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einen Umriss in diesem Abstand hinzufügen, z. B. für Sticker"
+          }
+        }
+      }
+    },
+    "Add fill" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Füllung hinzufügen"
           }
         }
       }
@@ -157,6 +277,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fügt den Umriss des ganzen Motivs hinzu, z. B. als Grundlage für mehrlagige Folie"
+          }
+        }
+      }
+    },
+    "Adhesive vinyl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klebefolie"
           }
         }
       }
@@ -271,6 +401,16 @@
         }
       }
     },
+    "Along the outline" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entlang der Kontur"
+          }
+        }
+      }
+    },
     "Already there: %lld" : {
       "localizations" : {
         "de" : {
@@ -311,6 +451,26 @@
         }
       }
     },
+    "As many copies as fit onto the mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So viele Kopien, wie auf die Matte passen"
+          }
+        }
+      }
+    },
+    "At sharp corners the blade runs a little past the corner and starts again, for crisp corners in thick material" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An spitzen Ecken fährt die Klinge etwas über die Ecke hinaus und setzt neu an – für saubere Ecken in dickem Material"
+          }
+        }
+      }
+    },
     "AutoBlade" : {
       "localizations" : {
         "de" : {
@@ -341,6 +501,16 @@
         }
       }
     },
+    "Automatic tries USB first, then Bluetooth. Supported: %@. Bluetooth: Cameo 4, 4 Plus and 4 Pro." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch versucht zuerst USB, dann Bluetooth. Unterstützt: %@. Bluetooth: Cameo 4, 4 Plus und 4 Pro."
+          }
+        }
+      }
+    },
     "Background" : {
       "localizations" : {
         "de" : {
@@ -351,12 +521,32 @@
         }
       }
     },
+    "Below" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unten"
+          }
+        }
+      }
+    },
     "Blade depth" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Klingentiefe"
+          }
+        }
+      }
+    },
+    "Blade offset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klingen-Offset"
           }
         }
       }
@@ -481,6 +671,26 @@
         }
       }
     },
+    "Cardstock" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karton"
+          }
+        }
+      }
+    },
+    "Cardstock 200 g/m²" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karton 200 g/m²"
+          }
+        }
+      }
+    },
     "Cardstock 220 g/m²" : {
       "localizations" : {
         "de" : {
@@ -527,6 +737,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reihenfolge ändern"
+          }
+        }
+      }
+    },
+    "Change tool" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkzeug ändern"
           }
         }
       }
@@ -591,6 +811,26 @@
         }
       }
     },
+    "Chipboard 1 mm (Kraft Blade)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Graupappe 1 mm (Kraft-Klinge)"
+          }
+        }
+      }
+    },
+    "Choose more than one row or column." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle mehr als eine Reihe oder Spalte."
+          }
+        }
+      }
+    },
     "Choose one or more cut profile files" : {
       "localizations" : {
         "de" : {
@@ -621,6 +861,16 @@
         }
       }
     },
+    "Closed lines are cut 1 mm past their start, so the piece comes out cleanly" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschlossene Linien werden 1 mm über den Anfang hinaus geschnitten, damit sich das Teil sauber löst"
+          }
+        }
+      }
+    },
     "Colours" : {
       "localizations" : {
         "de" : {
@@ -641,12 +891,32 @@
         }
       }
     },
+    "Columns: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spalten: %lld"
+          }
+        }
+      }
+    },
     "Combine" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kombinieren"
+          }
+        }
+      }
+    },
+    "Concentric" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konzentrisch"
           }
         }
       }
@@ -711,6 +981,16 @@
         }
       }
     },
+    "Copies turned evenly in a ring, e.g. for flowers and mandalas" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopien gleichmäßig im Kreis gedreht, z. B. für Blumen und Mandalas"
+          }
+        }
+      }
+    },
     "Copy command" : {
       "localizations" : {
         "de" : {
@@ -761,6 +1041,16 @@
         }
       }
     },
+    "Correction of the blade tip offset in 0.05 mm steps. Raise it if corners come out round." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korrektur des Klingenversatzes in 0,05-mm-Schritten. Erhöhen, wenn Ecken rund werden."
+          }
+        }
+      }
+    },
     "Could not check for updates" : {
       "localizations" : {
         "de" : {
@@ -797,6 +1087,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Erzeugt einen neuen geheimen Schlüssel. Bereits verbundene Assistenten funktionieren erst wieder, wenn du den neuen Befehl ausführst."
+          }
+        }
+      }
+    },
+    "Crop" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abschneiden"
+          }
+        }
+      }
+    },
+    "Cross-hatch" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kreuzschraffur"
           }
         }
       }
@@ -861,6 +1171,16 @@
         }
       }
     },
+    "Cut options" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittoptionen"
+          }
+        }
+      }
+    },
     "Cut profile" : {
       "localizations" : {
         "de" : {
@@ -911,12 +1231,32 @@
         }
       }
     },
+    "Cut the frontmost object out of every other selected object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das vorderste Objekt aus allen anderen ausgewählten Objekten ausschneiden"
+          }
+        }
+      }
+    },
     "Cut this object" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dieses Objekt schneiden"
+          }
+        }
+      }
+    },
+    "Cut with" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearbeiten mit"
           }
         }
       }
@@ -947,6 +1287,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schneide…"
+          }
+        }
+      }
+    },
+    "d-c-fix adhesive film" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d-c-fix Klebefolie"
           }
         }
       }
@@ -1041,12 +1391,32 @@
         }
       }
     },
+    "Divide" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teilen"
+          }
+        }
+      }
+    },
     "Done. Unload the mat with the button on the plotter." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fertig. Matte mit der Taste am Plotter auswerfen."
+          }
+        }
+      }
+    },
+    "Dots" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte"
           }
         }
       }
@@ -1131,6 +1501,16 @@
         }
       }
     },
+    "Edit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bearbeiten"
+          }
+        }
+      }
+    },
     "Edit shape" : {
       "localizations" : {
         "de" : {
@@ -1167,6 +1547,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ellipse"
+          }
+        }
+      }
+    },
+    "Embossing metal foil" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prägen Metallfolie"
+          }
+        }
+      }
+    },
+    "Embossing paper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prägen Papier"
+          }
+        }
+      }
+    },
+    "Embossing tool" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prägewerkzeug"
           }
         }
       }
@@ -1261,6 +1671,46 @@
         }
       }
     },
+    "Faux leather, smooth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kunstleder, glatt"
+          }
+        }
+      }
+    },
+    "Felt (Kraft Blade)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filz (Kraft-Klinge)"
+          }
+        }
+      }
+    },
+    "Fill mat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matte füllen"
+          }
+        }
+      }
+    },
+    "Fill the area" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fläche füllen"
+          }
+        }
+      }
+    },
     "Finishing…" : {
       "localizations" : {
         "de" : {
@@ -1307,6 +1757,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Freihand"
+          }
+        }
+      }
+    },
+    "Frosted glass film" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Milchglasfolie"
+          }
+        }
+      }
+    },
+    "Gap (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abstand (mm)"
           }
         }
       }
@@ -1501,6 +1971,16 @@
         }
       }
     },
+    "Inner offset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontur innen"
+          }
+        }
+      }
+    },
     "Installed version" : {
       "localizations" : {
         "de" : {
@@ -1531,6 +2011,16 @@
         }
       }
     },
+    "Join the selected objects into one object without changing the lines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die ausgewählten Objekte zu einem Objekt verbinden, ohne die Linien zu ändern"
+          }
+        }
+      }
+    },
     "Join the selected objects into one outline" : {
       "localizations" : {
         "de" : {
@@ -1551,12 +2041,52 @@
         }
       }
     },
+    "Keep only what lies inside the frontmost object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur behalten, was im vordersten Objekt liegt"
+          }
+        }
+      }
+    },
     "Keep proportions" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seitenverhältnis beibehalten"
+          }
+        }
+      }
+    },
+    "Kraft Blade (leather)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kraft-Klinge (Leder)"
+          }
+        }
+      }
+    },
+    "Kraft paper 260 g/m² (cut)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kraftpapier 260 g/m² (schneiden)"
+          }
+        }
+      }
+    },
+    "Kraft paper 260 g/m² (score)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kraftpapier 260 g/m² (ritzen)"
           }
         }
       }
@@ -1601,6 +2131,36 @@
         }
       }
     },
+    "Leather 1–2 mm (Kraft Blade)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leder 1–2 mm (Kraft-Klinge)"
+          }
+        }
+      }
+    },
+    "Leather and thick material" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leder und dickes Material"
+          }
+        }
+      }
+    },
+    "Leather up to 1 mm (Kraft Blade)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leder bis 1 mm (Kraft-Klinge)"
+          }
+        }
+      }
+    },
     "Leave out" : {
       "localizations" : {
         "de" : {
@@ -1611,12 +2171,72 @@
         }
       }
     },
+    "Left" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Links"
+          }
+        }
+      }
+    },
+    "Left holder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linker Halter"
+          }
+        }
+      }
+    },
     "Left: follow the pixels. Right: rounder lines. Sharp corners stay." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Links: genau den Pixeln folgen. Rechts: rundere Linien. Spitze Ecken bleiben erhalten."
+          }
+        }
+      }
+    },
+    "Lies outside the cutting area" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liegt außerhalb des Schneidebereichs"
+          }
+        }
+      }
+    },
+    "Lines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linien"
+          }
+        }
+      }
+    },
+    "Lines inside the object, for the pen or the embossing tool. Choose that tool for the fill in the Object panel." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linien im Objekt, für Stift oder Prägewerkzeug. Wähle das Werkzeug für die Füllung im Bereich Objekt."
+          }
+        }
+      }
+    },
+    "Lines outside the mat are moved to its edge." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linien außerhalb der Matte werden an den Rand gesetzt."
           }
         }
       }
@@ -1667,6 +2287,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suche Plotter…"
+          }
+        }
+      }
+    },
+    "Lower values move the head more gently, e.g. for thick or delicate material. Cameo 4 line only." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kleinere Werte bewegen den Kopf sanfter, z. B. für dickes oder empfindliches Material. Nur Cameo-4-Reihe."
+          }
+        }
+      }
+    },
+    "Luxury cardstock 220 g/m²" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luxus-Karton 220 g/m²"
+          }
+        }
+      }
+    },
+    "Make compound path" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verknüpften Pfad erstellen"
           }
         }
       }
@@ -1731,12 +2381,32 @@
         }
       }
     },
+    "Metallic HTV (Stahls)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metallic-Flex (Stahls)"
+          }
+        }
+      }
+    },
     "Mirror" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spiegeln"
+          }
+        }
+      }
+    },
+    "Mirror copy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gespiegelte Kopie"
           }
         }
       }
@@ -1771,6 +2441,16 @@
         }
       }
     },
+    "Mixed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemischt"
+          }
+        }
+      }
+    },
     "Mode" : {
       "localizations" : {
         "de" : {
@@ -1781,12 +2461,42 @@
         }
       }
     },
+    "Modify" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifizieren"
+          }
+        }
+      }
+    },
+    "Most of these need two or more objects." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die meisten brauchen zwei oder mehr Objekte."
+          }
+        }
+      }
+    },
     "Move" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verschieben"
+          }
+        }
+      }
+    },
+    "Move by" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschieben um"
           }
         }
       }
@@ -1851,6 +2561,16 @@
         }
       }
     },
+    "No dots fit with this spacing." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit diesem Abstand passen keine Punkte."
+          }
+        }
+      }
+    },
     "No mat or material loaded. Load it with the button on the plotter." : {
       "localizations" : {
         "de" : {
@@ -1911,12 +2631,32 @@
         }
       }
     },
+    "Nothing changed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts geändert"
+          }
+        }
+      }
+    },
     "Nothing left" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nichts übrig"
+          }
+        }
+      }
+    },
+    "Nothing to copy." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts zum Kopieren."
           }
         }
       }
@@ -1951,6 +2691,16 @@
         }
       }
     },
+    "Objects shown in this colour are cut with this tool. Choose the tool of an object in the Object panel or with a right click." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objekte in dieser Farbe werden mit diesem Werkzeug bearbeitet. Das Werkzeug eines Objekts wählst du im Bereich Objekt oder per Rechtsklick."
+          }
+        }
+      }
+    },
     "Off" : {
       "localizations" : {
         "de" : {
@@ -1971,6 +2721,16 @@
         }
       }
     },
+    "Oiss Easy Flex" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oiss Easy Flex"
+          }
+        }
+      }
+    },
     "OK" : {
       "localizations" : {
         "de" : {
@@ -1981,12 +2741,42 @@
         }
       }
     },
+    "Only closed outlines can be filled." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur geschlossene Umrisse lassen sich füllen."
+          }
+        }
+      }
+    },
     "Only the first page of the PDF was used." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nur die erste Seite des PDF wurde verwendet."
+          }
+        }
+      }
+    },
+    "Oracal 531/651 (glossy)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oracal 531/651 (glänzend)"
+          }
+        }
+      }
+    },
+    "Oracal 631 (matte)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oracal 631 (matt)"
           }
         }
       }
@@ -2031,12 +2821,32 @@
         }
       }
     },
+    "Outside the cutting area: %lld. Lines there are cut off at the edge." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Außerhalb des Schneidebereichs: %lld. Linien dort werden am Rand abgeschnitten."
+          }
+        }
+      }
+    },
     "Outside the cutting area: %lld. The parts outside are not cut, to protect the mat." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Außerhalb des Schneidebereichs: %lld. Die überstehenden Teile werden nicht geschnitten, um die Matte zu schonen."
+            "value" : "Außerhalb des Schneidebereichs: %lld. Die Teile außerhalb werden nicht geschnitten, um die Matte zu schonen."
+          }
+        }
+      }
+    },
+    "Overcut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überschnitt"
           }
         }
       }
@@ -2047,6 +2857,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bereich"
+          }
+        }
+      }
+    },
+    "Paper" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Papier"
           }
         }
       }
@@ -2101,12 +2921,42 @@
         }
       }
     },
+    "Pattern" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muster"
+          }
+        }
+      }
+    },
     "Pen" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stift"
+          }
+        }
+      }
+    },
+    "Pen, embossing, punching" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stift, Prägen, Stanzen"
+          }
+        }
+      }
+    },
+    "Photo paper 100 g/m²" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotopapier 100 g/m²"
           }
         }
       }
@@ -2137,6 +2987,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zacken: %lld"
+          }
+        }
+      }
+    },
+    "Poliflex Premium" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poliflex Premium"
           }
         }
       }
@@ -2201,6 +3061,26 @@
         }
       }
     },
+    "Punch tool" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stanzwerkzeug"
+          }
+        }
+      }
+    },
+    "Punching paper (stipple)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stanzen Papier (Punktierung)"
+          }
+        }
+      }
+    },
     "Ratchet blade" : {
       "localizations" : {
         "de" : {
@@ -2261,6 +3141,16 @@
         }
       }
     },
+    "Release compound path" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verknüpften Pfad lösen"
+          }
+        }
+      }
+    },
     "Remove specks" : {
       "localizations" : {
         "de" : {
@@ -2311,6 +3201,26 @@
         }
       }
     },
+    "Replace the object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Objekt ersetzen"
+          }
+        }
+      }
+    },
+    "Replicate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replizieren"
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "de" : {
@@ -2351,6 +3261,26 @@
         }
       }
     },
+    "Right" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechts"
+          }
+        }
+      }
+    },
+    "Right holder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechter Halter"
+          }
+        }
+      }
+    },
     "Rotate" : {
       "localizations" : {
         "de" : {
@@ -2371,12 +3301,52 @@
         }
       }
     },
+    "Rotate by" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drehen um"
+          }
+        }
+      }
+    },
+    "Rotate copies" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopien drehen"
+          }
+        }
+      }
+    },
     "Round" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rund"
+          }
+        }
+      }
+    },
+    "Rows and columns" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihen und Spalten"
+          }
+        }
+      }
+    },
+    "Rows: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihen: %lld"
           }
         }
       }
@@ -2457,6 +3427,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gesichert werden Werkzeug, Klingentiefe, Druck, Geschwindigkeit und Durchgänge."
+          }
+        }
+      }
+    },
+    "Saves tool, blade depth, force, speed, passes and cut options." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speichert Werkzeug, Klingentiefe, Anpressdruck, Geschwindigkeit, Durchgänge und Schnittoptionen."
+          }
+        }
+      }
+    },
+    "Scale" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skalieren"
+          }
+        }
+      }
+    },
+    "Scale (%)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skalieren (%)"
+          }
+        }
+      }
+    },
+    "Schiller Flex" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schiller Flex"
           }
         }
       }
@@ -2564,6 +3574,16 @@
         }
       }
     },
+    "Select one or more objects to edit them." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle ein oder mehrere Objekte aus, um sie zu bearbeiten."
+          }
+        }
+      }
+    },
     "Send to back" : {
       "localizations" : {
         "de" : {
@@ -2604,6 +3624,16 @@
         }
       }
     },
+    "Sharp corners (Smart Cut)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spitze Ecken (Smart Cut)"
+          }
+        }
+      }
+    },
     "Show image" : {
       "localizations" : {
         "de" : {
@@ -2624,12 +3654,32 @@
         }
       }
     },
+    "Siser P.S. Electric" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Siser P.S. Electric"
+          }
+        }
+      }
+    },
     "Size (mm)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Größe (mm)"
+          }
+        }
+      }
+    },
+    "Sketch and emboss fill" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skizzen- und Prägefüllung"
           }
         }
       }
@@ -2644,12 +3694,32 @@
         }
       }
     },
+    "Small dots along or inside the object. The punch tool pierces each dot; a pen draws small circles." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kleine Punkte entlang oder im Objekt. Das Stanzwerkzeug sticht jeden Punkt; ein Stift zeichnet kleine Kreise."
+          }
+        }
+      }
+    },
     "Smoothing" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Glätten"
+          }
+        }
+      }
+    },
+    "SnapPap (washable paper)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SnapPap (waschbares Papier)"
           }
         }
       }
@@ -2664,12 +3734,42 @@
         }
       }
     },
+    "Spacing (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abstand (mm)"
+          }
+        }
+      }
+    },
     "Speed" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geschwindigkeit"
+          }
+        }
+      }
+    },
+    "Split an object into its separate outlines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Objekt in seine einzelnen Umrisse aufteilen"
+          }
+        }
+      }
+    },
+    "Split overlapping objects into all their pieces" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überlappende Objekte in alle Einzelteile zerlegen"
           }
         }
       }
@@ -2714,6 +3814,26 @@
         }
       }
     },
+    "Stipple" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punktieren"
+          }
+        }
+      }
+    },
+    "Stippling (punch tool)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punktierung (Stanzwerkzeug)"
+          }
+        }
+      }
+    },
     "Style" : {
       "localizations" : {
         "de" : {
@@ -2730,6 +3850,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ausschneiden"
+          }
+        }
+      }
+    },
+    "Subtract all" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle subtrahieren"
           }
         }
       }
@@ -2780,6 +3910,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Text wurde ausgelassen. Wandle Text vorher in deinem Grafikprogramm in Kurven um."
+          }
+        }
+      }
+    },
+    "Textile vinyl (white, matte)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Textilfolie (weiß, matt)"
           }
         }
       }
@@ -2904,6 +4044,16 @@
         }
       }
     },
+    "The object has only one outline." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Objekt hat nur einen Umriss."
+          }
+        }
+      }
+    },
     "The object is too small for this inner offset." : {
       "localizations" : {
         "de" : {
@@ -2914,12 +4064,22 @@
         }
       }
     },
+    "The objects are too large to fill the mat." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Objekte sind zu groß, um die Matte zu füllen."
+          }
+        }
+      }
+    },
     "The parts outside the cutting area are left out, so the blade does not cut into the mat." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Teile außerhalb des Schneidebereichs werden ausgelassen, damit das Messer nicht in die Matte schneidet."
+            "value" : "Die Teile außerhalb des Schneidebereichs werden ausgelassen, damit die Klinge nicht in die Matte schneidet."
           }
         }
       }
@@ -2950,6 +4110,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Plotter wird von einem anderen Programm benutzt. Silhouette Studio beenden und erneut versuchen."
+          }
+        }
+      }
+    },
+    "The plotter rolls the mat in and out a few times first, so the rollers grip better (e.g. for long or thick material)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Plotter zieht die Matte zuerst ein paar Mal ein und aus, damit die Rollen besser greifen (z. B. bei langem oder dickem Material)"
           }
         }
       }
@@ -3024,6 +4194,26 @@
         }
       }
     },
+    "Tool 1" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkzeug 1"
+          }
+        }
+      }
+    },
+    "Tool 2" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkzeug 2"
+          }
+        }
+      }
+    },
     "Tool: select, text, freehand or curve" : {
       "localizations" : {
         "de" : {
@@ -3070,6 +4260,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wird nachgezeichnet …"
+          }
+        }
+      }
+    },
+    "Track enhancing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spurverstärkung"
+          }
+        }
+      }
+    },
+    "Transform" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transformieren"
+          }
+        }
+      }
+    },
+    "Transform, replicate, combine and offset in the Edit panel." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transformieren, Replizieren, Kombinieren und Kontur im Bereich Bearbeiten."
           }
         }
       }
@@ -3204,6 +4424,26 @@
         }
       }
     },
+    "Vellum 110 g/m² (cut)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transparentpapier 110 g/m² (schneiden)"
+          }
+        }
+      }
+    },
+    "Vellum 110 g/m² (score)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transparentpapier 110 g/m² (ritzen)"
+          }
+        }
+      }
+    },
     "Version %@ is the newest version." : {
       "localizations" : {
         "de" : {
@@ -3240,6 +4480,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ab welcher Helligkeit ein Pixel zum Motiv gehört"
+          }
+        }
+      }
+    },
+    "Which colour is cut with which tool. Click for the cut settings." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welche Farbe mit welchem Werkzeug bearbeitet wird. Klicken für die Schnitteinstellungen."
+          }
+        }
+      }
+    },
+    "Which tool holder cuts, draws or embosses this object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welcher Werkzeughalter dieses Objekt schneidet, zeichnet oder prägt"
           }
         }
       }

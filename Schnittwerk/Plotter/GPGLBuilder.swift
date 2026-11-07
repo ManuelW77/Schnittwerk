@@ -57,9 +57,18 @@ enum GPGLBuilder {
     static func units(_ mm: CGFloat) -> Int { Int((mm * unitsPerMM).rounded()) }
 
     /// All lines to cut, in mat coordinates, in a good order.
-    static func cutPaths(_ data: ProjectData) -> [Polyline] {
-        let lines = data.shapes.filter(\.cutEnabled).flatMap(\.matPaths).filter { $0.points.count >= 2 }
+    /// With `slot`, only the objects of tool 1 or 2.
+    static func cutPaths(_ data: ProjectData, slot: Int? = nil) -> [Polyline] {
+        let lines = data.shapes.filter { $0.cutEnabled && (slot == nil || $0.toolSlot == slot) }
+            .flatMap(\.matPaths).filter { $0.points.count >= 2 }
         return ordered(lines)
+    }
+
+    /// The tool runs of a project. Tools that do not cut through (pen,
+    /// embossing, punching) run first, so the material does not move yet.
+    static func runs(for data: ProjectData) -> [ToolRun] {
+        let runs = data.usedSlots.map { ToolRun(settings: data.settings(slot: $0), paths: cutPaths(data, slot: $0)) }
+        return runs.filter { !$0.settings.tool.isBlade } + runs.filter { $0.settings.tool.isBlade }
     }
 
     /// Small and inner lines first (holes before the outline, so the
@@ -104,27 +113,42 @@ enum GPGLBuilder {
         return result
     }
 
-    static func build(paths: [Polyline], settings rawSettings: CutSettings, mat: MatType,
+    /// Lines cut with one tool.
+    struct ToolRun {
+        var settings: CutSettings
+        var paths: [Polyline]
+    }
+
+    static func build(paths: [Polyline], settings: CutSettings, mat: MatType,
                       model: PlotterModel = .cameo4) -> GPGLJob {
-        let s = rawSettings.clamped
-        // Machines with one tool holder (Portrait) know no holder 2
-        let h = model.twoTools ? s.holder : 1
+        build(runs: [ToolRun(settings: settings, paths: paths)], mat: mat, model: model)
+    }
+
+    /// One job with one or two tools. Each run selects its holder (`J`),
+    /// sets its values and cuts its lines. Machines with one holder cut
+    /// everything with the values of the first run.
+    static func build(runs rawRuns: [ToolRun], mat: MatType, model: PlotterModel = .cameo4) -> GPGLJob {
+        var runs = rawRuns.filter { !$0.paths.isEmpty }
+        if runs.isEmpty, let first = rawRuns.first { runs = [first] }
+        if !model.twoTools, runs.count > 1 {
+            runs = [ToolRun(settings: runs[0].settings, paths: runs.flatMap(\.paths))]
+        }
+        guard let firstRun = runs.first else {
+            return build(runs: [ToolRun(settings: CutSettings(), paths: [])], mat: mat, model: model)
+        }
         var area = mat.size
         area.width = min(area.width, model.widthMM)
         var c: [String] = []
 
-        let speed = min(s.speed, model.maxSpeed)
-        // Blade tip offset 0.9 mm (18 units); a pen has none
-        let offset = s.tool.isBlade ? "FC18,1,\(h)" : "FC0,1,\(h)"
-
+        let first = firstRun.settings.clamped
         if model.family == .classic {
             // Older machines: no mat command, no tool holder, no AutoBlade.
             // FW300 = custom media, the values below apply.
             c.append("FW300")
-            c.append("!\(speed)")
-            c.append("FX\(s.pressure)")
-            c.append(s.tool.isBlade ? "FC18" : "FC0")
-            c.append("FY1")
+            c.append("!\(min(first.speed, model.maxSpeed))")
+            c.append("FX\(first.pressure)")
+            c.append("FC\(bladeOffset(first))")
+            c.append(first.options.trackEnhancing ? "FY0" : "FY1")
             c.append("FN0")
             c.append("TB50,0")
             c.append("FE0,0")
@@ -138,61 +162,39 @@ enum GPGLBuilder {
             c.append("TG\(mat.tgIndex)")
             c.append("FN0")
             c.append("TB50,0")
+            // Track enhancing: the rollers run over the mat first
+            if runs.contains(where: { $0.settings.options.trackEnhancing }) { c.append("FY0") }
             c.append("\\0,0")
             c.append("Z\(units(area.height)),\(units(area.width))")
-            if model.twoTools { c.append("J\(h)") }
         }
 
-        // Tool
-        switch model.family {
-        case .classic:
-            break
-        case .cameo4:
-            if s.tool == .autoBlade {
-                c.append("TF\(s.depth),\(h)")
-            }
-            c.append("FX\(s.pressure),\(h)")
-            c.append("TJ0")
-            c.append("!\(speed),\(h)")
-            c.append("FC0,1,\(h)")
-            c.append("FE0,\(h)")
-            c.append("FF1,0,\(h)")
-            c.append("FF1,1,\(h)")
-            c.append("FX\(s.pressure),\(h)")
-            c.append("TJ3")
-            c.append(offset)
-        case .cameo3:
-            // Same values, set once, without the acceleration command TJ
-            c.append("!\(speed),\(h)")
-            c.append("FX\(s.pressure),\(h)")
-            c.append("FE0,\(h)")
-            c.append("FF1,0,\(h)")
-            c.append("FF1,1,\(h)")
-            c.append("FC0,1,\(h)")
-            if s.tool.isBlade { c.append(offset) }
-            if s.tool == .autoBlade {
-                c.append("TF\(s.depth),\(h)")
-            }
-        }
-
-        // Lines
         var maxY: CGFloat = 0
         var length: CGFloat = 0
-        // Parts outside the cutting area are left out, so the blade never
-        // runs along the edge of the mat
-        let pieces = paths.flatMap { clip($0, to: CGRect(origin: .zero, size: area)) }
-        for _ in 0..<s.passes {
-            for line in pieces {
-                var pts = line.points
-                if line.closed, let first = pts.first { pts.append(first) }
-                guard let first = pts.first, pts.count >= 2 else { continue }
-                c.append("M\(units(first.y)),\(units(first.x))")
-                for p in pts.dropFirst() {
-                    c.append("D\(units(p.y)),\(units(p.x))")
-                    maxY = max(maxY, p.y)
+        let box = CGRect(origin: .zero, size: area)
+        for run in runs {
+            let s = run.settings.clamped
+            // Machines with one tool holder (Portrait) know no holder 2
+            let h = model.twoTools ? s.holder : 1
+            if model.family != .classic, model.twoTools { c.append("J\(h)") }
+            c.append(contentsOf: toolCommands(s, holder: h, model: model))
+
+            // Parts outside the cutting area are left out, so the blade
+            // never runs along the edge of the mat
+            let pieces = run.paths.flatMap { clip($0, to: box) }
+            for _ in 0..<s.passes {
+                for line in pieces {
+                    for stroke in strokes(line, settings: s) {
+                        let pts = stroke.map { clamp($0, to: box) }
+                        guard let start = pts.first, pts.count >= 2 else { continue }
+                        c.append("M\(units(start.y)),\(units(start.x))")
+                        for p in pts.dropFirst() {
+                            c.append("D\(units(p.y)),\(units(p.x))")
+                            maxY = max(maxY, p.y)
+                        }
+                        maxY = max(maxY, start.y)
+                        length += Polyline(points: pts, closed: false).length
+                    }
                 }
-                maxY = max(maxY, first.y)
-                length += Polyline(points: pts, closed: false).length
             }
         }
 
@@ -212,7 +214,116 @@ enum GPGLBuilder {
             c.append("FN0")
             c.append("TB50,0")
         }
-        return GPGLJob(commands: c, pathCount: paths.count, cutLengthMM: length)
+        return GPGLJob(commands: c, pathCount: runs.reduce(0) { $0 + $1.paths.count }, cutLengthMM: length)
+    }
+
+    /// Blade offset in plotter units: 0.9 mm (18 units) plus the
+    /// correction; tools without a trailing blade tip have none.
+    static func bladeOffset(_ s: CutSettings) -> Int {
+        s.tool.isBlade ? max(0, 18 + s.options.offsetAdjust) : 0
+    }
+
+    /// Values of one tool: force, speed, depth, offset.
+    static func toolCommands(_ s: CutSettings, holder h: Int, model: PlotterModel) -> [String] {
+        let speed = min(s.speed, model.maxSpeed)
+        let offset = "FC\(bladeOffset(s)),1,\(h)"
+        var c: [String] = []
+        switch model.family {
+        case .classic:
+            break // set in the header
+        case .cameo4:
+            if s.tool.setsDepth {
+                c.append("TF\(s.depth),\(h)")
+            }
+            c.append("FX\(s.pressure),\(h)")
+            c.append("TJ0")
+            c.append("!\(speed),\(h)")
+            c.append("FC0,1,\(h)")
+            c.append("FE0,\(h)")
+            c.append("FF1,0,\(h)")
+            c.append("FF1,1,\(h)")
+            c.append("FX\(s.pressure),\(h)")
+            c.append("TJ\(s.options.acceleration)")
+            c.append(offset)
+        case .cameo3:
+            // Same values, set once, without the acceleration command TJ
+            c.append("!\(speed),\(h)")
+            c.append("FX\(s.pressure),\(h)")
+            c.append("FE0,\(h)")
+            c.append("FF1,0,\(h)")
+            c.append("FF1,1,\(h)")
+            c.append("FC0,1,\(h)")
+            if s.tool.isBlade { c.append(offset) }
+            // Only the AutoBlade sets its depth on the Cameo 3
+            if s.tool == .autoBlade {
+                c.append("TF\(s.depth),\(h)")
+            }
+        }
+        return c
+    }
+
+    /// The tool movements of one line: each stroke is cut in one go.
+    /// Closed lines return to their start. A punch only pierces the
+    /// centre; blades get the overcut and the sharp-corner moves.
+    static func strokes(_ line: Polyline, settings s: CutSettings) -> [[CGPoint]] {
+        if s.tool == .punch {
+            let b = line.bounds
+            guard !b.isNull else { return [] }
+            let centre = CGPoint(x: b.midX, y: b.midY)
+            return [[centre, centre]]
+        }
+        var pts = line.points
+        guard pts.count >= 2 else { return [] }
+        if line.closed, let first = pts.first { pts.append(first) }
+        guard s.tool.isBlade else { return [pts] }
+
+        if s.options.overcut, line.closed {
+            pts += walk(along: Array(line.points) + [line.points[0]], distance: CutOptions.overcutMM)
+        }
+        guard s.options.sharpCorners, pts.count >= 3 else { return [pts] }
+
+        // Split at sharp corners: run past the corner, lift, start again there
+        var result: [[CGPoint]] = []
+        var current = [pts[0]]
+        for i in 1..<(pts.count - 1) {
+            let a = pts[i - 1], p = pts[i], b = pts[i + 1]
+            current.append(p)
+            let inDir = CGVector(dx: p.x - a.x, dy: p.y - a.y)
+            let outDir = CGVector(dx: b.x - p.x, dy: b.y - p.y)
+            let inLen = hypot(inDir.dx, inDir.dy), outLen = hypot(outDir.dx, outDir.dy)
+            guard inLen > 1e-6, outLen > 1e-6 else { continue }
+            let cosine = (inDir.dx * outDir.dx + inDir.dy * outDir.dy) / (inLen * outLen)
+            let turn = acos(min(max(cosine, -1), 1)) * 180 / .pi
+            guard turn >= CutOptions.sharpCornerAngle else { continue }
+            let o = CutOptions.cornerOvershootMM
+            current.append(CGPoint(x: p.x + inDir.dx / inLen * o, y: p.y + inDir.dy / inLen * o))
+            result.append(current)
+            current = [p]
+        }
+        current.append(pts[pts.count - 1])
+        result.append(current)
+        return result.filter { $0.count >= 2 }
+    }
+
+    /// Points along `pts` from its start up to `distance` mm (without the start).
+    static func walk(along pts: [CGPoint], distance: CGFloat) -> [CGPoint] {
+        var left = distance
+        var out: [CGPoint] = []
+        for (a, b) in zip(pts, pts.dropFirst()) {
+            let d = a.distance(to: b)
+            guard d > 1e-9 else { continue }
+            if d >= left {
+                out.append(CGPoint(x: a.x + (b.x - a.x) * left / d, y: a.y + (b.y - a.y) * left / d))
+                return out
+            }
+            out.append(b)
+            left -= d
+        }
+        return out
+    }
+
+    static func clamp(_ p: CGPoint, to r: CGRect) -> CGPoint {
+        CGPoint(x: min(max(p.x, r.minX), r.maxX), y: min(max(p.y, r.minY), r.maxY))
     }
 
     /// The parts of `line` that lie inside `rect`. A line fully inside comes
@@ -263,7 +374,9 @@ enum GPGLBuilder {
     }
 
     static func build(for data: ProjectData, model: PlotterModel = .cameo4) -> GPGLJob {
-        build(paths: cutPaths(data), settings: data.settings, mat: data.mat, model: model)
+        let runs = runs(for: data)
+        if runs.isEmpty { return build(paths: [], settings: data.settings(slot: 1), mat: data.mat, model: model) }
+        return build(runs: runs, mat: data.mat, model: model)
     }
 
     /// Small test cut: 10 mm square with a triangle inside, at the top left.

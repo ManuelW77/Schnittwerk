@@ -47,7 +47,13 @@ enum MatType: String, Codable, CaseIterable, Identifiable {
 enum ToolKind: String, Codable, CaseIterable, Identifiable {
     case autoBlade
     case ratchetBlade
+    /// Deep cut blade for leather, felt and chipboard (Cameo 4: holder 2).
+    case kraftBlade
     case pen
+    /// Embossing tool: presses lines into paper or foil without cutting.
+    case emboss
+    /// Punch tool: pierces single dots (stippling).
+    case punch
 
     var id: String { rawValue }
 
@@ -55,11 +61,78 @@ enum ToolKind: String, Codable, CaseIterable, Identifiable {
         switch self {
         case .autoBlade: return String(localized: "AutoBlade")
         case .ratchetBlade: return String(localized: "Ratchet blade")
+        case .kraftBlade: return String(localized: "Kraft Blade (leather)")
         case .pen: return String(localized: "Pen")
+        case .emboss: return String(localized: "Embossing tool")
+        case .punch: return String(localized: "Punch tool")
         }
     }
 
-    var isBlade: Bool { self != .pen }
+    var systemImage: String {
+        switch self {
+        case .autoBlade, .ratchetBlade: return "scissors"
+        case .kraftBlade: return "scissors.badge.ellipsis"
+        case .pen: return "pencil.tip"
+        case .emboss: return "seal"
+        case .punch: return "circle.dotted"
+        }
+    }
+
+    /// Tools with a blade tip that trails behind the axis (blade offset).
+    var isBlade: Bool { self == .autoBlade || self == .ratchetBlade || self == .kraftBlade }
+
+    /// Tools that set their blade depth themselves (command `TF`).
+    var setsDepth: Bool { self == .autoBlade || self == .kraftBlade }
+
+    /// Holder the tool fits into on the Cameo 4 line, nil = both.
+    var requiredHolder: Int? {
+        switch self {
+        case .autoBlade: return 1
+        case .kraftBlade, .punch: return 2
+        default: return nil
+        }
+    }
+}
+
+/// Extra cut options, as in Silhouette Studio.
+struct CutOptions: Codable, Equatable, Hashable {
+    /// Acceleration 1 (gentle) to 3 (fast). Cameo 4 line only.
+    var acceleration: Int = 3
+    /// Correction of the blade offset in 0.05 mm steps, −10…10.
+    var offsetAdjust: Int = 0
+    /// Closed lines are cut a bit past their start, so nothing stays attached.
+    var overcut: Bool = false
+    /// The plotter rolls the mat in and out first, so the rollers leave a track.
+    var trackEnhancing: Bool = false
+    /// Sharp corners: the blade runs past the corner and starts again ("Smart Cut").
+    var sharpCorners: Bool = false
+
+    static let accelerationRange = 1...3
+    static let offsetAdjustRange = -10...10
+    /// How far an overcut runs past the start (mm).
+    static let overcutMM: CGFloat = 1
+    /// How far the blade runs past a sharp corner (mm).
+    static let cornerOvershootMM: CGFloat = 0.4
+    /// Turning angle (degrees) from which a corner counts as sharp.
+    static let sharpCornerAngle: CGFloat = 60
+
+    var clamped: CutOptions {
+        var o = self
+        o.acceleration = min(max(acceleration, Self.accelerationRange.lowerBound), Self.accelerationRange.upperBound)
+        o.offsetAdjust = min(max(offsetAdjust, Self.offsetAdjustRange.lowerBound), Self.offsetAdjustRange.upperBound)
+        return o
+    }
+
+    init() {}
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        acceleration = try c.decodeIfPresent(Int.self, forKey: .acceleration) ?? 3
+        offsetAdjust = try c.decodeIfPresent(Int.self, forKey: .offsetAdjust) ?? 0
+        overcut = try c.decodeIfPresent(Bool.self, forKey: .overcut) ?? false
+        trackEnhancing = try c.decodeIfPresent(Bool.self, forKey: .trackEnhancing) ?? false
+        sharpCorners = try c.decodeIfPresent(Bool.self, forKey: .sharpCorners) ?? false
+    }
 }
 
 /// All values the plotter needs for one cut.
@@ -77,11 +150,22 @@ struct CutSettings: Codable, Equatable {
     var passes: Int = 1
     /// Name of the material preset the values came from.
     var materialID: String? = MaterialPreset.vinyl.id
+    var options = CutOptions()
 
     static let pressureRange = 1...33
     static let speedRange = 1...30
     static let depthRange = 1...10
     static let passesRange = 1...10
+
+    init() {}
+
+    /// Default for holder 2: a pen, which fits into both holders.
+    static var holder2Default: CutSettings {
+        var s = CutSettings()
+        MaterialPreset.pen.apply(to: &s)
+        s.holder = 2
+        return s
+    }
 
     /// Values limited to what the plotter accepts.
     var clamped: CutSettings {
@@ -91,30 +175,70 @@ struct CutSettings: Codable, Equatable {
         s.pressure = min(max(pressure, Self.pressureRange.lowerBound), Self.pressureRange.upperBound)
         s.speed = min(max(speed, Self.speedRange.lowerBound), Self.speedRange.upperBound)
         s.passes = min(max(passes, Self.passesRange.lowerBound), Self.passesRange.upperBound)
+        s.options = options.clamped
         return s
+    }
+
+    /// Older project files have no options yet.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        tool = try c.decodeIfPresent(ToolKind.self, forKey: .tool) ?? .autoBlade
+        holder = try c.decodeIfPresent(Int.self, forKey: .holder) ?? 1
+        depth = try c.decodeIfPresent(Int.self, forKey: .depth) ?? 2
+        pressure = try c.decodeIfPresent(Int.self, forKey: .pressure) ?? 10
+        speed = try c.decodeIfPresent(Int.self, forKey: .speed) ?? 5
+        passes = try c.decodeIfPresent(Int.self, forKey: .passes) ?? 1
+        materialID = try c.decodeIfPresent(String.self, forKey: .materialID)
+        options = try c.decodeIfPresent(CutOptions.self, forKey: .options) ?? CutOptions()
     }
 }
 
 /// Starting values for common materials. Always do a test cut first.
+/// Many values come from the table of michamade.de/schnitteinstellungen
+/// (Cameo 4, AutoBlade); the Kraft Blade values follow Silhouette's
+/// own starting points.
 struct MaterialPreset: Identifiable, Equatable {
+    enum Category: String, CaseIterable, Identifiable {
+        case vinyl, htv, paper, cardstock, leather, tools
+        var id: String { rawValue }
+        var title: String {
+            switch self {
+            case .vinyl: return String(localized: "Adhesive vinyl")
+            case .htv: return String(localized: "Heat transfer vinyl")
+            case .paper: return String(localized: "Paper")
+            case .cardstock: return String(localized: "Cardstock")
+            case .leather: return String(localized: "Leather and thick material")
+            case .tools: return String(localized: "Pen, embossing, punching")
+            }
+        }
+    }
+
     let id: String
+    let category: Category
+    private let titleKey: String.LocalizationValue
     let tool: ToolKind
     let depth: Int
     let pressure: Int
     let speed: Int
     let passes: Int
+    var options = CutOptions()
 
-    var title: String {
-        switch id {
-        case "vinyl": return String(localized: "Vinyl (glossy/matte)")
-        case "htv": return String(localized: "Heat transfer vinyl")
-        case "paper": return String(localized: "Paper 80 g/m²")
-        case "cardstock": return String(localized: "Cardstock 220 g/m²")
-        case "sticker": return String(localized: "Sticker paper")
-        case "pen": return String(localized: "Drawing with pen")
-        default: return id
-        }
+    init(_ id: String, _ category: Category, _ title: String.LocalizationValue, tool: ToolKind = .autoBlade,
+         depth: Int, pressure: Int, speed: Int, passes: Int = 1, overcut: Bool = false) {
+        self.id = id
+        self.category = category
+        self.titleKey = title
+        self.tool = tool
+        self.depth = depth
+        self.pressure = pressure
+        self.speed = speed
+        self.passes = passes
+        options.overcut = overcut
     }
+
+    var title: String { String(localized: titleKey) }
+
+    static func == (a: MaterialPreset, b: MaterialPreset) -> Bool { a.id == b.id }
 
     func apply(to settings: inout CutSettings) {
         settings.tool = tool
@@ -122,15 +246,59 @@ struct MaterialPreset: Identifiable, Equatable {
         settings.pressure = pressure
         settings.speed = speed
         settings.passes = passes
+        settings.options = options
         settings.materialID = id
     }
 
-    static let vinyl = MaterialPreset(id: "vinyl", tool: .autoBlade, depth: 2, pressure: 10, speed: 5, passes: 1)
-    static let htv = MaterialPreset(id: "htv", tool: .autoBlade, depth: 2, pressure: 9, speed: 5, passes: 1)
-    static let paper = MaterialPreset(id: "paper", tool: .autoBlade, depth: 2, pressure: 12, speed: 5, passes: 1)
-    static let cardstock = MaterialPreset(id: "cardstock", tool: .autoBlade, depth: 4, pressure: 24, speed: 3, passes: 2)
-    static let sticker = MaterialPreset(id: "sticker", tool: .autoBlade, depth: 2, pressure: 14, speed: 5, passes: 1)
-    static let pen = MaterialPreset(id: "pen", tool: .pen, depth: 1, pressure: 10, speed: 5, passes: 1)
+    // The first six ids are kept: older projects point to them.
+    static let vinyl = MaterialPreset("vinyl", .vinyl, "Vinyl (glossy/matte)", depth: 2, pressure: 10, speed: 5)
+    static let htv = MaterialPreset("htv", .htv, "Heat transfer vinyl", depth: 2, pressure: 9, speed: 5)
+    static let paper = MaterialPreset("paper", .paper, "Paper 80 g/m²", depth: 2, pressure: 12, speed: 5)
+    static let cardstock = MaterialPreset("cardstock", .cardstock, "Cardstock 220 g/m²", depth: 4, pressure: 24, speed: 3, passes: 2)
+    static let sticker = MaterialPreset("sticker", .paper, "Sticker paper", depth: 2, pressure: 14, speed: 5)
+    static let pen = MaterialPreset("pen", .tools, "Drawing with pen", tool: .pen, depth: 1, pressure: 10, speed: 5)
 
-    static let all: [MaterialPreset] = [.vinyl, .htv, .paper, .cardstock, .sticker, .pen]
+    static let all: [MaterialPreset] = [
+        // Adhesive vinyl
+        vinyl,
+        MaterialPreset("oracal631", .vinyl, "Oracal 631 (matte)", depth: 1, pressure: 10, speed: 2, passes: 2),
+        MaterialPreset("oracal651", .vinyl, "Oracal 531/651 (glossy)", depth: 2, pressure: 15, speed: 1),
+        MaterialPreset("dcfix", .vinyl, "d-c-fix adhesive film", depth: 1, pressure: 25, speed: 8, passes: 2),
+        MaterialPreset("frosted", .vinyl, "Frosted glass film", depth: 4, pressure: 25, speed: 5),
+        // Heat transfer vinyl
+        htv,
+        MaterialPreset("htvTextile", .htv, "Textile vinyl (white, matte)", depth: 2, pressure: 12, speed: 8),
+        MaterialPreset("poliflex", .htv, "Poliflex Premium", depth: 2, pressure: 8, speed: 5),
+        MaterialPreset("siserPS", .htv, "Siser P.S. Electric", depth: 2, pressure: 8, speed: 5),
+        MaterialPreset("easyflex", .htv, "Oiss Easy Flex", depth: 2, pressure: 4, speed: 4),
+        MaterialPreset("htvMetallic", .htv, "Metallic HTV (Stahls)", depth: 3, pressure: 19, speed: 5),
+        MaterialPreset("schillerFlex", .htv, "Schiller Flex", depth: 3, pressure: 8, speed: 7),
+        // Paper
+        paper,
+        sticker,
+        MaterialPreset("photo", .paper, "Photo paper 100 g/m²", depth: 2, pressure: 15, speed: 10),
+        MaterialPreset("vellumCut", .paper, "Vellum 110 g/m² (cut)", depth: 2, pressure: 25, speed: 10),
+        MaterialPreset("vellumScore", .paper, "Vellum 110 g/m² (score)", depth: 1, pressure: 1, speed: 10),
+        // Cardstock
+        MaterialPreset("card200", .cardstock, "Cardstock 200 g/m²", depth: 3, pressure: 30, speed: 3),
+        cardstock,
+        MaterialPreset("luxuryCard", .cardstock, "Luxury cardstock 220 g/m²", depth: 3, pressure: 30, speed: 3),
+        MaterialPreset("kraftPaperCut", .cardstock, "Kraft paper 260 g/m² (cut)", depth: 5, pressure: 33, speed: 3, passes: 2),
+        MaterialPreset("kraftPaperScore", .cardstock, "Kraft paper 260 g/m² (score)", depth: 1, pressure: 20, speed: 1),
+        MaterialPreset("snappap", .cardstock, "SnapPap (washable paper)", depth: 8, pressure: 33, speed: 3),
+        // Leather and thick material
+        MaterialPreset("fauxLeather", .leather, "Faux leather, smooth", depth: 7, pressure: 33, speed: 3, passes: 2, overcut: true),
+        MaterialPreset("leatherThin", .leather, "Leather up to 1 mm (Kraft Blade)", tool: .kraftBlade,
+                       depth: 6, pressure: 33, speed: 2, passes: 3, overcut: true),
+        MaterialPreset("leatherThick", .leather, "Leather 1–2 mm (Kraft Blade)", tool: .kraftBlade,
+                       depth: 10, pressure: 33, speed: 1, passes: 5, overcut: true),
+        MaterialPreset("felt", .leather, "Felt (Kraft Blade)", tool: .kraftBlade, depth: 8, pressure: 30, speed: 3, passes: 2, overcut: true),
+        MaterialPreset("chipboard", .leather, "Chipboard 1 mm (Kraft Blade)", tool: .kraftBlade,
+                       depth: 10, pressure: 33, speed: 1, passes: 4, overcut: true),
+        // Pen, embossing, punching
+        pen,
+        MaterialPreset("embossPaper", .tools, "Embossing paper", tool: .emboss, depth: 1, pressure: 20, speed: 3),
+        MaterialPreset("embossFoil", .tools, "Embossing metal foil", tool: .emboss, depth: 1, pressure: 25, speed: 2),
+        MaterialPreset("punchPaper", .tools, "Punching paper (stipple)", tool: .punch, depth: 1, pressure: 20, speed: 3),
+    ]
 }

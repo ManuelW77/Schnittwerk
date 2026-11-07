@@ -60,7 +60,10 @@ gleichzeitig mit einer anderen App verbunden sein.
 ### Bearbeiten
 - Verschieben, skalieren, drehen, spiegeln; genaue Position und Größe im Inspektor
 - Mehrfachauswahl mit ⇧/⌘-Klick oder Auswahlrahmen
-- Verschmelzen, Abziehen, Schnittmenge
+- Verschmelzen, Abziehen, Schnittmenge, Alle subtrahieren, Teilen, Abschneiden, verknüpfte Pfade erstellen und lösen
+- Transformieren: skalieren in Prozent, verschieben und drehen um feste Werte
+- Replizieren: neben das Objekt kopieren, Reihen und Spalten, Matte füllen, gespiegelte Kopien, Kopien im Kreis drehen
+- Skizzen- und Prägefüllung (Linien, Kreuzschraffur, konzentrisch) und Punktierung entlang der Kontur oder in der Fläche
 - Kontur nach außen oder innen, runde oder spitze Ecken (z. B. für Sticker)
 - Ausrichten und Verteilen
 - Objekte **gruppieren**, damit sie sich gemeinsam bewegen, und **sperren**, damit sie nicht verändert werden
@@ -73,8 +76,10 @@ gleichzeitig mit einer anderen App verbunden sein.
 - Ansicht verschieben mit Leertaste + Ziehen oder mittlerer Maustaste
 
 ### Schneiden
-- Werkzeug, Klingentiefe, Kraft, Geschwindigkeit, Durchgänge
-- Material-Vorlagen und eigene Schnittprofile (Import / Export als `.schnittprofile`)
+- Zwei Werkzeuge in einem Auftrag: jedes Objekt wird mit Werkzeug 1 (rot) oder 2 (blau) bearbeitet, Stift und Prägen laufen vor dem Schneiden
+- Werkzeuge: AutoBlade, Ratschenklinge, Kraft-Klinge (Leder, Filz, Graupappe), Stift, Prägewerkzeug, Stanzwerkzeug
+- Klingentiefe, Kraft, Geschwindigkeit, Durchgänge, Beschleunigung, Klingen-Offset, Überschnitt, spitze Ecken (Smart Cut), Spurverstärkung
+- Über 30 Material-Vorlagen (u. a. nach [michamade.de](https://michamade.de/schnitteinstellungen/)) und eigene Schnittprofile (Import / Export als `.schnittprofile`)
 - Testschnitt, Verbindung prüfen, Plotter-Befehle als Text exportieren
 - Objekte lassen sich vom Schneiden ausnehmen; Linien außerhalb des Schneidbereichs werden gemeldet
 

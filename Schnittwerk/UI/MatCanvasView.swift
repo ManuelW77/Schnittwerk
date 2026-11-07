@@ -85,6 +85,8 @@ struct MatCanvasView: View {
             for shape in selected {
                 drawSelection(shape, handles: selected.count == 1 && !shape.isLocked, &ctx, vp)
             }
+            // Tool number at the selected objects; the colour shows it for all
+            for shape in selected where shape.cutEnabled { drawToolBadge(shape, &ctx, vp) }
             drawToolPreview(&ctx, vp)
             if let marquee {
                 let r = Path(marquee.applying(vp.matToView))
@@ -211,7 +213,7 @@ struct MatCanvasView: View {
     private func drawShape(_ shape: CutShape, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
         let p = path(for: shape, vp)
         let outside = !shape.fits(in: document.data.mat.size)
-        let color: Color = !shape.cutEnabled ? .gray : (outside ? .orange : .red)
+        let color: Color = !shape.cutEnabled ? .gray : (outside ? .orange : ToolSlotStyle.color(shape.toolSlot))
         let fill = shape.colorHex.flatMap(RGB.init(hex:)).map { Color(red: $0.r, green: $0.g, blue: $0.b).opacity(0.55) }
             ?? color.opacity(0.10)
         ctx.fill(path(for: shape, vp, closedOnly: true), with: .color(fill), style: FillStyle(eoFill: true))
@@ -220,6 +222,17 @@ struct MatCanvasView: View {
         } else {
             ctx.stroke(p, with: .color(color), style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
         }
+    }
+
+    /// Number of the tool at the top left of a selected object.
+    private func drawToolBadge(_ shape: CutShape, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
+        let b = shape.matBounds
+        guard !b.isNull else { return }
+        let at = vp.view(CGPoint(x: b.minX, y: b.minY))
+        let r = CGRect(x: at.x - 7, y: at.y - 7, width: 14, height: 14)
+        ctx.fill(Path(ellipseIn: r), with: .color(ToolSlotStyle.color(shape.toolSlot)))
+        ctx.draw(Text(verbatim: "\(shape.toolSlot)").font(.system(size: 9, weight: .bold)).foregroundColor(.white),
+                 at: CGPoint(x: r.midX, y: r.midY))
     }
 
     /// Freehand line and curve while they are being drawn.
@@ -572,6 +585,14 @@ struct MatCanvasView: View {
             }
             .disabled(editable.isEmpty)
             Divider()
+            Menu("Cut with") {
+                ForEach([1, 2], id: \.self) { slot in
+                    Button("\(ToolSlotStyle.title(slot)) · \(data.settings(slot: slot).tool.title)") {
+                        document.setToolSlot(slot, ids: ids, undoManager: um)
+                    }
+                }
+            }
+            .disabled(editable.isEmpty)
             if data.canGroup(editable) {
                 Button("Group") { document.group(ids, undoManager: um); selection = ids }
             }

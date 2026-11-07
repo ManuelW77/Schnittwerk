@@ -58,7 +58,10 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 ### Editing
 - Move, scale, rotate, mirror; exact position and size in the inspector
 - Multiple selection with shift/⌘ click or rubber band
-- Weld, subtract, intersect
+- Weld, subtract, intersect, subtract all, divide, crop, make and release compound paths
+- Transform: scale by percent, move and rotate by set amounts
+- Replicate: copy next to the object, rows and columns, fill the mat, mirrored copies, rotated copies in a ring
+- Sketch and emboss fills (lines, cross-hatch, concentric) and stippling along the outline or inside the area
 - Offset outwards or inwards, round or sharp corners (e.g. sticker outlines)
 - Align and distribute
 - **Group** objects so they move together, **lock** objects so they cannot be changed
@@ -71,8 +74,10 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 - Move the view with space + drag or the middle mouse button
 
 ### Cutting
-- Tool, blade depth, force, speed, passes
-- Material presets and your own cut profiles (import / export as `.schnittprofile`)
+- Two tools in one job: each object is handled by tool 1 (red) or tool 2 (blue); pen and embossing run before cutting
+- Tools: AutoBlade, ratchet blade, Kraft Blade (leather, felt, chipboard), pen, embossing tool, punch tool
+- Blade depth, force, speed, passes, acceleration, blade offset, overcut, sharp corners (Smart Cut), track enhancing
+- More than 30 material presets (many from [michamade.de](https://michamade.de/schnitteinstellungen/)) and your own cut profiles (import / export as `.schnittprofile`)
 - Test cut, connection check, export of the plotter commands as text
 - Objects can be excluded from cutting; lines outside the cutting area are reported
 

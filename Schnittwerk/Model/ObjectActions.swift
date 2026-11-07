@@ -72,3 +72,15 @@ extension CutDocument {
         }
     }
 }
+
+extension CutDocument {
+    /// Sets tool 1 or 2 for the objects (whole groups, unlocked only).
+    func setToolSlot(_ slot: Int, ids: Set<UUID>, undoManager: UndoManager?) {
+        let ids = data.unlocked(data.expandedToGroups(ids))
+        update(String(localized: "Change tool"), undoManager: undoManager) { data in
+            for i in data.shapes.indices where ids.contains(data.shapes[i].id) {
+                data.shapes[i].toolSlot = slot
+            }
+        }
+    }
+}
