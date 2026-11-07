@@ -502,13 +502,7 @@ struct ToolPalette: View {
         VStack(spacing: 2) {
             ForEach(DrawingTool.allCases) { t in
                 Button { tool = t } label: {
-                    Image(systemName: t.systemImage)
-                        .font(.system(size: 15, weight: .medium))
-                        .frame(width: 34, height: 34)
-                        .foregroundStyle(tool == t ? Color.white : Color.primary)
-                        .background(tool == t ? Color.accentColor : Color.clear,
-                                    in: RoundedRectangle(cornerRadius: 9, style: .continuous))
-                        .contentShape(Rectangle())
+                    PaletteCell(systemImage: t.systemImage, selected: tool == t)
                 }
                 .buttonStyle(.plain)
                 .tip(TipContent(title: t.title, text: t.help))
@@ -521,12 +515,10 @@ struct ToolPalette: View {
                     Button { addShape(kind) } label: { Label(kind.title, systemImage: kind.systemImage) }
                 }
             } label: {
-                Image(systemName: "square.on.circle")
-                    .font(.system(size: 15, weight: .medium))
-                    .frame(width: 34, height: 34)
-                    .contentShape(Rectangle())
+                PaletteCell(systemImage: "square.on.circle", selected: false)
             }
-            .menuStyle(.borderlessButton)
+            .menuStyle(.button)
+            .buttonStyle(.plain)
             .menuIndicator(.hidden)
             .frame(width: 34, height: 34)
             .tip(title: "Shape", "Adds a rectangle, ellipse, polygon or star. Its size and corners stay editable.")
@@ -534,6 +526,30 @@ struct ToolPalette: View {
         }
         .padding(5)
         .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+}
+
+/// One cell of the tool palette: accent colour when chosen, a light
+/// shade under the mouse, a darker one while pressed.
+struct PaletteCell: View {
+    let systemImage: String
+    let selected: Bool
+    @State private var hovering = false
+
+    var body: some View {
+        Image(systemName: systemImage)
+            .font(.system(size: 15, weight: .medium))
+            .frame(width: 34, height: 34)
+            .foregroundStyle(selected ? Color.white : Color.primary)
+            .background(background, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+            .contentShape(Rectangle())
+            .onHover { hovering = $0 }
+            .animation(.easeOut(duration: 0.12), value: hovering)
+    }
+
+    private var background: Color {
+        if selected { return hovering ? Color.accentColor.opacity(0.85) : Color.accentColor }
+        return hovering ? Color.primary.opacity(0.12) : Color.clear
     }
 }
 
