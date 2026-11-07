@@ -46,7 +46,7 @@ struct ContentView: View {
                 .padding(.horizontal, 12)
                 .padding(.top, 10)
                 switch inspectorTab {
-                case .object: InspectorView(document: document, selection: selection)
+                case .object: InspectorView(document: document, selection: $selection)
                 case .cut: CutPanelView(document: document)
                 }
             }

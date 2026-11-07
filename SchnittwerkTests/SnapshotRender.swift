@@ -28,7 +28,7 @@ final class SnapshotRender: XCTestCase {
         let png = try XCTUnwrap(NSBitmapImageRep(data: tiff)?.representation(using: .png, properties: [:]))
         try png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("canvas.png"))
 
-        let inspector = InspectorView(document: doc, selection: [text.id]).frame(width: 320, height: 900)
+        let inspector = InspectorView(document: doc, selection: .constant([text.id])).frame(width: 320, height: 900)
         let r2 = ImageRenderer(content: inspector.background(Color.white))
         let png2 = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r2.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
         try png2.write(to: URL(fileURLWithPath: dir).appendingPathComponent("inspector.png"))
@@ -53,7 +53,7 @@ final class SnapshotRender: XCTestCase {
         try png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("shapes.png"))
 
         for (i, name) in [(0, "inspector-rect"), (3, "inspector-star")] {
-            let inspector = InspectorView(document: doc, selection: [shapes[i].id]).frame(width: 320, height: 900)
+            let inspector = InspectorView(document: doc, selection: .constant([shapes[i].id])).frame(width: 320, height: 900)
             let r2 = ImageRenderer(content: inspector.background(Color.white))
             let png2 = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r2.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
             try png2.write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(name).png"))
