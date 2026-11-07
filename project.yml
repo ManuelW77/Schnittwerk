@@ -53,6 +53,7 @@ targets:
         LSApplicationCategoryType: public.app-category.graphics-design
         LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
         NSHumanReadableCopyright: "© 2026 Manuel Weiser · GPL-3.0"
+        NSBluetoothAlwaysUsageDescription: Schnittwerk connects to your Silhouette plotter over Bluetooth to send cut jobs.
         CFBundleDocumentTypes:
           - CFBundleTypeName: Schnittwerk Project
             CFBundleTypeRole: Editor

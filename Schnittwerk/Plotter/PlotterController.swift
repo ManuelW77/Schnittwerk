@@ -18,13 +18,15 @@ final class PlotterController: ObservableObject {
     /// 0…1 while sending, nil otherwise.
     @Published private(set) var progress: Double?
     @Published private(set) var deviceInfo: String?
+    /// Model of the plotter found last (Cameo 4 until one was found).
+    @Published private(set) var lastModel = PlotterModel.cameo4
 
     var isBusy: Bool {
         if case .working = phase { return true }
         return false
     }
 
-    private let queue = DispatchQueue(label: "de.manuelweiser.schnittwerk.usb")
+    private let queue = DispatchQueue(label: "de.manuelweiser.schnittwerk.plotter")
     private var cancelFlag = CancelFlag()
 
     // MARK: - Actions
@@ -33,14 +35,13 @@ final class PlotterController: ObservableObject {
         guard !isBusy else { return }
         phase = .working(String(localized: "Looking for the plotter…"))
         queue.async {
-            let usb = CameoUSB()
-            defer { usb.close() }
             do {
-                try usb.open()
-                try usb.initialize()
-                let status = try usb.status()
-                let firmware = (try? usb.firmwareVersion()) ?? ""
-                let info = firmware.isEmpty ? usb.modelName : "\(usb.modelName) · \(firmware)"
+                let plotter = try PlotterConnection.open()
+                defer { plotter.close() }
+                try plotter.initialize()
+                let status = try plotter.status()
+                let firmware = (try? plotter.firmwareVersion()) ?? ""
+                let info = firmware.isEmpty ? plotter.displayName : "\(plotter.displayName) · \(firmware)"
                 let text: String
                 switch status {
                 case .ready: text = String(localized: "Ready")
@@ -48,8 +49,10 @@ final class PlotterController: ObservableObject {
                 case .noMedia: text = String(localized: "Connected, no mat loaded")
                 case .unknown(let r): text = String(localized: "Connected, unknown status “\(r)”")
                 }
+                let model = plotter.model
                 Task { @MainActor in
                     self.deviceInfo = info
+                    self.lastModel = model
                     self.phase = .done("\(info): \(text)")
                 }
             } catch {
@@ -62,28 +65,30 @@ final class PlotterController: ObservableObject {
         }
     }
 
-    func send(_ job: GPGLJob) {
+    /// Sends the job built for the connected model.
+    func send(_ build: @escaping @Sendable (PlotterModel) -> GPGLJob) {
         guard !isBusy else { return }
         let flag = CancelFlag()
         cancelFlag = flag
         phase = .working(String(localized: "Connecting…"))
         progress = 0
         queue.async {
-            let usb = CameoUSB()
-            defer { usb.close() }
             do {
-                try usb.open()
-                try usb.initialize()
-                try Self.waitUntilReady(usb, flag: flag, limit: 15)
+                let plotter = try PlotterConnection.open()
+                defer { plotter.close() }
+                let model = plotter.model
+                Task { @MainActor in self.lastModel = model }
+                try plotter.initialize()
+                try Self.waitUntilReady(plotter, flag: flag, limit: 15)
                 Self.report(String(localized: "Cutting…"), progress: 0)
 
-                let chunks = job.chunks()
+                let chunks = build(model).chunks(maxBytes: plotter.preferredChunkSize)
                 for (i, chunk) in chunks.enumerated() {
-                    try usb.write(chunk, isCancelled: flag.isSet)
+                    try plotter.write(chunk, isCancelled: flag.isSet)
                     Self.report(nil, progress: Double(i + 1) / Double(chunks.count))
                 }
                 Self.report(String(localized: "Finishing…"), progress: 1)
-                try Self.waitUntilReady(usb, flag: flag, limit: 3600)
+                try Self.waitUntilReady(plotter, flag: flag, limit: 3600)
                 Task { @MainActor in
                     self.progress = nil
                     self.phase = .done(String(localized: "Done. Unload the mat with the button on the plotter."))
@@ -122,11 +127,11 @@ final class PlotterController: ObservableObject {
     }
 
     /// Polls the status until the plotter is idle.
-    nonisolated private static func waitUntilReady(_ usb: CameoUSB, flag: CancelFlag, limit: TimeInterval) throws {
+    nonisolated private static func waitUntilReady(_ plotter: PlotterTransport, flag: CancelFlag, limit: TimeInterval) throws {
         let end = Date().addingTimeInterval(limit)
         while true {
             if flag.isSet() { throw PlotterError.cancelled }
-            switch try usb.status() {
+            switch try plotter.status() {
             case .ready: return
             case .noMedia: throw PlotterError.noMedia
             case .moving, .unknown: break

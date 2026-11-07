@@ -311,6 +311,26 @@
         }
       }
     },
+    "Automatic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch"
+          }
+        }
+      }
+    },
+    "Automatic tries USB first, then Bluetooth. Supported: %@. Bluetooth: Cameo 4, 4 Plus and 4 Pro." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch versucht zuerst USB, dann Bluetooth. Unterstützt: %@. Bluetooth: Cameo 4, 4 Plus und 4 Pro."
+          }
+        }
+      }
+    },
     "Background" : {
       "localizations" : {
         "de" : {
@@ -337,6 +357,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blöcke (INSERT) im DXF wurden übersprungen. Vor dem Export auflösen."
+          }
+        }
+      }
+    },
+    "Bluetooth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth"
+          }
+        }
+      }
+    },
+    "Bluetooth error: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth-Fehler: %@"
+          }
+        }
+      }
+    },
+    "Bluetooth is switched off on this Mac." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth ist auf diesem Mac ausgeschaltet."
           }
         }
       }
@@ -607,6 +657,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbinde…"
+          }
+        }
+      }
+    },
+    "Connection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung"
           }
         }
       }
@@ -1691,16 +1751,6 @@
         }
       }
     },
-    "No Cameo 4 found. Is it switched on and connected via USB?" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Cameo 4 gefunden. Ist er eingeschaltet und per USB verbunden?"
-          }
-        }
-      }
-    },
     "No mat or material loaded. Load it with the button on the plotter." : {
       "localizations" : {
         "de" : {
@@ -1737,6 +1787,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Noch keine eigenen Profile"
+          }
+        }
+      }
+    },
+    "No plotter found. Is it switched on and connected via USB or Bluetooth?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Plotter gefunden. Ist er eingeschaltet und per USB oder Bluetooth erreichbar?"
           }
         }
       }
@@ -2264,6 +2324,16 @@
         }
       }
     },
+    "Schnittwerk may not use Bluetooth. Allow it in System Settings → Privacy & Security → Bluetooth." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk darf Bluetooth nicht nutzen. Erlaube es unter Systemeinstellungen → Datenschutz & Sicherheit → Bluetooth."
+          }
+        }
+      }
+    },
     "Select" : {
       "localizations" : {
         "de" : {
@@ -2684,6 +2754,16 @@
         }
       }
     },
+    "This plotter offers no Cameo 4 Bluetooth service." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Plotter bietet keinen Cameo-4-Bluetooth-Dienst an."
+          }
+        }
+      }
+    },
     "Threshold" : {
       "localizations" : {
         "de" : {
@@ -2850,6 +2930,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle entsperren"
+          }
+        }
+      }
+    },
+    "USB" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "USB"
           }
         }
       }

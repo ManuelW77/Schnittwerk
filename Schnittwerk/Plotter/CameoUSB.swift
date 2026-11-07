@@ -1,7 +1,7 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 //
-// USB connection to the Cameo 4 via libusb. All calls block, so they
-// must run off the main thread (PlotterController does that).
+// USB connection to plotters of the Cameo 4 line via libusb. All calls
+// block, so they must run off the main thread (PlotterController does that).
 
 import Foundation
 
@@ -28,11 +28,14 @@ enum PlotterError: LocalizedError, Equatable {
     case timeout
     case cancelled
     case usb(String)
+    case bluetoothOff
+    case bluetoothDenied
+    case bluetooth(String)
 
     var errorDescription: String? {
         switch self {
         case .notFound:
-            return String(localized: "No Cameo 4 found. Is it switched on and connected via USB?")
+            return String(localized: "No plotter found. Is it switched on and connected via USB or Bluetooth?")
         case .busy:
             return String(localized: "The plotter is in use by another program. Quit Silhouette Studio and try again.")
         case .noMedia:
@@ -43,23 +46,25 @@ enum PlotterError: LocalizedError, Equatable {
             return String(localized: "Cancelled.")
         case .usb(let detail):
             return String(localized: "USB error: \(detail)")
+        case .bluetoothOff:
+            return String(localized: "Bluetooth is switched off on this Mac.")
+        case .bluetoothDenied:
+            return String(localized: "Schnittwerk may not use Bluetooth. Allow it in System Settings → Privacy & Security → Bluetooth.")
+        case .bluetooth(let detail):
+            return String(localized: "Bluetooth error: \(detail)")
         }
     }
 }
 
-final class CameoUSB {
-    static let vendorID: UInt16 = 0x0B4D
-    static let models: [UInt16: String] = [
-        0x1137: "Cameo 4",
-        0x1138: "Cameo 4 Plus",
-        0x1139: "Cameo 4 Pro",
-    ]
+final class CameoUSB: PlotterTransport {
 
     private var context: OpaquePointer?
     private var handle: OpaquePointer?
     private var endpointOut: UInt8 = 0x01
     private var endpointIn: UInt8 = 0x82
-    private(set) var modelName = ""
+    private(set) var model = PlotterModel.cameo4
+    var displayName: String { "\(model.name) (USB)" }
+    let preferredChunkSize = 1024
 
     deinit { close() }
 
@@ -81,9 +86,9 @@ final class CameoUSB {
             guard let dev = list[i] else { continue }
             var desc = libusb_device_descriptor()
             guard libusb_get_device_descriptor(dev, &desc) == 0 else { continue }
-            if desc.idVendor == Self.vendorID, let name = Self.models[desc.idProduct] {
+            if let m = PlotterModel.usb(vendor: desc.idVendor, product: desc.idProduct) {
                 found = dev
-                modelName = name
+                model = m
                 break
             }
         }
@@ -137,7 +142,11 @@ final class CameoUSB {
 
     /// Sends all bytes. Waits while the plotter's buffer is full,
     /// up to `stallLimit` seconds without progress.
-    func write(_ data: Data, stallLimit: TimeInterval = 120, isCancelled: () -> Bool = { false }) throws {
+    func write(_ data: Data, isCancelled: () -> Bool) throws {
+        try write(data, stallLimit: 120, isCancelled: isCancelled)
+    }
+
+    func write(_ data: Data, stallLimit: TimeInterval, isCancelled: () -> Bool) throws {
         guard let h = handle else { throw PlotterError.notFound }
         var bytes = [UInt8](data)
         var offset = 0
@@ -172,7 +181,7 @@ final class CameoUSB {
     }
 
     /// Reads until ETX (0x03) or timeout.
-    func readReply(timeout: TimeInterval = 2) throws -> String {
+    func readReply(timeout: TimeInterval) throws -> String {
         var reply = Data()
         let end = Date().addingTimeInterval(timeout)
         while Date() < end {
@@ -190,26 +199,6 @@ final class CameoUSB {
         for _ in 0..<5 {
             guard let d = try? read(timeoutMS: 30), !d.isEmpty else { return }
         }
-    }
-
-    // MARK: - Commands
-
-    static let escape: UInt8 = 0x1B
-
-    func initialize() throws {
-        try write(Data([Self.escape, 0x04]))
-    }
-
-    func status() throws -> PlotterStatus {
-        drain()
-        try write(Data([Self.escape, 0x05]))
-        return PlotterStatus(reply: try readReply())
-    }
-
-    func firmwareVersion() throws -> String {
-        drain()
-        try write(Data("FG".utf8) + Data([GPGLJob.etx]))
-        return try readReply().trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     // MARK: - Helpers
