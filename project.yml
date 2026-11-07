@@ -8,8 +8,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "0.1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.2.0"
+    CURRENT_PROJECT_VERSION: "2"
     # Homebrew libusb (linked statically) is arm64-only and built for macOS 26
     MACOSX_DEPLOYMENT_TARGET: "26.0"
     ARCHS: arm64
@@ -37,6 +37,7 @@ targets:
           - CoreFoundation
           - -framework
           - Security
+        # Debug: ad-hoc signature; Release: Developer ID for notarization
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGN_STYLE: Manual
         ENABLE_HARDENED_RUNTIME: NO
@@ -44,6 +45,12 @@ targets:
         COMBINE_HIDPI_IMAGES: YES
         INFOPLIST_KEY_CFBundleDisplayName: Schnittwerk
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+      configs:
+        Release:
+          CODE_SIGN_IDENTITY: Developer ID Application
+          DEVELOPMENT_TEAM: LWWM5RV3D9
+          ENABLE_HARDENED_RUNTIME: YES
+          OTHER_CODE_SIGN_FLAGS: --timestamp
     info:
       path: Schnittwerk/Support/Info.plist
       properties:
@@ -53,12 +60,22 @@ targets:
         LSApplicationCategoryType: public.app-category.graphics-design
         LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
         NSHumanReadableCopyright: "© 2026 Manuel Weiser · GPL-3.0"
+        NSBluetoothAlwaysUsageDescription: Schnittwerk connects to your Silhouette plotter over Bluetooth to send cut jobs.
         CFBundleDocumentTypes:
           - CFBundleTypeName: Schnittwerk Project
             CFBundleTypeRole: Editor
             LSHandlerRank: Owner
+            # macOS draws the app icon onto a document sheet
+            CFBundleTypeIconSystemGenerated: 1
             LSItemContentTypes:
               - de.manuelweiser.schnittwerk.project
+          - CFBundleTypeName: Schnittwerk Cut Profiles
+            # Icon only; profiles are imported in the settings
+            CFBundleTypeRole: None
+            LSHandlerRank: Owner
+            CFBundleTypeIconSystemGenerated: 1
+            LSItemContentTypes:
+              - de.manuelweiser.schnittwerk.cutprofiles
           - CFBundleTypeName: Cut File
             CFBundleTypeRole: Viewer
             LSHandlerRank: Alternate

@@ -29,6 +29,8 @@ struct MatCanvasView: View {
     var onCreated: () -> Void = {}
     /// Called to edit the text of a text object (double-click).
     var onEditText: (UUID) -> Void = { _ in }
+    /// Called to paste a drawing from the clipboard (⌘V, context menu).
+    var onPaste: () -> Void = {}
 
     @Environment(\.undoManager) private var undoManager
     @Environment(\.colorScheme) private var colorScheme
@@ -131,6 +133,8 @@ struct MatCanvasView: View {
             }
         }
         .contextMenu { contextMenu(vp) }
+        .onPasteCommand(of: PasteboardImport.acceptedTypes) { _ in onPaste() }
+        .onAppear { focused = true }
         .onDeleteCommand {
             if !pen.anchors.isEmpty { pen.anchors.removeLast() } else { deleteSelection() }
         }
@@ -529,6 +533,9 @@ struct MatCanvasView: View {
         let editable = data.unlocked(ids)
         let um = undoManager
         if targets.isEmpty {
+            Button("Paste") { onPaste() }
+                .disabled(!PasteboardImport.canPaste())
+            Divider()
             Button("Select all") { selection = data.unlocked(Set(data.shapes.map(\.id))) }
                 .disabled(data.unlocked(Set(data.shapes.map(\.id))).isEmpty)
             if data.shapes.contains(where: \.isLocked) {

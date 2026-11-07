@@ -311,6 +311,26 @@
         }
       }
     },
+    "Automatic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch"
+          }
+        }
+      }
+    },
+    "Automatic tries USB first, then Bluetooth. Supported: %@. Bluetooth: Cameo 4, 4 Plus and 4 Pro." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch versucht zuerst USB, dann Bluetooth. Unterstützt: %@. Bluetooth: Cameo 4, 4 Plus und 4 Pro."
+          }
+        }
+      }
+    },
     "Background" : {
       "localizations" : {
         "de" : {
@@ -337,6 +357,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blöcke (INSERT) im DXF wurden übersprungen. Vor dem Export auflösen."
+          }
+        }
+      }
+    },
+    "Bluetooth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth"
+          }
+        }
+      }
+    },
+    "Bluetooth error: %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth-Fehler: %@"
+          }
+        }
+      }
+    },
+    "Bluetooth is switched off on this Mac." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bluetooth ist auf diesem Mac ausgeschaltet."
           }
         }
       }
@@ -501,6 +551,36 @@
         }
       }
     },
+    "Check for new versions automatically" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch nach neuen Versionen suchen"
+          }
+        }
+      }
+    },
+    "Check for Updates …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Updates suchen …"
+          }
+        }
+      }
+    },
+    "Check now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt prüfen"
+          }
+        }
+      }
+    },
     "Choose one or more cut profile files" : {
       "localizations" : {
         "de" : {
@@ -611,6 +691,16 @@
         }
       }
     },
+    "Connection" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindung"
+          }
+        }
+      }
+    },
     "Copy command" : {
       "localizations" : {
         "de" : {
@@ -657,6 +747,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ecken: %lld"
+          }
+        }
+      }
+    },
+    "Could not check for updates" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updates konnten nicht geprüft werden"
           }
         }
       }
@@ -941,6 +1041,16 @@
         }
       }
     },
+    "Download" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herunterladen"
+          }
+        }
+      }
+    },
     "Draw" : {
       "localizations" : {
         "de" : {
@@ -977,6 +1087,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zeichnen mit Stift"
+          }
+        }
+      }
+    },
+    "Dropped" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hereingezogen"
           }
         }
       }
@@ -1261,6 +1381,16 @@
         }
       }
     },
+    "Images in the PDF were skipped." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder im PDF wurden ausgelassen."
+          }
+        }
+      }
+    },
     "Images in the SVG were skipped. Only lines can be cut." : {
       "localizations" : {
         "de" : {
@@ -1311,12 +1441,12 @@
         }
       }
     },
-    "Import SVG or DXF (⌘I)" : {
+    "Import SVG, DXF or PDF (⌘I)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SVG oder DXF importieren (⌘I)"
+            "value" : "SVG, DXF oder PDF importieren (⌘I)"
           }
         }
       }
@@ -1357,6 +1487,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "In einer Gruppe"
+          }
+        }
+      }
+    },
+    "Installed version" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installierte Version"
           }
         }
       }
@@ -1407,6 +1547,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seitenverhältnis beibehalten"
+          }
+        }
+      }
+    },
+    "Last check" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Prüfung"
+          }
+        }
+      }
+    },
+    "Later" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Später"
           }
         }
       }
@@ -1661,6 +1821,16 @@
         }
       }
     },
+    "Never" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch nie"
+          }
+        }
+      }
+    },
     "New key" : {
       "localizations" : {
         "de" : {
@@ -1687,16 +1857,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Neues Profil"
-          }
-        }
-      }
-    },
-    "No Cameo 4 found. Is it switched on and connected via USB?" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kein Cameo 4 gefunden. Ist er eingeschaltet und per USB verbunden?"
           }
         }
       }
@@ -1741,6 +1901,16 @@
         }
       }
     },
+    "No plotter found. Is it switched on and connected via USB or Bluetooth?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Plotter gefunden. Ist er eingeschaltet und per USB oder Bluetooth erreichbar?"
+          }
+        }
+      }
+    },
     "Not cut" : {
       "localizations" : {
         "de" : {
@@ -1757,6 +1927,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nichts übrig"
+          }
+        }
+      }
+    },
+    "Nothing to paste" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts zum Einfügen"
           }
         }
       }
@@ -1807,6 +1987,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "Only the first page of the PDF was used." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur die erste Seite des PDF wurde verwendet."
           }
         }
       }
@@ -1887,6 +2077,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durchgänge"
+          }
+        }
+      }
+    },
+    "Paste" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einfügen"
+          }
+        }
+      }
+    },
+    "Paste failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einfügen fehlgeschlagen"
+          }
+        }
+      }
+    },
+    "Pasted" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eingefügt"
           }
         }
       }
@@ -2254,12 +2474,52 @@
     "Schnittwerk" : {
       "shouldTranslate" : false
     },
+    "Schnittwerk %@ is available" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk %@ ist verfügbar"
+          }
+        }
+      }
+    },
+    "Schnittwerk asks GitHub once a day whether a newer release exists. Nothing about you is sent. New versions are downloaded and installed by you." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk fragt einmal am Tag bei GitHub, ob es eine neuere Version gibt. Dabei wird nichts über dich gesendet. Neue Versionen lädst und installierst du selbst."
+          }
+        }
+      }
+    },
     "Schnittwerk does not change SVG or DXF files. Use File → Save As to save a .schnittwerk project." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schnittwerk verändert keine SVG- oder DXF-Dateien. Bitte mit Ablage → Sichern unter… als .schnittwerk-Projekt sichern."
+          }
+        }
+      }
+    },
+    "Schnittwerk is up to date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk ist aktuell"
+          }
+        }
+      }
+    },
+    "Schnittwerk may not use Bluetooth. Allow it in System Settings → Privacy & Security → Bluetooth." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk darf Bluetooth nicht nutzen. Erlaube es unter Systemeinstellungen → Datenschutz & Sicherheit → Bluetooth."
           }
         }
       }
@@ -2384,6 +2644,16 @@
         }
       }
     },
+    "Skip this version" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Version überspringen"
+          }
+        }
+      }
+    },
     "Smoothing" : {
       "localizations" : {
         "de" : {
@@ -2504,12 +2774,32 @@
         }
       }
     },
+    "Text was skipped. Convert text to curves in your design app first." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text wurde ausgelassen. Wandle Text vorher in deinem Grafikprogramm in Kurven um."
+          }
+        }
+      }
+    },
     "The AutoBlade only works in holder 1." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die AutoBlade funktioniert nur in Halter 1."
+          }
+        }
+      }
+    },
+    "The clipboard holds no vector drawing. Copy it as SVG or PDF in your design app." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Zwischenablage enthält keine Vektorzeichnung. Kopiere sie in deinem Grafikprogramm als SVG oder PDF."
           }
         }
       }
@@ -2574,12 +2864,12 @@
         }
       }
     },
-    "The file type “%@” is not supported. Use SVG or DXF." : {
+    "The file type “%@” is not supported. Use SVG, DXF or PDF." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Der Dateityp „%@“ wird nicht unterstützt. Bitte SVG oder DXF verwenden."
+            "value" : "Der Dateityp „%@“ wird nicht unterstützt. Verwende SVG, DXF oder PDF."
           }
         }
       }
@@ -2620,6 +2910,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Das Objekt ist für diese Innenkontur zu klein."
+          }
+        }
+      }
+    },
+    "The PDF is too complex; only part of it was read." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das PDF ist zu verschachtelt; nur ein Teil wurde gelesen."
           }
         }
       }
@@ -2680,6 +2980,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dieses Objekt ist gesperrt."
+          }
+        }
+      }
+    },
+    "This plotter offers no Cameo 4 Bluetooth service." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Plotter bietet keinen Cameo-4-Bluetooth-Dienst an."
           }
         }
       }
@@ -2854,12 +3164,42 @@
         }
       }
     },
+    "Updates" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updates"
+          }
+        }
+      }
+    },
+    "USB" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "USB"
+          }
+        }
+      }
+    },
     "USB error: %@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "USB-Fehler: %@"
+          }
+        }
+      }
+    },
+    "Version %@ is the newest version." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@ ist die neueste Version."
           }
         }
       }
@@ -2940,6 +3280,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Y"
+          }
+        }
+      }
+    },
+    "You have version %@. Download the new version and drag it into Applications." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du hast Version %@. Lade die neue Version herunter und zieh sie in den Programme-Ordner."
           }
         }
       }
