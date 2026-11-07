@@ -2011,6 +2011,16 @@
         }
       }
     },
+    "Join paths" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pfade verknüpfen"
+          }
+        }
+      }
+    },
     "Join the selected objects into one object without changing the lines" : {
       "localizations" : {
         "de" : {
@@ -2307,16 +2317,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Luxus-Karton 220 g/m²"
-          }
-        }
-      }
-    },
-    "Make compound path" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verknüpften Pfad erstellen"
           }
         }
       }
@@ -3141,16 +3141,6 @@
         }
       }
     },
-    "Release compound path" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verknüpften Pfad lösen"
-          }
-        }
-      }
-    },
     "Remove specks" : {
       "localizations" : {
         "de" : {
@@ -3770,6 +3760,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Überlappende Objekte in alle Einzelteile zerlegen"
+          }
+        }
+      }
+    },
+    "Split paths" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pfade lösen"
           }
         }
       }

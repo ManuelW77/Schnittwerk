@@ -249,29 +249,7 @@ struct CutPanelView: View {
                 }
                 .disabled(plotter.isBusy)
                 .help("Automatic tries USB first, then Bluetooth. Supported: \(PlotterModel.supportedNames). Bluetooth: Cameo 3, Cameo 4, 4 Plus and 4 Pro. Cameo 3 and older machines cut at speed 10 at most.")
-                statusView
-                if let p = plotter.progress {
-                    ProgressView(value: p)
-                }
-                if outsideCount > 0 {
-                    Label("Outside the cutting area: \(outsideCount). The parts outside are not cut, to protect the mat.",
-                          systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.orange)
-                }
-                if plotter.isBusy {
-                    Button("Cancel", role: .cancel) { plotter.cancel() }
-                } else {
-                    Button {
-                        if outsideCount > 0 { confirmOutside = true } else { cut() }
-                    } label: {
-                        Label("Cut (\(cutCount))", systemImage: "scissors")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .disabled(cutCount == 0)
-                    .keyboardShortcut(.return, modifiers: .command)
-
+                if !plotter.isBusy {
                     HStack {
                         Button("Test cut") {
                             let settings = settings, mat = document.data.mat // the tool shown
@@ -286,6 +264,8 @@ struct CutPanelView: View {
             }
         }
         .formStyle(.grouped)
+        // The cut button stays in reach, whatever is scrolled above it
+        .safeAreaInset(edge: .bottom, spacing: 0) { cutBar }
         .confirmationDialog("Some objects lie outside the cutting area.", isPresented: $confirmOutside) {
             Button("Cut anyway") { cut() }
             Button("Cancel", role: .cancel) {}
@@ -319,6 +299,44 @@ struct CutPanelView: View {
         } message: {
             Text("Projects that use it keep their values.")
         }
+    }
+
+    private var cutBar: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            statusView
+                .font(.callout)
+                .lineLimit(3)
+            if let p = plotter.progress {
+                ProgressView(value: p)
+            }
+            if outsideCount > 0 {
+                Label("Outside the cutting area: \(outsideCount). The parts outside are not cut, to protect the mat.",
+                      systemImage: "exclamationmark.triangle.fill")
+                    .font(.callout)
+                    .foregroundStyle(.orange)
+            }
+            if plotter.isBusy {
+                Button(role: .cancel) { plotter.cancel() } label: {
+                    Text("Cancel").frame(maxWidth: .infinity)
+                }
+                .controlSize(.large)
+            } else {
+                Button {
+                    if outsideCount > 0 { confirmOutside = true } else { cut() }
+                } label: {
+                    Label("Cut (\(cutCount))", systemImage: "scissors")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(cutCount == 0)
+                .keyboardShortcut(.return, modifiers: .command)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.bar)
+        .overlay(alignment: .top) { Divider() }
     }
 
     @ViewBuilder

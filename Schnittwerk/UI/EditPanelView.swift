@@ -25,6 +25,12 @@ struct EditPanelView: View {
     @AppStorage("stipple.spacing") private var stippleSpacing = 2.5
     @AppStorage("stipple.replace") private var stippleReplace = false
     @State private var failure: String?
+    @AppStorage("edit.open.transform") private var openTransform = true
+    @AppStorage("edit.open.replicate") private var openReplicate = true
+    @AppStorage("edit.open.modify") private var openModify = true
+    @AppStorage("edit.open.offset") private var openOffset = false
+    @AppStorage("edit.open.fill") private var openFill = false
+    @AppStorage("edit.open.stipple") private var openStipple = false
 
     private var editable: Set<UUID> { document.data.unlocked(selection) }
     private var hasSelection: Bool { !editable.isEmpty }
@@ -64,7 +70,7 @@ struct EditPanelView: View {
     // MARK: Transform
 
     private var transformSection: some View {
-        Section("Transform") {
+        Section("Transform", isExpanded: $openTransform) {
             LabeledContent("Scale") {
                 HStack(spacing: 4) {
                     ForEach([33.0, 50.0, 200.0, 300.0], id: \.self) { p in
@@ -127,7 +133,7 @@ struct EditPanelView: View {
     // MARK: Replicate
 
     private var replicateSection: some View {
-        Section("Replicate") {
+        Section("Replicate", isExpanded: $openReplicate) {
             LabeledContent("Duplicate") {
                 directionButtons { d in
                     select(document.duplicate(selection, toward: d, gap: CGFloat(gap), undoManager: undoManager),
@@ -145,16 +151,17 @@ struct EditPanelView: View {
                 Stepper("Rows: \(rows)", value: $rows, in: 1...50)
                 Stepper("Columns: \(columns)", value: $columns, in: 1...50)
             }
+            Button {
+                select(document.replicateGrid(selection, rows: rows, columns: columns, gap: CGFloat(gap), undoManager: undoManager),
+                       orFail: String(localized: "Choose more than one row or column."))
+            } label: {
+                Label("Rows and columns", systemImage: "square.grid.3x2").frame(maxWidth: .infinity)
+            }
             HStack {
-                Button {
-                    select(document.replicateGrid(selection, rows: rows, columns: columns, gap: CGFloat(gap), undoManager: undoManager),
-                           orFail: String(localized: "Choose more than one row or column."))
-                } label: { Label("Rows and columns", systemImage: "square.grid.3x2") }
-                Spacer()
                 Button {
                     select(document.fillMat(selection, gap: CGFloat(gap), undoManager: undoManager),
                            orFail: String(localized: "The objects are too large to fill the mat."))
-                } label: { Label("Fill mat", systemImage: "square.grid.4x3.fill") }
+                } label: { Label("Fill mat", systemImage: "square.grid.4x3.fill").frame(maxWidth: .infinity) }
                     .help("As many copies as fit onto the mat")
             }
             LabeledContent("Rotate copies") {
@@ -186,7 +193,7 @@ struct EditPanelView: View {
     // MARK: Modify
 
     private var modifySection: some View {
-        Section("Modify") {
+        Section("Modify", isExpanded: $openModify) {
             let count = editable.count
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], alignment: .leading, spacing: 6) {
                 ForEach(PathOperation.allCases) { op in
@@ -228,7 +235,7 @@ struct EditPanelView: View {
     // MARK: Offset
 
     private var offsetSection: some View {
-        Section("Offset") {
+        Section("Offset", isExpanded: $openOffset) {
             TextField("Distance (mm)", value: $offsetDistance, format: mm)
             Picker("Corners", selection: $offsetRound) {
                 Text("Round").tag(true)
@@ -257,7 +264,7 @@ struct EditPanelView: View {
     // MARK: Fill and stipple
 
     private var fillSection: some View {
-        Section {
+        Section(isExpanded: $openFill) {
             Picker("Pattern", selection: $fillPattern) {
                 ForEach(FillPattern.allCases) { Label($0.title, systemImage: $0.systemImage).tag($0.rawValue) }
             }
@@ -274,15 +281,16 @@ struct EditPanelView: View {
                     failure = String(localized: "Only closed outlines can be filled.")
                 }
             } label: { Label("Add fill", systemImage: "line.3.horizontal.decrease") }
+            Text("Lines inside the object, for the pen or the embossing tool. Choose that tool for the fill in the Object panel.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         } header: {
             Text("Sketch and emboss fill")
-        } footer: {
-            Text("Lines inside the object, for the pen or the embossing tool. Choose that tool for the fill in the Object panel.")
         }
     }
 
     private var stippleSection: some View {
-        Section {
+        Section(isExpanded: $openStipple) {
             Picker("Dots", selection: $stippleMode) {
                 ForEach(StippleMode.allCases) { Text($0.title).tag($0.rawValue) }
             }
@@ -298,10 +306,11 @@ struct EditPanelView: View {
                     failure = String(localized: "No dots fit with this spacing.")
                 }
             } label: { Label("Stipple", systemImage: "circle.dotted") }
+            Text("Small dots along or inside the object. The punch tool pierces each dot; a pen draws small circles.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         } header: {
             Text("Stippling (punch tool)")
-        } footer: {
-            Text("Small dots along or inside the object. The punch tool pierces each dot; a pen draws small circles.")
         }
     }
 }

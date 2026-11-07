@@ -91,8 +91,24 @@ final class SnapshotRender: XCTestCase {
             canvas.padding(.leading, 52)
             ToolPalette(tool: .constant(.select), addShape: { _ in }).padding(12)
         }.overlay(alignment: .bottom) { ToolLegend(data: doc.data).padding(12) }, "tools-canvas.png")
-        try save(EditPanelView(document: doc, selection: .constant([circle.id])).frame(width: 340, height: 1500), "edit-panel.png")
-        try save(CutPanelView(document: doc, slot: .constant(2)).frame(width: 340, height: 1300), "cut-panel.png")
-        try save(InspectorView(document: doc, selection: .constant([circle.id])).frame(width: 340, height: 900), "object-panel.png")
+        // Forms only draw inside a real window
+        func saveInWindow(_ view: some View, _ name: String, size: CGSize) throws {
+            let host = NSHostingView(rootView: view.frame(width: size.width, height: size.height))
+            let window = NSWindow(contentRect: CGRect(origin: .zero, size: size), styleMask: [.borderless],
+                                  backing: .buffered, defer: false)
+            window.contentView = host
+            host.layoutSubtreeIfNeeded()
+            RunLoop.main.run(until: Date().addingTimeInterval(0.5))
+            let rep = try XCTUnwrap(host.bitmapImageRepForCachingDisplay(in: host.bounds))
+            host.cacheDisplay(in: host.bounds, to: rep)
+            try XCTUnwrap(rep.representation(using: .png, properties: [:]))
+                .write(to: URL(fileURLWithPath: dir).appendingPathComponent(name))
+        }
+        try saveInWindow(EditPanelView(document: doc, selection: .constant([circle.id])), "edit-panel.png",
+                         size: CGSize(width: 340, height: 1700))
+        try saveInWindow(CutPanelView(document: doc, slot: .constant(2)), "cut-panel.png",
+                         size: CGSize(width: 340, height: 1400))
+        try saveInWindow(InspectorView(document: doc, selection: .constant([circle.id])), "object-panel.png",
+                         size: CGSize(width: 340, height: 1000))
     }
 }
