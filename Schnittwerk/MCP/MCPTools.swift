@@ -130,7 +130,10 @@ enum MCPTools {
             "cut": shape.cutEnabled,
             "inside_cutting_area": shape.fits(in: mat.size),
             "line_count": shape.paths.count,
+            "locked": shape.isLocked,
         ]
+        if let g = shape.groupID { d["group"] = g.uuidString }
+        if let c = shape.colorHex { d["color"] = c }
         if let t = shape.text {
             d["kind"] = "text"
             d["text"] = t.text
@@ -162,20 +165,25 @@ enum MCPTools {
 
     // MARK: - Helpers
 
-    /// Finds objects by id or number ("#3" or "3").
-    static func resolve(_ refs: [String], in data: ProjectData) throws -> [UUID] {
+    /// Finds objects by id or number ("#3" or "3"). With `editing`,
+    /// locked objects are refused: the user protected them.
+    static func resolve(_ refs: [String], in data: ProjectData, editing: Bool = false) throws -> [UUID] {
         guard !refs.isEmpty else { throw ToolError("No objects given.") }
-        return try refs.map { ref in
+        let ids = try refs.map { ref in
             let t = ref.trimmingCharacters(in: .whitespaces)
             if let id = UUID(uuidString: t), data.shapes.contains(where: { $0.id == id }) { return id }
             let digits = t.hasPrefix("#") ? String(t.dropFirst()) : t
             if let n = Int(digits), n >= 1, n <= data.shapes.count { return data.shapes[n - 1].id }
             throw ToolError("No object “\(ref)”. Call get_document for the current ids.")
         }
+        if editing, let locked = data.shapes.first(where: { ids.contains($0.id) && $0.isLocked }) {
+            throw ToolError("Object “\(locked.name)” is locked by the user and cannot be changed.")
+        }
+        return ids
     }
 
-    static func resolveOne(_ args: ToolArgs, in data: ProjectData) throws -> UUID {
-        try resolve([args.requiredString("id")], in: data)[0]
+    static func resolveOne(_ args: ToolArgs, in data: ProjectData, editing: Bool = false) throws -> UUID {
+        try resolve([args.requiredString("id")], in: data, editing: editing)[0]
     }
 
     nonisolated static var actionName: String { String(localized: "AI edit") }
@@ -345,7 +353,7 @@ enum MCPTools {
                     "inner_ratio": num("Stars: inner ratio 0.1–0.95."),
                     "order": choice(["front", "back"], "Bring to front or send to back (matters for subtract)."),
                 ], required: ["id"], changes: true) { args, ctx in
-            let id = try resolveOne(args, in: ctx.document.data)
+            let id = try resolveOne(args, in: ctx.document.data, editing: true)
             guard var s = ctx.document.data.shapes.first(where: { $0.id == id }) else { throw ToolError("Object not found.") }
 
             if let name = try args.string("name") { s.name = name }
@@ -392,7 +400,7 @@ enum MCPTools {
 
         MCPTool(name: "delete_objects", description: "Deletes objects.",
                 properties: ["ids": ids], required: ["ids"], changes: true) { args, ctx in
-            let found = Set(try resolve(args.strings("ids") ?? [], in: ctx.document.data))
+            let found = Set(try resolve(args.strings("ids") ?? [], in: ctx.document.data, editing: true))
             ctx.document.update(actionName, undoManager: ctx.undoManager) { $0.shapes.removeAll { found.contains($0.id) } }
             ctx.select?([])
             return [text("Deleted \(found.count) object(s).")]
@@ -406,6 +414,8 @@ enum MCPTools {
             let copies = ctx.document.data.shapes.filter { found.contains($0.id) }.map { s -> CutShape in
                 var c = s.duplicated(offset: 0)
                 c.position.x += dx; c.position.y += dy
+                c.isLocked = false
+                c.groupID = nil
                 return c
             }
             return add(copies, ctx)
@@ -418,7 +428,7 @@ enum MCPTools {
             guard let op = PathOperation(rawValue: try args.requiredString("operation")) else {
                 throw ToolError("“operation” must be weld, subtract or intersect.")
             }
-            let found = Set(try resolve(args.strings("ids") ?? [], in: ctx.document.data))
+            let found = Set(try resolve(args.strings("ids") ?? [], in: ctx.document.data, editing: true))
             guard found.count >= 2 else { throw ToolError("Give at least two objects.") }
             guard let id = ctx.document.combine(op, ids: found, undoManager: ctx.undoManager) else {
                 throw ToolError("The result would be empty. Check that the objects overlap.")
@@ -449,7 +459,7 @@ enum MCPTools {
                 description: "Aligns objects to each other (one object: to the mat) or distributes three or more with equal gaps.",
                 properties: ["ids": ids, "action": choice(AlignEdge.allCases.map(\.rawValue) + ["distribute_horizontal", "distribute_vertical"], "What to do.")],
                 required: ["ids", "action"], changes: true) { args, ctx in
-            let found = Set(try resolve(args.strings("ids") ?? [], in: ctx.document.data))
+            let found = Set(try resolve(args.strings("ids") ?? [], in: ctx.document.data, editing: true))
             let action = try args.requiredString("action")
             if let edge = AlignEdge(rawValue: action) {
                 ctx.document.align(edge, ids: found, undoManager: ctx.undoManager)
