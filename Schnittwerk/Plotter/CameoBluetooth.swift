@@ -244,7 +244,8 @@ extension CameoBluetooth: CBCentralManagerDelegate, CBPeripheralDelegate {
         if let current = self.peripheral, current.identifier == remembered || peripheral.identifier != remembered { return }
         let services = advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] ?? []
         let name = (peripheral.name ?? advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "").lowercased()
-        // The Cameo 3 also shows up here, but talks over classic Bluetooth (CameoSerial)
+        // The Cameo 3 offers this service too, but gave no answer to status queries
+        // over it; it is reached over classic Bluetooth instead (CameoSerial)
         let classic = name.replacingOccurrences(of: " ", with: "").hasPrefix("cameo3")
         guard services.contains(Self.serviceID) || ((name.contains("cameo") || name.contains("silhouette")) && !classic)
         else { return }
