@@ -80,6 +80,8 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 - Tools: AutoBlade, ratchet blade, Kraft Blade (leather, felt, chipboard), pen, embossing tool, punch tool
 - Blade depth, force, speed, passes, acceleration, blade offset, overcut, sharp corners (Smart Cut), track enhancing
 - More than 30 material presets (many from [michamade.de](https://michamade.de/schnitteinstellungen/)) and your own cut profiles (import / export as `.schnittprofile`)
+- **Cut preview** with order, travel moves and estimated time
+- **Print & Cut** with registration marks (A4/Letter, Cameo 3 and Cameo 4 line): print or save as PDF, the plotter finds the marks before cutting
 - Test cut, connection check, export of the plotter commands as text
 - Objects can be excluded from cutting; lines outside the cutting area are reported
 
