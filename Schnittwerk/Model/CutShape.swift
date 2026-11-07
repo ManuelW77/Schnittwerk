@@ -26,6 +26,8 @@ struct CutShape: Identifiable, Codable, Equatable {
     /// Rotation in degrees, clockwise on screen.
     var rotation: Double = 0
     var text: TextSpec?
+    /// Settings of a basic shape (rectangle, ellipse …), nil otherwise.
+    var shapeSpec: ShapeSpec?
     /// Objects with `cutEnabled == false` stay visible but are not cut.
     var cutEnabled: Bool = true
 

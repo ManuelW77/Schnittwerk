@@ -33,4 +33,30 @@ final class SnapshotRender: XCTestCase {
         let png2 = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r2.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
         try png2.write(to: URL(fileURLWithPath: dir).appendingPathComponent("inspector.png"))
     }
+
+    func testRenderShapes() throws {
+        guard let dir = ProcessInfo.processInfo.environment["SW_SNAPSHOT_DIR"] else { throw XCTSkip("no SW_SNAPSHOT_DIR") }
+        let doc = CutDocument()
+        var rect = ShapeSpec.standard(.rectangle)
+        rect.cornerRadiusMM = 8
+        rect.widthMM = 70
+        let shapes = [
+            CutShape.basic(rect, at: CGPoint(x: 20, y: 20)),
+            CutShape.basic(.standard(.ellipse), at: CGPoint(x: 110, y: 20)),
+            CutShape.basic(.standard(.polygon), at: CGPoint(x: 180, y: 20)),
+            CutShape.basic(.standard(.star), at: CGPoint(x: 250, y: 20)),
+        ]
+        doc.data.shapes = shapes
+        let canvas = MatCanvasView(document: doc, selection: .constant(shapes[3].id), zoom: 1)
+        let r = ImageRenderer(content: canvas.background(Color.white))
+        let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
+        try png.write(to: URL(fileURLWithPath: dir).appendingPathComponent("shapes.png"))
+
+        for (i, name) in [(0, "inspector-rect"), (3, "inspector-star")] {
+            let inspector = InspectorView(document: doc, selection: shapes[i].id).frame(width: 320, height: 900)
+            let r2 = ImageRenderer(content: inspector.background(Color.white))
+            let png2 = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r2.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
+            try png2.write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(name).png"))
+        }
+    }
 }

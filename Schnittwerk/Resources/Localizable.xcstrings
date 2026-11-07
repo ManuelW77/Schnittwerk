@@ -31,6 +31,26 @@
         }
       }
     },
+    "Add a basic shape" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grundform hinzufügen"
+          }
+        }
+      }
+    },
+    "Add shape" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form hinzufügen"
+          }
+        }
+      }
+    },
     "Add text" : {
       "localizations" : {
         "de" : {
@@ -311,6 +331,26 @@
         }
       }
     },
+    "Corner radius (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eckenradius (mm)"
+          }
+        }
+      }
+    },
+    "Corners: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ecken: %lld"
+          }
+        }
+      }
+    },
     "Custom" : {
       "localizations" : {
         "de" : {
@@ -531,12 +571,32 @@
         }
       }
     },
+    "Edit shape" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form ändern"
+          }
+        }
+      }
+    },
     "Edit text" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Text bearbeiten"
+          }
+        }
+      }
+    },
+    "Ellipse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ellipse"
           }
         }
       }
@@ -841,6 +901,16 @@
         }
       }
     },
+    "Make it a circle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zum Kreis machen"
+          }
+        }
+      }
+    },
     "Manage all cut profiles" : {
       "localizations" : {
         "de" : {
@@ -1101,6 +1171,36 @@
         }
       }
     },
+    "Point depth" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zackentiefe"
+          }
+        }
+      }
+    },
+    "Points: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zacken: %lld"
+          }
+        }
+      }
+    },
+    "Polygon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vieleck"
+          }
+        }
+      }
+    },
     "Position (mm, top left)" : {
       "localizations" : {
         "de" : {
@@ -1147,6 +1247,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bereit"
+          }
+        }
+      }
+    },
+    "Rectangle" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechteck"
           }
         }
       }
@@ -1364,6 +1474,16 @@
         }
       }
     },
+    "Shape" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form"
+          }
+        }
+      }
+    },
     "Show or hide settings" : {
       "localizations" : {
         "de" : {
@@ -1400,6 +1520,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geschwindigkeit"
+          }
+        }
+      }
+    },
+    "Star" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stern"
           }
         }
       }
