@@ -15,6 +15,17 @@ struct ProjectData: Codable, Equatable {
     var shapes: [CutShape] = []
     var mat: MatType = .mat12x12
     var settings = CutSettings()
+
+    /// Gives objects with an id that is already taken a new id.
+    /// A damaged or hand-edited file must not have two objects with the
+    /// same id (lists and dragging rely on unique ids).
+    mutating func makeShapeIDsUnique() {
+        var seen = Set<UUID>()
+        for i in shapes.indices where !seen.insert(shapes[i].id).inserted {
+            shapes[i].id = UUID()
+            seen.insert(shapes[i].id)
+        }
+    }
 }
 
 /// One open project window.
@@ -44,6 +55,7 @@ final class CutDocument: ReferenceFileDocument, ObservableObject {
         }
         if configuration.contentType.conforms(to: .schnittwerkProject) {
             data = try JSONDecoder().decode(ProjectData.self, from: raw)
+            data.makeShapeIDsUnique()
             return
         }
         let fileName = configuration.file.filename ?? "Import"
@@ -55,6 +67,7 @@ final class CutDocument: ReferenceFileDocument, ObservableObject {
         // into the .svg file. Such files open as the project they contain.
         if raw.first == UInt8(ascii: "{"), let project = try? JSONDecoder().decode(ProjectData.self, from: raw) {
             data = project
+            data.makeShapeIDsUnique()
             openNotes = [String(localized: "This file contained a Schnittwerk project instead of SVG/DXF. It was opened as a project. Save it as a .schnittwerk file.")]
             return
         }

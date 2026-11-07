@@ -5,10 +5,11 @@ import SwiftUI
 /// Right side panel: position, size, rotation and text of the selected object.
 struct InspectorView: View {
     @ObservedObject var document: CutDocument
-    let selection: Set<UUID>
+    @Binding var selection: Set<UUID>
 
     @Environment(\.undoManager) private var undoManager
     @AppStorage("inspector.lockAspect") private var lockAspect = true
+    @State private var combineFailed = false
 
     /// The one selected object; nil with none or several selected.
     private var selectedID: UUID? { selection.count == 1 ? selection.first : nil }
@@ -32,6 +33,7 @@ struct InspectorView: View {
                 Section {
                     Text("\(selection.count) objects selected")
                 }
+                combineSection
             } else {
                 Section {
                     Text("Select an object on the mat, or import a file.")
@@ -40,6 +42,30 @@ struct InspectorView: View {
             }
         }
         .formStyle(.grouped)
+        .alert("Nothing left", isPresented: $combineFailed) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("The result would be empty. Check that the objects overlap.")
+        }
+    }
+
+    // MARK: - Several objects
+
+    private var combineSection: some View {
+        Section("Combine") {
+            ForEach(PathOperation.allCases) { op in
+                Button { combine(op) } label: { Label(op.title, systemImage: op.systemImage) }
+                    .help(op.help)
+            }
+        }
+    }
+
+    private func combine(_ op: PathOperation) {
+        if let id = document.combine(op, ids: selection, undoManager: undoManager) {
+            selection = [id]
+        } else {
+            combineFailed = true
+        }
     }
 
     // MARK: - Changes

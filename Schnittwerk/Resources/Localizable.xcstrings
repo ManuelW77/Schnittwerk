@@ -301,6 +301,16 @@
         }
       }
     },
+    "Combine" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kombinieren"
+          }
+        }
+      }
+    },
     "Connected, no mat loaded" : {
       "localizations" : {
         "de" : {
@@ -447,6 +457,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schneideeinstellungen und an den Plotter senden"
+          }
+        }
+      }
+    },
+    "Cut the front objects out of the backmost object" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die vorderen Objekte aus dem hintersten Objekt ausschneiden"
           }
         }
       }
@@ -861,6 +881,36 @@
         }
       }
     },
+    "Intersect" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittmenge"
+          }
+        }
+      }
+    },
+    "Join the selected objects into one outline" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die ausgewählten Objekte zu einem Umriss verbinden"
+          }
+        }
+      }
+    },
+    "Keep only the area where all selected objects overlap" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur die Fläche behalten, in der sich alle ausgewählten Objekte überlappen"
+          }
+        }
+      }
+    },
     "Keep proportions" : {
       "localizations" : {
         "de" : {
@@ -1101,6 +1151,16 @@
         }
       }
     },
+    "Nothing left" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts übrig"
+          }
+        }
+      }
+    },
     "Object" : {
       "localizations" : {
         "de" : {
@@ -1117,6 +1177,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Objekte"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         }
       }
@@ -1564,6 +1634,16 @@
         }
       }
     },
+    "Subtract" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausschneiden"
+          }
+        }
+      }
+    },
     "Test cut" : {
       "localizations" : {
         "de" : {
@@ -1694,6 +1774,16 @@
         }
       }
     },
+    "The result would be empty. Check that the objects overlap." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Ergebnis wäre leer. Prüfe, ob sich die Objekte überlappen."
+          }
+        }
+      }
+    },
     "This file contained a Schnittwerk project instead of SVG/DXF. It was opened as a project. Save it as a .schnittwerk file." : {
       "localizations" : {
         "de" : {
@@ -1730,6 +1820,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vinylfolie (glänzend/matt)"
+          }
+        }
+      }
+    },
+    "Weld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschweißen"
           }
         }
       }
