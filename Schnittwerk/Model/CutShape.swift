@@ -71,6 +71,13 @@ struct CutShape: Identifiable, Codable, Equatable {
         localBounds = paths.bounds.isNull ? .zero : paths.bounds
     }
 
+    /// Sets the geometry in object coordinates; position, scale and
+    /// rotation stay, so the object does not move on the mat.
+    mutating func setLocalPaths(_ newPaths: [Polyline]) {
+        paths = newPaths
+        localBounds = paths.bounds.isNull ? .zero : paths.bounds
+    }
+
     /// Local → mat coordinates: scale, then rotate, then move.
     var transform: CGAffineTransform {
         CGAffineTransform(translationX: position.x, y: position.y)

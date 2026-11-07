@@ -91,6 +91,16 @@
         }
       }
     },
+    "%lld object(s) lie outside the area between the marks." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Objekt(e) liegen außerhalb des Bereichs zwischen den Passkreuzen."
+          }
+        }
+      }
+    },
     "%lld object(s) stick out over the cutting area. Those parts are not cut, to protect the mat." : {
       "localizations" : {
         "de" : {
@@ -171,6 +181,36 @@
         }
       }
     },
+    "A box around the motif and lines through the free space, so the waste vinyl comes off in small pieces." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Rahmen um das Motiv und Linien durch die freien Flächen, damit sich die überschüssige Folie in kleinen Stücken abziehen lässt."
+          }
+        }
+      }
+    },
+    "about %lld min %lld s" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ca. %lld min %lld s"
+          }
+        }
+      }
+    },
+    "about %lld s" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ca. %lld s"
+          }
+        }
+      }
+    },
     "Above" : {
       "localizations" : {
         "de" : {
@@ -187,6 +227,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beschleunigung"
+          }
+        }
+      }
+    },
+    "Across: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quer: %lld"
           }
         }
       }
@@ -241,6 +291,16 @@
         }
       }
     },
+    "Add point" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkt hinzufügen"
+          }
+        }
+      }
+    },
     "Add shape" : {
       "localizations" : {
         "de" : {
@@ -267,6 +327,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auf die Matte"
+          }
+        }
+      }
+    },
+    "Add weeding lines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entgitterlinien hinzufügen"
           }
         }
       }
@@ -417,6 +487,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schon vorhanden: %lld"
+          }
+        }
+      }
+    },
+    "Also prints thin lines along the cut lines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Druckt zusätzlich dünne Linien entlang der Schnittlinien"
           }
         }
       }
@@ -601,6 +681,16 @@
         }
       }
     },
+    "Box margin (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rahmenabstand (mm)"
+          }
+        }
+      }
+    },
     "Brightness" : {
       "localizations" : {
         "de" : {
@@ -751,6 +841,16 @@
         }
       }
     },
+    "Change Print & Cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Print & Cut ändern"
+          }
+        }
+      }
+    },
     "Change tool" : {
       "localizations" : {
         "de" : {
@@ -857,6 +957,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auf die Matte klicken, um Text zu setzen (T)"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließen"
           }
         }
       }
@@ -1171,6 +1281,16 @@
         }
       }
     },
+    "Cut length" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittlänge"
+          }
+        }
+      }
+    },
     "Cut on/off" : {
       "localizations" : {
         "de" : {
@@ -1187,6 +1307,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schnittoptionen"
+          }
+        }
+      }
+    },
+    "Cut preview" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittvorschau"
           }
         }
       }
@@ -1341,6 +1471,16 @@
         }
       }
     },
+    "Delete point" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkt löschen"
+          }
+        }
+      }
+    },
     "Delete profile" : {
       "localizations" : {
         "de" : {
@@ -1441,12 +1581,42 @@
         }
       }
     },
+    "Down: %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Längs: %lld"
+          }
+        }
+      }
+    },
     "Download" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Herunterladen"
+          }
+        }
+      }
+    },
+    "Drag a straight line across objects to cut them into pieces (K)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine gerade Linie über Objekte ziehen, um sie zu zerteilen (K)"
+          }
+        }
+      }
+    },
+    "Drag over objects to erase parts of them (E)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über Objekte ziehen, um Teile davon wegzuradieren (E)"
           }
         }
       }
@@ -1531,6 +1701,16 @@
         }
       }
     },
+    "Edit points" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte bearbeiten"
+          }
+        }
+      }
+    },
     "Edit shape" : {
       "localizations" : {
         "de" : {
@@ -1557,6 +1737,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Text bearbeiten …"
+          }
+        }
+      }
+    },
+    "Edit the points of one object: drag a point, double-click a point to delete it, double-click a line to add a point, right-click a point to split the line there (A)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte eines Objekts bearbeiten: Punkt ziehen, Doppelklick auf einen Punkt löscht ihn, Doppelklick auf eine Linie fügt einen Punkt hinzu, Rechtsklick auf einen Punkt trennt die Linie dort auf (A)"
           }
         }
       }
@@ -1607,6 +1797,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leeres Profil"
+          }
+        }
+      }
+    },
+    "Erase" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radieren"
+          }
+        }
+      }
+    },
+    "Eraser" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radiergummi"
+          }
+        }
+      }
+    },
+    "Eraser size" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radiergummigröße"
+          }
+        }
+      }
+    },
+    "Eraser size (radius)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radiergummigröße (Radius)"
           }
         }
       }
@@ -2101,6 +2331,16 @@
         }
       }
     },
+    "Knife" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Messer"
+          }
+        }
+      }
+    },
     "Kraft Blade (leather)" : {
       "localizations" : {
         "de" : {
@@ -2281,6 +2521,16 @@
         }
       }
     },
+    "Lines inside others are cut first, so the material does not move. Grey dashes show the moves with the tool up. The time is an estimate." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Innere Linien werden zuerst geschnitten, damit das Material nicht verrutscht. Graue Striche zeigen die Fahrten mit angehobenem Werkzeug. Die Zeit ist geschätzt."
+          }
+        }
+      }
+    },
     "Lines inside the object, for the pen or the embossing tool. Choose that tool for the fill in the Object panel." : {
       "localizations" : {
         "de" : {
@@ -2351,6 +2601,16 @@
         }
       }
     },
+    "Looking for the registration marks…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suche Passkreuze …"
+          }
+        }
+      }
+    },
     "Lower values move the head more gently, e.g. for thick or delicate material. Cameo 4 line only." : {
       "localizations" : {
         "de" : {
@@ -2387,6 +2647,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle Schnittprofile verwalten"
+          }
+        }
+      }
+    },
+    "Mark inset (mm)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abstand der Passkreuze vom Rand (mm)"
           }
         }
       }
@@ -2547,6 +2817,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verschieben um"
+          }
+        }
+      }
+    },
+    "Move point" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkt verschieben"
           }
         }
       }
@@ -2931,6 +3211,16 @@
         }
       }
     },
+    "Pass %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchgang %lld"
+          }
+        }
+      }
+    },
     "Passes" : {
       "localizations" : {
         "de" : {
@@ -3091,6 +3381,76 @@
         }
       }
     },
+    "Preview" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorschau"
+          }
+        }
+      }
+    },
+    "Print & Cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Print & Cut"
+          }
+        }
+      }
+    },
+    "Print and Cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Print and Cut"
+          }
+        }
+      }
+    },
+    "Print at 100 % (no “fit to page”), lay the sheet straight at the top left of the mat, then cut. Cameo 3 and Cameo 4 line." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In 100 % drucken (nicht „An Seite anpassen“), das Blatt gerade oben links auf die Matte legen, dann schneiden. Cameo 3 und Cameo-4-Reihe."
+          }
+        }
+      }
+    },
+    "Print outlines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umrisse mitdrucken"
+          }
+        }
+      }
+    },
+    "Print the design with marks; the plotter finds them with its sensor and cuts exactly around the print" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Motiv mit Passkreuzen drucken; der Plotter findet sie mit seinem Sensor und schneidet genau um den Druck"
+          }
+        }
+      }
+    },
+    "Print…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drucken …"
+          }
+        }
+      }
+    },
     "Profile" : {
       "localizations" : {
         "de" : {
@@ -3187,6 +3547,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wiederholen (⇧⌘Z)"
+          }
+        }
+      }
+    },
+    "Registration marks" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passkreuze"
           }
         }
       }
@@ -3447,6 +3817,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Als neues Profil sichern…"
+          }
+        }
+      }
+    },
+    "Save as PDF…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als PDF sichern …"
           }
         }
       }
@@ -3714,6 +4094,16 @@
         }
       }
     },
+    "Shows the order of the cut lines and the time, before cutting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt vor dem Schneiden die Reihenfolge der Schnittlinien und die Dauer"
+          }
+        }
+      }
+    },
     "Siser P.S. Electric" : {
       "localizations" : {
         "de" : {
@@ -3824,6 +4214,26 @@
         }
       }
     },
+    "Split line" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linie auftrennen"
+          }
+        }
+      }
+    },
+    "Split line here" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linie hier auftrennen"
+          }
+        }
+      }
+    },
     "Split overlapping objects into all their pieces" : {
       "localizations" : {
         "de" : {
@@ -3860,6 +4270,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Startet …"
+          }
+        }
+      }
+    },
+    "Step" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schritt"
           }
         }
       }
@@ -4174,6 +4594,16 @@
         }
       }
     },
+    "The plotter could not find the registration marks%@. Check that the sheet lies straight at the top left of the mat, the marks are printed black and the print was made at 100 %%." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Plotter hat die Passkreuze nicht gefunden%@. Prüfe, ob das Blatt gerade oben links auf der Matte liegt, die Passkreuze schwarz gedruckt sind und in 100 %% gedruckt wurde."
+          }
+        }
+      }
+    },
     "The plotter did not respond in time." : {
       "localizations" : {
         "de" : {
@@ -4244,6 +4674,16 @@
         }
       }
     },
+    "This plotter cannot read registration marks." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Plotter kann keine Passkreuze lesen."
+          }
+        }
+      }
+    },
     "This plotter offers no Cameo 4 Bluetooth service." : {
       "localizations" : {
         "de" : {
@@ -4260,6 +4700,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schwellwert"
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
           }
         }
       }
@@ -4290,6 +4740,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Werkzeug 2"
+          }
+        }
+      }
+    },
+    "Tool changes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkzeugwechsel"
           }
         }
       }
@@ -4380,6 +4840,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transparenz"
+          }
+        }
+      }
+    },
+    "Travel" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leerfahrt"
           }
         }
       }
@@ -4540,6 +5010,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vinylfolie (glänzend/matt)"
+          }
+        }
+      }
+    },
+    "Weeding lines" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entgitterlinien"
           }
         }
       }
