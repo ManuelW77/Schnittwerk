@@ -64,4 +64,35 @@ final class SnapshotRender: XCTestCase {
             try png2.write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(name).png"))
         }
     }
+
+    func testRenderToolsAndPanels() throws {
+        guard let dir = ProcessInfo.processInfo.environment["SW_SNAPSHOT_DIR"] else { throw XCTSkip("no SW_SNAPSHOT_DIR") }
+        func save(_ view: some View, _ name: String) throws {
+            let r = ImageRenderer(content: view.background(Color.white))
+            r.scale = 2
+            let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(r.nsImage?.tiffRepresentation))?.representation(using: .png, properties: [:]))
+            try png.write(to: URL(fileURLWithPath: dir).appendingPathComponent(name))
+        }
+        let doc = CutDocument()
+        let heart = CutShape.basic(.standard(.star), at: CGPoint(x: 20, y: 20))
+        var circle = CutShape.basic(.standard(.ellipse), at: CGPoint(x: 120, y: 20))
+        circle.toolSlot = 2
+        doc.data.shapes = [heart, circle]
+        doc.addFill(ids: [circle.id], pattern: .crossHatch, spacing: 3, angle: 45, undoManager: nil)
+        let rect = CutShape.basic(.standard(.rectangle), at: CGPoint(x: 200, y: 20))
+        doc.data.shapes.append(rect)
+        doc.addStipple(ids: [rect.id], mode: .fill, spacing: 3, replace: false, undoManager: nil)
+        doc.rotateCopies([heart.id], count: 6, undoManager: nil)
+        var s2 = CutSettings.holder2Default
+        s2.tool = .emboss
+        doc.data.setSettings(s2, slot: 2)
+        let canvas = MatCanvasView(document: doc, selection: .constant([circle.id]), zoom: 1, tool: .constant(.select))
+        try save(ZStack(alignment: .topLeading) {
+            canvas.padding(.leading, 52)
+            ToolPalette(tool: .constant(.select), addShape: { _ in }).padding(12)
+        }.overlay(alignment: .bottom) { ToolLegend(data: doc.data).padding(12) }, "tools-canvas.png")
+        try save(EditPanelView(document: doc, selection: .constant([circle.id])).frame(width: 340, height: 1500), "edit-panel.png")
+        try save(CutPanelView(document: doc, slot: .constant(2)).frame(width: 340, height: 1300), "cut-panel.png")
+        try save(InspectorView(document: doc, selection: .constant([circle.id])).frame(width: 340, height: 900), "object-panel.png")
+    }
 }

@@ -17,10 +17,13 @@ struct ObjectListView: View {
                               : shape.shapeSpec?.kind.systemImage ?? "scribble.variable")
                             .foregroundStyle(shape.colorHex.flatMap(RGB.init(hex:))
                                 .map { Color(red: $0.r, green: $0.g, blue: $0.b) }
-                                ?? (shape.cutEnabled ? Color.red : Color.gray))
+                                ?? (shape.cutEnabled ? ToolSlotStyle.color(shape.toolSlot) : Color.gray))
                         Text(verbatim: shape.name.isEmpty ? "–" : shape.name)
                             .lineLimit(1)
                         Spacer()
+                        ToolSlotBadge(slot: shape.toolSlot)
+                            .opacity(shape.cutEnabled ? 1 : 0.35)
+                            .help(ToolSlotStyle.title(shape.toolSlot))
                         if shape.groupID != nil {
                             Image(systemName: "link")
                                 .foregroundStyle(.secondary)
@@ -45,6 +48,14 @@ struct ObjectListView: View {
                         if shape.groupID != nil {
                             Button("Ungroup") { ungroup(shape.id) }
                         }
+                        Menu("Cut with") {
+                            ForEach([1, 2], id: \.self) { slot in
+                                Button(ToolSlotStyle.title(slot)) {
+                                    document.setToolSlot(slot, ids: [shape.id], undoManager: undoManager)
+                                }
+                            }
+                        }
+                        .disabled(shape.isLocked)
                         Divider()
                         Button("Duplicate") { duplicate(shape.id) }
                         Button("Bring to front") { reorder(shape.id, toFront: true) }

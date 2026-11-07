@@ -16,14 +16,19 @@ struct CutPanelView: View {
     @State private var renameText = ""
     @State private var confirmDelete = false
     @AppStorage(ConnectionKind.storageKey) private var connection: ConnectionKind = .automatic
+    /// Tool whose values are shown: 1 or 2.
+    @Binding var slot: Int
 
-    private var settings: CutSettings { document.data.settings }
+    private var settings: CutSettings { document.data.settings(slot: slot) }
 
     /// Changes the values; the chosen profile stays selected and is
     /// shown as "changed" until it is saved or reset.
     private func set(_ edit: @escaping (inout CutSettings) -> Void) {
+        let slot = slot
         document.update(String(localized: "Change cut settings"), undoManager: undoManager) { data in
-            edit(&data.settings)
+            var s = data.settings(slot: slot)
+            edit(&s)
+            data.setSettings(s, slot: slot)
         }
     }
 
@@ -67,6 +72,15 @@ struct CutPanelView: View {
         Binding(get: { settings[keyPath: keyPath] }, set: { v in set { $0[keyPath: keyPath] = v } })
     }
 
+    private func optionBinding<V>(_ keyPath: WritableKeyPath<CutOptions, V>) -> Binding<V> {
+        Binding(get: { settings.options[keyPath: keyPath] }, set: { v in set { $0.options[keyPath: keyPath] = v } })
+    }
+
+    private var offsetText: String {
+        let mm = Double(settings.options.offsetAdjust) * 0.05
+        return mm == 0 ? "0" : String(format: "%+.2f mm", mm)
+    }
+
     private var outsideCount: Int {
         let area = document.data.mat.size
         return document.data.shapes.filter { $0.cutEnabled && !$0.fits(in: area) }.count
@@ -74,12 +88,47 @@ struct CutPanelView: View {
 
     private var cutCount: Int { document.data.shapes.filter(\.cutEnabled).count }
 
+    private func objectCount(_ slot: Int) -> Int {
+        document.data.shapes.filter { $0.cutEnabled && $0.toolSlot == slot }.count
+    }
+
+    /// Problems of the chosen tool in this holder, or nil.
+    private var holderWarning: String? {
+        guard let needed = settings.tool.requiredHolder, needed != slot else { return nil }
+        return String(localized: "\(settings.tool.title) only fits into holder \(needed) (Cameo 4 line). Choose it for tool \(needed) instead.")
+    }
+
     var body: some View {
         Form {
+            Section {
+                Picker("Tool", selection: $slot) {
+                    ForEach([1, 2], id: \.self) { n in
+                        Text(verbatim: "\(ToolSlotStyle.title(n)) (\(objectCount(n)))").tag(n)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                HStack(spacing: 8) {
+                    ToolSlotBadge(slot: slot)
+                    Text(slot == 1 ? "Left holder" : "Right holder")
+                    Spacer()
+                    Image(systemName: settings.tool.systemImage)
+                        .foregroundStyle(ToolSlotStyle.color(slot))
+                    Text(verbatim: settings.tool.title)
+                        .foregroundStyle(.secondary)
+                }
+                .font(.callout)
+                Text("Objects shown in this colour are cut with this tool. Choose the tool of an object in the Object panel or with a right click.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Cut profile") {
                 Picker("Profile", selection: Binding(get: { pickerValue }, set: select)) {
-                    Section("Built-in") {
-                        ForEach(MaterialPreset.all) { Text($0.title).tag($0.id) }
+                    ForEach(MaterialPreset.Category.allCases) { category in
+                        Section(category.title) {
+                            ForEach(MaterialPreset.all.filter { $0.category == category }) { Text($0.title).tag($0.id) }
+                        }
                     }
                     if !store.profiles.isEmpty {
                         Section("My profiles") {
@@ -155,15 +204,11 @@ struct CutPanelView: View {
                 Picker("Tool", selection: Binding(get: { settings.tool }, set: { t in set { $0.tool = t } })) {
                     ForEach(ToolKind.allCases) { Text($0.title).tag($0) }
                 }
-                Picker("Holder", selection: intBinding(\.holder)) {
-                    Text("1 (left)").tag(1)
-                    Text("2 (right)").tag(2)
-                }
-                if settings.tool == .autoBlade && settings.holder == 2 {
-                    Label("The AutoBlade only works in holder 1.", systemImage: "exclamationmark.triangle.fill")
+                if let holderWarning {
+                    Label(holderWarning, systemImage: "exclamationmark.triangle.fill")
                         .foregroundStyle(.orange)
                 }
-                if settings.tool == .autoBlade {
+                if settings.tool.setsDepth {
                     Stepper(value: intBinding(\.depth), in: CutSettings.depthRange) {
                         LabeledContent("Blade depth", value: "\(settings.depth)")
                     }
@@ -177,6 +222,25 @@ struct CutPanelView: View {
                 Stepper(value: intBinding(\.passes), in: CutSettings.passesRange) {
                     LabeledContent("Passes", value: "\(settings.passes)")
                 }
+            }
+
+            Section("Cut options") {
+                Stepper(value: optionBinding(\.acceleration), in: CutOptions.accelerationRange) {
+                    LabeledContent("Acceleration", value: "\(settings.options.acceleration)")
+                }
+                .help("Lower values move the head more gently, e.g. for thick or delicate material. Cameo 4 line only.")
+                if settings.tool.isBlade {
+                    Stepper(value: optionBinding(\.offsetAdjust), in: CutOptions.offsetAdjustRange) {
+                        LabeledContent("Blade offset", value: offsetText)
+                    }
+                    .help("Correction of the blade tip offset in 0.05 mm steps. Raise it if corners come out round.")
+                    Toggle("Overcut", isOn: optionBinding(\.overcut))
+                        .help("Closed lines are cut 1 mm past their start, so the piece comes out cleanly")
+                    Toggle("Sharp corners (Smart Cut)", isOn: optionBinding(\.sharpCorners))
+                        .help("At sharp corners the blade runs a little past the corner and starts again, for crisp corners in thick material")
+                }
+                Toggle("Track enhancing", isOn: optionBinding(\.trackEnhancing))
+                    .help("The plotter rolls the mat in and out a few times first, so the rollers grip better (e.g. for long or thick material)")
             }
 
             Section("Plotter") {
@@ -210,7 +274,7 @@ struct CutPanelView: View {
 
                     HStack {
                         Button("Test cut") {
-                            let settings = settings, mat = document.data.mat
+                            let settings = settings, mat = document.data.mat // the tool shown
                             plotter.send { GPGLBuilder.testCut(settings: settings, mat: mat, model: $0) }
                         }
                         .help("Cuts a 10 mm square with a triangle at the top left of the mat")
@@ -233,7 +297,7 @@ struct CutPanelView: View {
             Button("Save", action: saveAsNewProfile)
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Saves tool, blade depth, force, speed and passes.")
+            Text("Saves tool, blade depth, force, speed, passes and cut options.")
         }
         .alert("Rename profile", isPresented: $askRename) {
             TextField("Name", text: $renameText)
