@@ -57,8 +57,17 @@ targets:
           - CFBundleTypeName: Schnittwerk Project
             CFBundleTypeRole: Editor
             LSHandlerRank: Owner
+            # macOS draws the app icon onto a document sheet
+            CFBundleTypeIconSystemGenerated: 1
             LSItemContentTypes:
               - de.manuelweiser.schnittwerk.project
+          - CFBundleTypeName: Schnittwerk Cut Profiles
+            # Icon only; profiles are imported in the settings
+            CFBundleTypeRole: None
+            LSHandlerRank: Owner
+            CFBundleTypeIconSystemGenerated: 1
+            LSItemContentTypes:
+              - de.manuelweiser.schnittwerk.cutprofiles
           - CFBundleTypeName: Cut File
             CFBundleTypeRole: Viewer
             LSHandlerRank: Alternate

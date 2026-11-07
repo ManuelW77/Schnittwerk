@@ -9,6 +9,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>Schnittwerk Project</string>
 			<key>CFBundleTypeRole</key>
@@ -18,6 +20,20 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>de.manuelweiser.schnittwerk.project</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
+			<key>CFBundleTypeName</key>
+			<string>Schnittwerk Cut Profiles</string>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>de.manuelweiser.schnittwerk.cutprofiles</string>
 			</array>
 		</dict>
 		<dict>
