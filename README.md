@@ -13,7 +13,7 @@
 > Not affiliated with Silhouette America, Inc. "Silhouette", "Cameo" and "Portrait" are trademarks of their owners.
 
 <p align="center">
-  <img src="docs/screenshots/en-main.png" width="820" alt="Schnittwerk: mat with text, stars and an emboss fill, object panel on the right">
+  <img src="docs/screenshots/en-main.png" width="880" alt="Schnittwerk in dark mode: mat with text, stars and an emboss fill, object panel on the right">
 </p>
 
 ## Download
@@ -60,6 +60,9 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 - Basic shapes: rectangle (rounded corners), ellipse, polygon, star – editable afterwards
 
 ### Editing
+
+<img src="docs/screenshots/en-edit.png" width="680" alt="Edit panel with transform and replicate">
+
 - Move, scale, rotate, mirror; exact position and size in the inspector
 - Multiple selection with shift/⌘ click or rubber band
 - Weld, subtract, intersect, subtract all, divide, crop, make and release compound paths
@@ -86,7 +89,7 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 
 ### Cutting
 
-<img src="docs/screenshots/en-cut.png" width="620" alt="Cut panel with tool 1 and 2, cut profile and cut options">
+<img src="docs/screenshots/en-cut.png" width="680" alt="Cut panel with tool 1 and 2, cut profile and cut options">
 
 - Two tools in one job: each object is handled by tool 1 (red) or tool 2 (blue); pen and embossing run before cutting
 - Tools: AutoBlade, ratchet blade, Kraft Blade (leather, felt, chipboard), pen, embossing tool, punch tool

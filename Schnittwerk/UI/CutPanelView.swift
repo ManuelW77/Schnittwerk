@@ -127,21 +127,8 @@ struct CutPanelView: View {
             }
 
             Section("Cut profile") {
-                Picker("Profile", selection: Binding(get: { pickerValue }, set: select)) {
-                    ForEach(MaterialPreset.Category.allCases) { category in
-                        Section(category.title) {
-                            ForEach(MaterialPreset.all.filter { $0.category == category }) { Text($0.title).tag($0.id) }
-                        }
-                    }
-                    if !store.profiles.isEmpty {
-                        Section("My profiles") {
-                            ForEach(store.profiles) { Text(verbatim: $0.name).tag($0.settingsID) }
-                        }
-                    }
-                    if pickerValue == "custom" {
-                        Text("Custom").tag("custom")
-                    }
-                }
+                ProfileMenu(title: "Profile", selection: Binding(get: { pickerValue }, set: select),
+                            showCustom: pickerValue == "custom")
 
                 if isModified {
                     HStack {
