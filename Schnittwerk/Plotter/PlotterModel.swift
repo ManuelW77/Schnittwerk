@@ -1,13 +1,24 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 //
-// Silhouette plotters that understand the same commands as the Cameo 4
-// ("Cameo 4 line"). USB ids and widths were taken from the open-source
-// project inkscape-silhouette (silhouette/Graphtec.py); only the Cameo 4
-// itself was tested with Schnittwerk.
+// Supported Silhouette plotters: the Cameo 4 line, the Cameo 3 and older
+// machines, each family with its own command set. USB ids and widths were taken from the
+// open-source project inkscape-silhouette (silhouette/Graphtec.py); only the
+// Cameo 4 itself was tested with Schnittwerk.
 
 import Foundation
 
 struct PlotterModel: Equatable, Hashable, Sendable {
+    /// Command dialect the machine understands.
+    enum Family: Sendable {
+        /// Cameo 4, 5, Pro MK-II, Portrait 3/4.
+        case cameo4
+        /// Cameo 3: no acceleration command (TJ), speed only 1–10.
+        case cameo3
+        /// Older machines (Cameo 1/2, Portrait 1/2, Craft Robo): no mat
+        /// command, one tool holder, no AutoBlade, speed only 1–10.
+        case classic
+    }
+
     let name: String
     let vendorID: UInt16
     let productID: UInt16
@@ -17,6 +28,10 @@ struct PlotterModel: Equatable, Hashable, Sendable {
     let twoTools: Bool
     /// Bluetooth with the Cameo 4 protocol.
     let bluetooth: Bool
+    var family: Family = .cameo4
+
+    /// Highest speed the machine accepts.
+    var maxSpeed: Int { family == .cameo4 ? 30 : 10 }
 
     static let silhouetteVendor: UInt16 = 0x0B4D
     /// The Cameo 5 Alpha models use their own vendor id.
@@ -24,6 +39,9 @@ struct PlotterModel: Equatable, Hashable, Sendable {
 
     static let cameo4 = PlotterModel(name: "Cameo 4", vendorID: silhouetteVendor, productID: 0x1137,
                                      widthMM: 304.8, twoTools: true, bluetooth: true)
+
+    static let cameo3 = PlotterModel(name: "Cameo 3", vendorID: silhouetteVendor, productID: 0x112F,
+                                     widthMM: 304.8, twoTools: true, bluetooth: false, family: .cameo3)
 
     static let all: [PlotterModel] = [
         cameo4,
@@ -45,6 +63,17 @@ struct PlotterModel: Equatable, Hashable, Sendable {
                      widthMM: 203, twoTools: false, bluetooth: false),
         PlotterModel(name: "Portrait 4", vendorID: silhouetteVendor, productID: 0x113F,
                      widthMM: 216, twoTools: false, bluetooth: false),
+        cameo3,
+        PlotterModel(name: "Cameo 2", vendorID: silhouetteVendor, productID: 0x112B,
+                     widthMM: 304, twoTools: false, bluetooth: false, family: .classic),
+        PlotterModel(name: "Cameo", vendorID: silhouetteVendor, productID: 0x1121,
+                     widthMM: 304, twoTools: false, bluetooth: false, family: .classic),
+        PlotterModel(name: "Portrait 2", vendorID: silhouetteVendor, productID: 0x1132,
+                     widthMM: 203, twoTools: false, bluetooth: false, family: .classic),
+        PlotterModel(name: "Portrait", vendorID: silhouetteVendor, productID: 0x1123,
+                     widthMM: 206, twoTools: false, bluetooth: false, family: .classic),
+        PlotterModel(name: "Craft Robo CC200-20", vendorID: silhouetteVendor, productID: 0x110A,
+                     widthMM: 200, twoTools: false, bluetooth: false, family: .classic),
     ]
 
     static func usb(vendor: UInt16, product: UInt16) -> PlotterModel? {

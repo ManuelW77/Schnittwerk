@@ -26,10 +26,13 @@ Schnittwerk into Applications. The app is signed and notarized by Apple.
 | Connection | Models |
 |---|---|
 | USB | Cameo 4, Cameo 4 Plus, Cameo 4 Pro, Cameo 5, Cameo 5 Plus, Cameo 5 Alpha, Cameo 5 Alpha Plus, Cameo Pro MK-II, Portrait 3, Portrait 4 |
+| USB (experimental, own command set) | Cameo 3, Cameo 2, Cameo, Portrait 2, Portrait, Craft Robo CC200-20 |
 | Bluetooth (experimental) | Cameo 4, Cameo 4 Plus, Cameo 4 Pro |
 
-Tested on a real **Cameo 4**. The other models use the same commands and were added from public protocol
-documentation; feedback from owners is welcome. Choose the connection in the Cut panel: *Automatic* tries USB
+Tested on a real **Cameo 4**. The other models were added following the open-source project
+[inkscape-silhouette](https://github.com/fablabnbg/inkscape-silhouette). The Cameo 3 and older machines get their
+own commands and cut at speed 10 at most; older machines have one tool holder and no AutoBlade depth. Run a test
+cut there first. feedback from owners is welcome. Choose the connection in the Cut panel: *Automatic* tries USB
 first, then Bluetooth. Over Bluetooth, the plotter must not be connected to another app at the same time.
 
 ## Features

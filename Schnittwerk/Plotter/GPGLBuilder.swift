@@ -1,6 +1,7 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 //
-// Builds the Graphtec/GPGL command stream for plotters of the Cameo 4 line.
+// Builds the Graphtec/GPGL command stream for Silhouette plotters: the
+// Cameo 4 line, the Cameo 3 and older machines (Cameo 1/2, Portrait 1/2).
 // Protocol facts (units, command order) were learned from the
 // open-source project inkscape-silhouette; no code was copied.
 //
@@ -112,29 +113,67 @@ enum GPGLBuilder {
         area.width = min(area.width, model.widthMM)
         var c: [String] = []
 
-        // Mat and cutting area
-        c.append("TG\(mat.tgIndex)")
-        c.append("FN0")
-        c.append("TB50,0")
-        c.append("\\0,0")
-        c.append("Z\(units(area.height)),\(units(area.width))")
+        let speed = min(s.speed, model.maxSpeed)
+        // Blade tip offset 0.9 mm (18 units); a pen has none
+        let offset = s.tool.isBlade ? "FC18,1,\(h)" : "FC0,1,\(h)"
+
+        if model.family == .classic {
+            // Older machines: no mat command, no tool holder, no AutoBlade.
+            // FW300 = custom media, the values below apply.
+            c.append("FW300")
+            c.append("!\(speed)")
+            c.append("FX\(s.pressure)")
+            c.append(s.tool.isBlade ? "FC18" : "FC0")
+            c.append("FY1")
+            c.append("FN0")
+            c.append("TB50,0")
+            c.append("FE0,0")
+            c.append("\\0,0")
+            c.append("Z\(units(area.height)),\(units(area.width))")
+            c.append("L0")
+            c.append("FE0,0")
+            c.append("FF0,0,0")
+        } else {
+            // Mat and cutting area
+            c.append("TG\(mat.tgIndex)")
+            c.append("FN0")
+            c.append("TB50,0")
+            c.append("\\0,0")
+            c.append("Z\(units(area.height)),\(units(area.width))")
+            if model.twoTools { c.append("J\(h)") }
+        }
 
         // Tool
-        if model.twoTools { c.append("J\(h)") }
-        if s.tool == .autoBlade {
-            c.append("TF\(s.depth),\(h)")
+        switch model.family {
+        case .classic:
+            break
+        case .cameo4:
+            if s.tool == .autoBlade {
+                c.append("TF\(s.depth),\(h)")
+            }
+            c.append("FX\(s.pressure),\(h)")
+            c.append("TJ0")
+            c.append("!\(speed),\(h)")
+            c.append("FC0,1,\(h)")
+            c.append("FE0,\(h)")
+            c.append("FF1,0,\(h)")
+            c.append("FF1,1,\(h)")
+            c.append("FX\(s.pressure),\(h)")
+            c.append("TJ3")
+            c.append(offset)
+        case .cameo3:
+            // Same values, set once, without the acceleration command TJ
+            c.append("!\(speed),\(h)")
+            c.append("FX\(s.pressure),\(h)")
+            c.append("FE0,\(h)")
+            c.append("FF1,0,\(h)")
+            c.append("FF1,1,\(h)")
+            c.append("FC0,1,\(h)")
+            if s.tool.isBlade { c.append(offset) }
+            if s.tool == .autoBlade {
+                c.append("TF\(s.depth),\(h)")
+            }
         }
-        c.append("FX\(s.pressure),\(h)")
-        c.append("TJ0")
-        c.append("!\(s.speed),\(h)")
-        c.append("FC0,1,\(h)")
-        c.append("FE0,\(h)")
-        c.append("FF1,0,\(h)")
-        c.append("FF1,1,\(h)")
-        c.append("FX\(s.pressure),\(h)")
-        c.append("TJ3")
-        // Blade tip offset 0.9 mm (18 units); a pen has none
-        c.append(s.tool.isBlade ? "FC18,1,\(h)" : "FC0,1,\(h)")
 
         // Lines
         var maxY: CGFloat = 0

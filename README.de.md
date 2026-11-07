@@ -26,10 +26,13 @@ Schnittwerk in den Programme-Ordner ziehen. Die App ist signiert und von Apple n
 | Verbindung | Modelle |
 |---|---|
 | USB | Cameo 4, Cameo 4 Plus, Cameo 4 Pro, Cameo 5, Cameo 5 Plus, Cameo 5 Alpha, Cameo 5 Alpha Plus, Cameo Pro MK-II, Portrait 3, Portrait 4 |
+| USB (experimentell, eigener Befehlssatz) | Cameo 3, Cameo 2, Cameo, Portrait 2, Portrait, Craft Robo CC200-20 |
 | Bluetooth (experimentell) | Cameo 4, Cameo 4 Plus, Cameo 4 Pro |
 
-Getestet an einem echten **Cameo 4**. Die anderen Modelle nutzen dieselben Befehle und wurden nach öffentlicher
-Protokoll-Dokumentation ergänzt; Rückmeldungen von Besitzern sind willkommen. Die Verbindung wählst du im
+Getestet an einem echten **Cameo 4**. Die anderen Modelle wurden nach dem Open-Source-Projekt
+[inkscape-silhouette](https://github.com/fablabnbg/inkscape-silhouette) ergänzt. Cameo 3 und ältere Geräte
+bekommen eigene Befehle und schneiden höchstens mit Geschwindigkeit 10; ältere Geräte haben nur einen
+Werkzeughalter und keine AutoBlade-Tiefe. Mach dort zuerst einen Testschnitt. Rückmeldungen von Besitzern sind willkommen. Die Verbindung wählst du im
 Schneiden-Bereich: *Automatisch* versucht zuerst USB, dann Bluetooth. Per Bluetooth darf der Plotter nicht
 gleichzeitig mit einer anderen App verbunden sein.
 

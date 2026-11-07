@@ -88,7 +88,7 @@ struct MCPTool {
 @MainActor
 enum MCPTools {
     static let instructions = """
-    Schnittwerk designs cut files for Silhouette cutting plotters (Cameo 4 line). \
+    Schnittwerk designs cut files for Silhouette cutting plotters (Cameo 3 and Cameo 4 line). \
     All lengths are millimetres. The origin is the top left corner of the mat, \
     x grows to the right and y grows downwards. x/y of an object is the top left \
     corner of its bounding box on the mat. Every object is a set of cut lines; \

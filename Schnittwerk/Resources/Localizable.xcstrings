@@ -321,12 +321,12 @@
         }
       }
     },
-    "Automatic tries USB first, then Bluetooth. Supported: %@. Bluetooth: Cameo 4, 4 Plus and 4 Pro." : {
+    "Automatic tries USB first, then Bluetooth. Supported: %@. Bluetooth: Cameo 4, 4 Plus and 4 Pro. Cameo 3 and older machines cut at speed 10 at most." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatisch versucht zuerst USB, dann Bluetooth. Unterstützt: %@. Bluetooth: Cameo 4, 4 Plus und 4 Pro."
+            "value" : "Automatisch versucht zuerst USB, dann Bluetooth. Unterstützt: %@. Bluetooth: Cameo 4, 4 Plus und 4 Pro. Cameo 3 und ältere Geräte schneiden höchstens mit Geschwindigkeit 10."
           }
         }
       }
