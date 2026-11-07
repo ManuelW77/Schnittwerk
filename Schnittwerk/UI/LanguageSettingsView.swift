@@ -1,7 +1,8 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 //
-// Settings tab: app language (system, German, English). macOS reads the
-// language only at launch, so a change needs a restart.
+// Settings tab "General": app language (system, German, English) and
+// light or dark look. macOS reads the language only at launch, so a
+// language change needs a restart; the look changes at once.
 
 import AppKit
 import SwiftUI
@@ -50,7 +51,36 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     }
 }
 
+/// Light or dark look, or the same as macOS. Takes effect at once.
+enum AppAppearance: String, CaseIterable, Identifiable {
+    case system, light, dark
+    var id: String { rawValue }
+
+    static let storageKey = "appearance"
+
+    var title: String {
+        switch self {
+        case .system: String(localized: "Same as macOS")
+        case .light: String(localized: "Light")
+        case .dark: String(localized: "Dark")
+        }
+    }
+
+    static var stored: AppAppearance {
+        AppAppearance(rawValue: UserDefaults.standard.string(forKey: storageKey) ?? "") ?? .system
+    }
+
+    func apply() {
+        switch self {
+        case .system: NSApp.appearance = nil
+        case .light: NSApp.appearance = NSAppearance(named: .aqua)
+        case .dark: NSApp.appearance = NSAppearance(named: .darkAqua)
+        }
+    }
+}
+
 struct LanguageSettingsView: View {
+    @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
     @State private var choice = AppLanguage.current
     /// Language the app was started with.
     @State private var started = AppLanguage.current
@@ -73,6 +103,13 @@ struct LanguageSettingsView: View {
             } footer: {
                 Text("“Same as macOS” follows System Settings → General → Language & Region.")
                     .foregroundStyle(.secondary)
+            }
+            Section {
+                Picker("Appearance", selection: $appearance) {
+                    ForEach(AppAppearance.allCases) { Text($0.title).tag($0) }
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: appearance) { appearance.apply() }
             }
         }
         .formStyle(.grouped)
