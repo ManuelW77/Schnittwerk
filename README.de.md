@@ -12,6 +12,10 @@
 
 > Kein Produkt von Silhouette America, Inc. „Silhouette“, „Cameo“ und „Portrait“ sind Marken ihrer Inhaber.
 
+<p align="center">
+  <img src="docs/screenshots/de-main.png" width="820" alt="Schnittwerk: Matte mit Text, Sternen und Prägefüllung, rechts der Objekt-Bereich">
+</p>
+
 ## Download
 
 Das aktuelle DMG gibt es unter [GitHub Releases](https://github.com/ManuelW77/Schnittwerk/releases). Öffnen und
@@ -83,6 +87,9 @@ gleichzeitig mit einer anderen App verbunden sein.
 - Wahlweise vor jedem Schnitt die Vorschau zeigen
 
 ### Schneiden
+
+<img src="docs/screenshots/de-cut.png" width="620" alt="Schneiden-Bereich mit Werkzeug 1 und 2, Schnittprofil und Schnittoptionen">
+
 - Zwei Werkzeuge in einem Auftrag: jedes Objekt wird mit Werkzeug 1 (rot) oder 2 (blau) bearbeitet, Stift und Prägen laufen vor dem Schneiden
 - Werkzeuge: AutoBlade, Ratschenklinge, Kraft-Klinge (Leder, Filz, Graupappe), Stift, Prägewerkzeug, Stanzwerkzeug
 - Klingentiefe, Kraft, Geschwindigkeit, Durchgänge, Beschleunigung, Klingen-Offset, Überschnitt, spitze Ecken (Smart Cut), Spurverstärkung

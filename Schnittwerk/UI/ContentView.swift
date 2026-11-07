@@ -33,6 +33,12 @@ struct ContentView: View {
         var text: String
     }
 
+    init(document: CutDocument, initialSelection: Set<UUID> = [], initialTab: Int = 0) {
+        self.document = document
+        _selection = State(initialValue: initialSelection)
+        _inspectorTab = State(initialValue: InspectorTab.allCases[min(max(initialTab, 0), InspectorTab.allCases.count - 1)])
+    }
+
     enum InspectorTab: Hashable, CaseIterable {
         case object, edit, cut
 
