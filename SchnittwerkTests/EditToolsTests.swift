@@ -159,4 +159,24 @@ final class EditToolsTests: XCTestCase {
         XCTAssertEqual(doc.data.settings(slot: 1).tool, .kraftBlade)
         XCTAssertEqual(doc.data.settings(slot: 2).tool, .emboss)
     }
+
+    func testNewProjectTakesLastUsed() {
+        let d = UserDefaults.standard
+        let keys = [NewProjectDefaults.matKey, NewProjectDefaults.profile1Key, NewProjectDefaults.profile2Key,
+                    "last.mat", "last.settings1", "last.settings2"]
+        let saved = keys.map { d.object(forKey: $0) }
+        defer { for (k, v) in zip(keys, saved) { d.set(v, forKey: k) } }
+        for k in keys.prefix(3) { d.removeObject(forKey: k) } // default: last used
+        var data = ProjectData()
+        data.mat = .roll
+        var s = CutSettings()
+        s.pressure = 27
+        s.options.overcut = true
+        data.setSettings(s, slot: 1)
+        NewProjectDefaults.remember(data)
+        let doc = CutDocument.newProject()
+        XCTAssertEqual(doc.data.mat, .roll)
+        XCTAssertEqual(doc.data.settings(slot: 1).pressure, 27)
+        XCTAssertTrue(doc.data.settings(slot: 1).options.overcut)
+    }
 }
