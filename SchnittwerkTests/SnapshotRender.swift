@@ -136,3 +136,31 @@ final class SnapshotRender: XCTestCase {
         try shot(CutPanelView(document: doc, slot: .constant(1)), "cut-printcut.png", CGSize(width: 340, height: 1500))
     }
 }
+
+/// Writes the example project used for the README screenshots (SW_SAMPLE_DIR).
+@MainActor
+final class SampleProject: XCTestCase {
+    func testWriteSample() throws {
+        guard let dir = ProcessInfo.processInfo.environment["SW_SAMPLE_DIR"] else { throw XCTSkip("no SW_SAMPLE_DIR") }
+        let doc = CutDocument()
+        var title = CutShape.text(TextSpec(text: "Schnittwerk", fontName: "HelveticaNeue-Bold", sizeMM: 28), at: CGPoint(x: 30, y: 30))!
+        title.name = "Schnittwerk"
+        var star = CutShape.basic(.standard(.star), at: CGPoint(x: 60, y: 110))
+        star.scaleX = 0.6; star.scaleY = 0.6
+        let english = ProcessInfo.processInfo.environment["SW_SAMPLE_LANG"] == "en"
+        star.name = english ? "Star" : "Stern"
+        var circle = CutShape.basic(.standard(.ellipse), at: CGPoint(x: 190, y: 120))
+        circle.name = english ? "Circle" : "Kreis"
+        doc.data.shapes = [title, star, circle]
+        doc.rotateCopies([star.id], count: 6, undoManager: nil)
+        doc.addFill(ids: [circle.id], pattern: .crossHatch, spacing: 3, angle: 45, undoManager: nil)
+        if let fill = doc.data.shapes.last { doc.setToolSlot(2, ids: [fill.id, circle.id], undoManager: nil) }
+        var emboss = CutSettings.holder2Default
+        emboss.tool = .emboss
+        doc.data.setSettings(emboss, slot: 2)
+        doc.addWeedingLines(ids: [title.id], margin: 4, horizontal: 1, vertical: 3, undoManager: nil)
+        let enc = JSONEncoder()
+        enc.outputFormatting = [.prettyPrinted, .sortedKeys]
+        try enc.encode(doc.data).write(to: URL(fileURLWithPath: dir).appendingPathComponent("Beispiel.schnittwerk"))
+    }
+}

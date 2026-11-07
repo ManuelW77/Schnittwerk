@@ -13,7 +13,7 @@
 > Kein Produkt von Silhouette America, Inc. „Silhouette“, „Cameo“ und „Portrait“ sind Marken ihrer Inhaber.
 
 <p align="center">
-  <img src="docs/screenshots/de-main.png" width="820" alt="Schnittwerk: Matte mit Text, Sternen und Prägefüllung, rechts der Objekt-Bereich">
+  <img src="docs/screenshots/de-main.png" width="880" alt="Schnittwerk im Dunkelmodus: Matte mit Text, Sternen und Prägefüllung, rechts der Objekt-Bereich">
 </p>
 
 ## Download
@@ -62,6 +62,9 @@ gleichzeitig mit einer anderen App verbunden sein.
 - Grundformen: Rechteck (runde Ecken), Ellipse, Vieleck, Stern – nachträglich änderbar
 
 ### Bearbeiten
+
+<img src="docs/screenshots/de-edit.png" width="680" alt="Bearbeiten-Bereich mit Transformieren und Replizieren">
+
 - Verschieben, skalieren, drehen, spiegeln; genaue Position und Größe im Inspektor
 - Mehrfachauswahl mit ⇧/⌘-Klick oder Auswahlrahmen
 - Verschmelzen, Abziehen, Schnittmenge, Alle subtrahieren, Teilen, Abschneiden, verknüpfte Pfade erstellen und lösen
@@ -88,7 +91,7 @@ gleichzeitig mit einer anderen App verbunden sein.
 
 ### Schneiden
 
-<img src="docs/screenshots/de-cut.png" width="620" alt="Schneiden-Bereich mit Werkzeug 1 und 2, Schnittprofil und Schnittoptionen">
+<img src="docs/screenshots/de-cut.png" width="680" alt="Schneiden-Bereich mit Werkzeug 1 und 2, Schnittprofil und Schnittoptionen">
 
 - Zwei Werkzeuge in einem Auftrag: jedes Objekt wird mit Werkzeug 1 (rot) oder 2 (blau) bearbeitet, Stift und Prägen laufen vor dem Schneiden
 - Werkzeuge: AutoBlade, Ratschenklinge, Kraft-Klinge (Leder, Filz, Graupappe), Stift, Prägewerkzeug, Stanzwerkzeug
