@@ -79,8 +79,74 @@ enum AppAppearance: String, CaseIterable, Identifiable {
     }
 }
 
-struct LanguageSettingsView: View {
+/// What a new project starts with (Settings → General).
+enum NewProjectDefaults {
+    static let matKey = "new.mat"
+    static let profile1Key = "new.profile1"
+    static let profile2Key = "new.profile2"
+    /// Show the cut preview before every cut.
+    static let previewFirstKey = "cut.previewFirst"
+
+    /// Applies a built-in preset or own profile by its id.
+    @MainActor
+    static func apply(_ id: String?, to settings: inout CutSettings) {
+        guard let id else { return }
+        if let p = MaterialPreset.all.first(where: { $0.id == id }) {
+            p.apply(to: &settings)
+        } else if let p = ProfileStore.shared.profile(settingsID: id) {
+            p.apply(to: &settings)
+        }
+    }
+}
+
+extension CutDocument {
+    /// A new, empty project with the defaults from the settings.
+    @MainActor
+    static func newProject() -> CutDocument {
+        let doc = CutDocument()
+        let d = UserDefaults.standard
+        if let mat = d.string(forKey: NewProjectDefaults.matKey).flatMap(MatType.init) { doc.data.mat = mat }
+        var s1 = doc.data.settings(slot: 1)
+        NewProjectDefaults.apply(d.string(forKey: NewProjectDefaults.profile1Key), to: &s1)
+        doc.data.setSettings(s1, slot: 1)
+        if let id = d.string(forKey: NewProjectDefaults.profile2Key) {
+            var s2 = doc.data.settings(slot: 2)
+            NewProjectDefaults.apply(id, to: &s2)
+            doc.data.setSettings(s2, slot: 2)
+        }
+        return doc
+    }
+}
+
+/// Picker of all built-in presets and own profiles, by id.
+struct ProfileIDPicker: View {
+    let title: LocalizedStringKey
+    @Binding var id: String
+    @ObservedObject private var store = ProfileStore.shared
+
+    var body: some View {
+        Picker(title, selection: $id) {
+            ForEach(MaterialPreset.Category.allCases) { category in
+                Section(category.title) {
+                    ForEach(MaterialPreset.all.filter { $0.category == category }) { Text($0.title).tag($0.id) }
+                }
+            }
+            if !store.profiles.isEmpty {
+                Section("My profiles") {
+                    ForEach(store.profiles) { Text(verbatim: $0.name).tag($0.settingsID) }
+                }
+            }
+        }
+    }
+}
+
+struct GeneralSettingsView: View {
     @AppStorage(AppAppearance.storageKey) private var appearance: AppAppearance = .system
+    @AppStorage(LengthUnit.storageKey) private var unit: LengthUnit = .mm
+    @AppStorage(NewProjectDefaults.matKey) private var newMat: MatType = .mat12x12
+    @AppStorage(NewProjectDefaults.profile1Key) private var newProfile1 = MaterialPreset.vinyl.id
+    @AppStorage(NewProjectDefaults.profile2Key) private var newProfile2 = MaterialPreset.pen.id
+    @AppStorage(NewProjectDefaults.previewFirstKey) private var previewFirst = false
     @State private var choice = AppLanguage.current
     /// Language the app was started with.
     @State private var started = AppLanguage.current
@@ -110,9 +176,34 @@ struct LanguageSettingsView: View {
                 }
                 .pickerStyle(.segmented)
                 .onChange(of: appearance) { appearance.apply() }
+                Picker("Unit", selection: $unit) {
+                    ForEach(LengthUnit.allCases) { Text($0.title).tag($0) }
+                }
+                .pickerStyle(.segmented)
+                .help("Unit for all lengths you type in. Projects keep their sizes.")
+            }
+            Section {
+                Picker("Mat", selection: $newMat) {
+                    ForEach(MatType.allCases) { Text($0.title).tag($0) }
+                }
+                ProfileIDPicker(title: "Tool 1", id: $newProfile1)
+                ProfileIDPicker(title: "Tool 2", id: $newProfile2)
+            } header: {
+                Text("New projects")
+            } footer: {
+                Text("Open projects keep their own settings.")
+                    .foregroundStyle(.secondary)
+            }
+            Section {
+                Toggle("Show the preview before every cut", isOn: $previewFirst)
+            } header: {
+                Text("Cutting")
+            } footer: {
+                Text("You see the order of the lines and the time, and start the cut from there.")
+                    .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
-        .frame(width: 460)
+        .frame(width: 480)
     }
 }

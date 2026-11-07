@@ -537,7 +537,7 @@ struct EraserSizeControl: View {
                 .frame(width: 34, height: 30)
             Stepper("Eraser size", value: $radius, in: 0.5...10, step: 0.5)
                 .labelsHidden()
-            Text(verbatim: radius.formatted(.number.precision(.fractionLength(1))) + " mm")
+            Text(verbatim: LengthUnit.current.text(radius))
                 .font(.caption2.monospacedDigit())
         }
         .padding(6)

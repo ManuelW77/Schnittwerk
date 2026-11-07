@@ -17,6 +17,7 @@ struct CutPanelView: View {
     @State private var confirmDelete = false
     @State private var showPreview = false
     @AppStorage("printcut.outlines") private var printOutlines = false
+    @AppStorage(NewProjectDefaults.previewFirstKey) private var previewFirst = false
     @AppStorage(ConnectionKind.storageKey) private var connection: ConnectionKind = .automatic
     /// Tool whose values are shown: 1 or 2.
     @Binding var slot: Int
@@ -335,10 +336,10 @@ struct CutPanelView: View {
                 Picker("Paper", selection: Binding(get: { pc.paper }, set: { p in setPrintCut { $0.paper = p } })) {
                     ForEach(PaperSize.allCases) { Text(verbatim: $0.title).tag($0) }
                 }
-                TextField("Mark inset (mm)", value: Binding(
+                LengthField("Mark inset", mm: Binding(
                     get: { pc.insetMM },
                     set: { v in if v.isFinite { setPrintCut { $0.insetMM = min(max(v, PrintAndCut.insetRange.lowerBound), PrintAndCut.insetRange.upperBound) } } }
-                ), format: .number.precision(.fractionLength(0...1)))
+                ))
                 Toggle("Print outlines", isOn: $printOutlines)
                     .help("Also prints thin lines along the cut lines")
                 HStack {
@@ -391,7 +392,8 @@ struct CutPanelView: View {
                     .disabled(cutCount == 0)
                     .help("Shows the order of the cut lines and the time, before cutting")
                     Button {
-                        if outsideCount > 0 { confirmOutside = true } else { cut() }
+                        if previewFirst { showPreview = true }
+                        else if outsideCount > 0 { confirmOutside = true } else { cut() }
                     } label: {
                         Label("Cut (\(cutCount))", systemImage: "scissors")
                             .frame(maxWidth: .infinity)

@@ -77,6 +77,11 @@ gleichzeitig mit einer anderen App verbunden sein.
 - Zoomen mit Pinch, ⌘ oder ⌥ + Scrollrad (um den Mauszeiger) oder über die Werkzeugleiste
 - Ansicht verschieben mit Leertaste + Ziehen oder mittlerer Maustaste
 
+### Einstellungen
+- Sprache (wie macOS, Deutsch, English), Erscheinungsbild hell/dunkel, Maßeinheit mm oder Zoll
+- Standard-Matte und Schnittprofile für Werkzeug 1 und 2 in neuen Projekten
+- Wahlweise vor jedem Schnitt die Vorschau zeigen
+
 ### Schneiden
 - Zwei Werkzeuge in einem Auftrag: jedes Objekt wird mit Werkzeug 1 (rot) oder 2 (blau) bearbeitet, Stift und Prägen laufen vor dem Schneiden
 - Werkzeuge: AutoBlade, Ratschenklinge, Kraft-Klinge (Leder, Filz, Graupappe), Stift, Prägewerkzeug, Stanzwerkzeug
