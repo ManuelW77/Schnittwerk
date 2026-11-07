@@ -159,7 +159,10 @@ final class CameoBluetooth: NSObject, PlotterTransport {
     func write(_ data: Data, isCancelled: () -> Bool) throws {
         guard let p = peripheral, let c = writeChar, p.state == .connected else { throw PlotterError.notFound }
         var payload = data
-        if payload.last != GPGLJob.etx { payload.append(GPGLJob.etx) }
+        // The Cameo 4 line wants ETX at the end of every write (Inkcut). The
+        // Cameo 3 gets escape commands (ESC EOT, ESC ENQ) as they are; with an
+        // extra ETX it never answers.
+        if model.family == .cameo4, payload.last != GPGLJob.etx { payload.append(GPGLJob.etx) }
         for piece in Self.pieces(of: payload, maxLength: preferredChunkSize) {
             let started = Date()
             while true {
