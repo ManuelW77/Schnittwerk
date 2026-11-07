@@ -290,6 +290,7 @@
   "The image could not be traced.": "Das Bild konnte nicht nachgezeichnet werden.",
   "The image has see-through parts. Transparency usually works best for logos.": "Das Bild hat durchsichtige Stellen. Für Logos klappt „Transparenz“ meist am besten.",
   "The object is too small for this inner offset.": "Das Objekt ist für diese Innenkontur zu klein.",
+  "The PDF is too complex; only part of it was read.": "Das PDF ist zu verschachtelt; nur ein Teil wurde gelesen.",
   "The plotter did not respond in time.": "Der Plotter hat nicht rechtzeitig geantwortet.",
   "The plotter is in use by another program. Quit Silhouette Studio and try again.": "Der Plotter wird von einem anderen Programm benutzt. Silhouette Studio beenden und erneut versuchen.",
   "The result would be empty. Check that the objects overlap.": "Das Ergebnis wäre leer. Prüfe, ob sich die Objekte überlappen.",
