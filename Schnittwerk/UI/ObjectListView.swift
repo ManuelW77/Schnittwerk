@@ -13,7 +13,8 @@ struct ObjectListView: View {
             Section("Objects") {
                 ForEach(document.data.shapes.reversed()) { shape in
                     HStack {
-                        Image(systemName: shape.text != nil ? "textformat" : "scribble.variable")
+                        Image(systemName: shape.text != nil ? "textformat"
+                              : shape.shapeSpec?.kind.systemImage ?? "scribble.variable")
                             .foregroundStyle(shape.cutEnabled ? Color.red : Color.gray)
                         Text(verbatim: shape.name.isEmpty ? "–" : shape.name)
                             .lineLimit(1)

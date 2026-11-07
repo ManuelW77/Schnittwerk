@@ -22,6 +22,9 @@ struct InspectorView: View {
                 if document.data.shapes[index].text != nil {
                     textSection(index)
                 }
+                if let spec = document.data.shapes[index].effectiveShapeSpec {
+                    shapeSection(spec)
+                }
             } else {
                 Section {
                     Text("Select an object on the mat, or import a file.")
@@ -138,6 +141,60 @@ struct InspectorView: View {
             let f = height / (base.height * abs(s.scaleY))
             s.scaleY *= f
             if lockAspect { s.scaleX *= f }
+        }
+        // Basic shapes: keep real corner radii when stretched
+        s.bakeShapeScale()
+    }
+
+    // MARK: - Basic shape
+
+    @ViewBuilder
+    private func shapeSection(_ spec: ShapeSpec) -> some View {
+        let mm = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0...1))
+        Section(spec.kind.title) {
+            switch spec.kind {
+            case .rectangle:
+                TextField("Corner radius (mm)", value: Binding(
+                    get: { spec.cornerRadiusMM },
+                    set: { v in guard v.isFinite else { return }; updateShape { $0.cornerRadiusMM = v } }
+                ), format: mm)
+            case .ellipse:
+                Button("Make it a circle") {
+                    updateShape { s in
+                        let d = max(s.widthMM, s.heightMM)
+                        s.widthMM = d
+                        s.heightMM = d
+                    }
+                }
+            case .polygon, .star:
+                Stepper(value: Binding(
+                    get: { spec.sides },
+                    set: { n in updateShape { $0.sides = n } }
+                ), in: ShapeSpec.sidesRange) {
+                    Text(spec.kind == .star ? "Points: \(spec.sides)" : "Corners: \(spec.sides)")
+                }
+                if spec.kind == .star {
+                    // Depth = 1 − inner ratio, so dragging right makes deeper points
+                    Slider(value: Binding(
+                        get: { 1 - spec.innerRatio },
+                        set: { d in updateShape { $0.innerRatio = 1 - d } }
+                    ), in: (1 - ShapeSpec.innerRatioRange.upperBound)...(1 - ShapeSpec.innerRatioRange.lowerBound)) {
+                        Text("Point depth")
+                    } minimumValueLabel: {
+                        Text(verbatim: "")
+                    } maximumValueLabel: {
+                        Text(verbatim: "\(Int((1 - spec.innerRatio) * 100)) %")
+                    }
+                }
+            }
+        }
+    }
+
+    private func updateShape(_ edit: @escaping (inout ShapeSpec) -> Void) {
+        change(String(localized: "Edit shape")) { shape in
+            guard var spec = shape.effectiveShapeSpec else { return }
+            edit(&spec)
+            shape.updateShapeSpec(spec)
         }
     }
 

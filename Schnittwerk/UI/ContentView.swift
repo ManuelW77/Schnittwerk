@@ -91,6 +91,14 @@ struct ContentView: View {
             Button(action: addText) { Label("Text", systemImage: "textformat") }
                 .keyboardShortcut("t", modifiers: .command)
                 .help("Add text (⌘T)")
+            Menu {
+                ForEach(ShapeSpec.Kind.allCases) { kind in
+                    Button { addShape(kind) } label: { Label(kind.title, systemImage: kind.systemImage) }
+                }
+            } label: {
+                Label("Shape", systemImage: "square.on.circle")
+            }
+            .help("Add a basic shape")
         }
         ToolbarItemGroup {
             Button(action: duplicateSelection) { Label("Duplicate", systemImage: "plus.square.on.square") }
@@ -171,6 +179,14 @@ struct ContentView: View {
         guard let shape = CutShape.text(FontCatalog.defaultSpec(), at: CGPoint(x: 20, y: 20)) else { return }
         document.update(String(localized: "Add text"), undoManager: undoManager) { $0.shapes.append(shape) }
         selection = shape.id
+        showInspector = true
+    }
+
+    private func addShape(_ kind: ShapeSpec.Kind) {
+        let shape = CutShape.basic(.standard(kind), at: CGPoint(x: 20, y: 20))
+        document.update(String(localized: "Add shape"), undoManager: undoManager) { $0.shapes.append(shape) }
+        selection = shape.id
+        inspectorTab = .object
         showInspector = true
     }
 
