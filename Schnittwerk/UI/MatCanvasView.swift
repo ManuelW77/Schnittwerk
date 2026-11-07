@@ -259,8 +259,9 @@ struct MatCanvasView: View {
             } else if !selection.contains(shape.id) {
                 selection = [shape.id]
             }
-            let starts = Dictionary(uniqueKeysWithValues: document.data.shapes
-                .filter { selection.contains($0.id) }.map { ($0.id, $0.position) })
+            let starts = Dictionary(document.data.shapes
+                .filter { selection.contains($0.id) }.map { ($0.id, $0.position) },
+                uniquingKeysWith: { first, _ in first })
             drag = DragState(kind: .move(startPositions: starts), before: before, startMat: matPoint)
             return
         }

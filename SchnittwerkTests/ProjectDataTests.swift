@@ -54,3 +54,14 @@ final class ProjectDataTests: XCTestCase {
         XCTAssertEqual(lines[0].length, 62.83, accuracy: 0.1)
     }
 }
+
+final class DuplicateIDTests: XCTestCase {
+    func testDuplicateIDsGetNewIDs() {
+        let shape = CutShape(name: "a", matPaths: [Polyline(points: [.zero, CGPoint(x: 5, y: 5)], closed: false)])
+        var data = ProjectData()
+        data.shapes = [shape, shape, shape]
+        data.makeShapeIDsUnique()
+        XCTAssertEqual(Set(data.shapes.map(\.id)).count, 3)
+        XCTAssertEqual(data.shapes[0].id, shape.id)
+    }
+}
