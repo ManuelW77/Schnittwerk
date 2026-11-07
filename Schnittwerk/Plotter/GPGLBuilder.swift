@@ -178,12 +178,12 @@ enum GPGLBuilder {
         // Lines
         var maxY: CGFloat = 0
         var length: CGFloat = 0
-        func clampPoint(_ p: CGPoint) -> CGPoint {
-            CGPoint(x: min(max(p.x, 0), area.width), y: min(max(p.y, 0), area.height))
-        }
+        // Parts outside the cutting area are left out, so the blade never
+        // runs along the edge of the mat
+        let pieces = paths.flatMap { clip($0, to: CGRect(origin: .zero, size: area)) }
         for _ in 0..<s.passes {
-            for line in paths {
-                var pts = line.points.map(clampPoint)
+            for line in pieces {
+                var pts = line.points
                 if line.closed, let first = pts.first { pts.append(first) }
                 guard let first = pts.first, pts.count >= 2 else { continue }
                 c.append("M\(units(first.y)),\(units(first.x))")
@@ -213,6 +213,53 @@ enum GPGLBuilder {
             c.append("TB50,0")
         }
         return GPGLJob(commands: c, pathCount: paths.count, cutLengthMM: length)
+    }
+
+    /// The parts of `line` that lie inside `rect`. A line fully inside comes
+    /// back unchanged; otherwise each inside stretch becomes an open line.
+    static func clip(_ line: Polyline, to rect: CGRect) -> [Polyline] {
+        let box = rect.insetBy(dx: -0.001, dy: -0.001)
+        if line.points.allSatisfy({ box.contains($0) }) { return [line] }
+        var pts = line.points
+        if line.closed, let first = pts.first { pts.append(first) }
+
+        var result: [Polyline] = []
+        var current: [CGPoint] = []
+        func flush() {
+            if current.count >= 2 { result.append(Polyline(points: current, closed: false)) }
+            current = []
+        }
+        for (a, b) in zip(pts, pts.dropFirst()) {
+            guard let (p, q) = clipSegment(a, b, to: rect) else { flush(); continue }
+            if let last = current.last, last.distance(to: p) > 1e-6 { flush() }
+            if current.isEmpty { current.append(p) }
+            current.append(q)
+            if q.distance(to: b) > 1e-6 { flush() } // left the area
+        }
+        flush()
+        return result
+    }
+
+    /// Liang–Barsky: the part of segment a→b inside `rect`, if any.
+    static func clipSegment(_ a: CGPoint, _ b: CGPoint, to rect: CGRect) -> (CGPoint, CGPoint)? {
+        let dx = b.x - a.x, dy = b.y - a.y
+        var t0: CGFloat = 0, t1: CGFloat = 1
+        let checks: [(CGFloat, CGFloat)] = [
+            (-dx, a.x - rect.minX), (dx, rect.maxX - a.x),
+            (-dy, a.y - rect.minY), (dy, rect.maxY - a.y),
+        ]
+        for (p, q) in checks {
+            if p == 0 {
+                if q < 0 { return nil }
+            } else {
+                let r = q / p
+                if p < 0 { t0 = max(t0, r) } else { t1 = min(t1, r) }
+                if t0 > t1 { return nil }
+            }
+        }
+        let p = CGPoint(x: a.x + t0 * dx, y: a.y + t0 * dy)
+        let q = CGPoint(x: a.x + t1 * dx, y: a.y + t1 * dy)
+        return p.distance(to: q) > 1e-6 ? (p, q) : nil
     }
 
     static func build(for data: ProjectData, model: PlotterModel = .cameo4) -> GPGLJob {

@@ -41,6 +41,16 @@
         }
       }
     },
+    "%lld object(s) stick out over the cutting area. Those parts are not cut, to protect the mat." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Objekt(e) ragen über den Schneidebereich. Diese Teile werden nicht geschnitten, um die Matte zu schonen."
+          }
+        }
+      }
+    },
     "%lld objects selected" : {
       "localizations" : {
         "de" : {
@@ -1611,26 +1621,6 @@
         }
       }
     },
-    "Lies outside the cutting area" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Liegt außerhalb des Schneidebereichs"
-          }
-        }
-      }
-    },
-    "Lines outside the mat are moved to its edge." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Linien außerhalb der Matte werden an den Rand gesetzt."
-          }
-        }
-      }
-    },
     "Linked copies (<use>) in the SVG were skipped." : {
       "localizations" : {
         "de" : {
@@ -2041,12 +2031,12 @@
         }
       }
     },
-    "Outside the cutting area: %lld. Lines there are cut off at the edge." : {
+    "Outside the cutting area: %lld. The parts outside are not cut, to protect the mat." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Außerhalb des Schneidebereichs: %lld. Linien dort werden am Rand abgeschnitten."
+            "value" : "Außerhalb des Schneidebereichs: %lld. Die überstehenden Teile werden nicht geschnitten, um die Matte zu schonen."
           }
         }
       }
@@ -2714,6 +2704,16 @@
         }
       }
     },
+    "Sticks out over the cutting area; that part is not cut" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ragt über den Schneidebereich; dieser Teil wird nicht geschnitten"
+          }
+        }
+      }
+    },
     "Style" : {
       "localizations" : {
         "de" : {
@@ -2910,6 +2910,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Das Objekt ist für diese Innenkontur zu klein."
+          }
+        }
+      }
+    },
+    "The parts outside the cutting area are left out, so the blade does not cut into the mat." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Teile außerhalb des Schneidebereichs werden ausgelassen, damit das Messer nicht in die Matte schneidet."
           }
         }
       }

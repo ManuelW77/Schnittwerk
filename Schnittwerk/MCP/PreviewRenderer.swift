@@ -34,9 +34,10 @@ enum PreviewRenderer {
         ctx.setFillColor(gray: 0.96, alpha: 1)
         ctx.fill(matRect)
 
-        // Grid every 10 mm, stronger every 50 mm
-        for step in stride(from: CGFloat(0), through: max(area.width, area.height), by: 10) {
-            let strong = Int(step.rounded()) % 50 == 0
+        // Grid like the printed mat: every quarter inch, stronger every inch
+        let quarter = MatGrid.inch / CGFloat(MatGrid.subdivisions)
+        for (i, step) in stride(from: CGFloat(0), through: max(area.width, area.height), by: quarter).enumerated() {
+            let strong = i % MatGrid.subdivisions == 0
             ctx.setStrokeColor(gray: strong ? 0.72 : 0.87, alpha: 1)
             ctx.setLineWidth((strong ? 1.0 : 0.6) / scale)
             if step <= area.width {

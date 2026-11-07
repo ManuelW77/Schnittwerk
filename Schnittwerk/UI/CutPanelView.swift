@@ -190,7 +190,7 @@ struct CutPanelView: View {
                     ProgressView(value: p)
                 }
                 if outsideCount > 0 {
-                    Label("Outside the cutting area: \(outsideCount). Lines there are cut off at the edge.",
+                    Label("Outside the cutting area: \(outsideCount). The parts outside are not cut, to protect the mat.",
                           systemImage: "exclamationmark.triangle.fill")
                         .foregroundStyle(.orange)
                 }
@@ -226,7 +226,7 @@ struct CutPanelView: View {
             Button("Cut anyway") { cut() }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Lines outside the mat are moved to its edge.")
+            Text("The parts outside the cutting area are left out, so the blade does not cut into the mat.")
         }
         .alert("Save as new profile", isPresented: $askNewName) {
             TextField("Name", text: $newName)
