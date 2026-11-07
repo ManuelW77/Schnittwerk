@@ -14,6 +14,12 @@ struct InspectorView: View {
     @AppStorage("offset.distance") private var offsetDistance = 3.0
     @AppStorage("offset.roundCorners") private var offsetRound = true
 
+    /// Number of locked objects in the selection, nil if none.
+    private var lockedInSelection: Int? {
+        let n = document.data.shapes.filter { selection.contains($0.id) && $0.isLocked }.count
+        return n > 0 ? n : nil
+    }
+
     /// The one selected object; nil with none or several selected.
     private var selectedID: UUID? { selection.count == 1 ? selection.first : nil }
 
@@ -24,7 +30,18 @@ struct InspectorView: View {
 
     var body: some View {
         Form {
-            if let index {
+            if let locked = lockedInSelection {
+                Section {
+                    Label(locked == 1 && selection.count == 1 ? "This object is locked." : "\(locked) locked objects selected.",
+                          systemImage: "lock.fill")
+                    Button("Unlock") {
+                        let ids = selection
+                        document.update(String(localized: "Unlock"), undoManager: undoManager) {
+                            $0.setLocked(false, ids: ids)
+                        }
+                    }
+                }
+            } else if let index {
                 objectSection(index)
                 if document.data.shapes[index].text != nil {
                     textSection(index)

@@ -30,6 +30,18 @@ struct CutShape: Identifiable, Codable, Equatable {
     var shapeSpec: ShapeSpec?
     /// Objects with `cutEnabled == false` stay visible but are not cut.
     var cutEnabled: Bool = true
+    /// Objects with the same group id are selected and moved together.
+    var groupID: UUID?
+    /// Colour shown on the mat (e.g. a layer of a traced image), "#RRGGBB".
+    var colorHex: String?
+    /// Stored as optional so older project files still open.
+    private var lock: Bool?
+
+    /// A locked object cannot be selected on the mat, moved or edited.
+    var isLocked: Bool {
+        get { lock ?? false }
+        set { lock = newValue ? true : nil }
+    }
 
     /// Creates an object from geometry in mat coordinates.
     /// The object keeps its place on the mat.

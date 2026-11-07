@@ -45,6 +45,24 @@ final class DocumentRegistry {
         entries[key] = Entry(document: document, window: window, select: select, lastActive: active)
     }
 
+    /// Called once when a window opened a file: an untitled, untouched,
+    /// empty project window (e.g. the one from app start) is closed and
+    /// the new window takes its place, so the file "opens in it".
+    func replaceBlankProject(with document: CutDocument, window: NSWindow) {
+        let blank = entries.values
+            .filter { entry in
+                guard let doc = entry.document, doc !== document, let w = entry.window, w.isVisible,
+                      let ns = NSDocumentController.shared.document(for: w) else { return false }
+                return ns.fileURL == nil && !ns.isDocumentEdited && doc.data.shapes.isEmpty
+            }
+            .max { $0.lastActive < $1.lastActive }
+        guard let blank, let blankWindow = blank.window,
+              let blankDoc = NSDocumentController.shared.document(for: blankWindow) else { return }
+        window.setFrame(blankWindow.frame, display: true)
+        blankDoc.close()
+        window.makeKeyAndOrderFront(nil)
+    }
+
     private func windowBecameActive(_ window: NSWindow) {
         for (key, entry) in entries where entry.window === window {
             entries[key]?.lastActive = Date()
