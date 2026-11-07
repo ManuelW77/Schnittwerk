@@ -106,6 +106,8 @@ codesign --verify --deep --strict "$APP" || fail "Signature invalid"
 SIGNATURE="$(codesign -dvv "$APP" 2>&1)"
 [[ "$SIGNATURE" == *"(runtime)"* ]] || fail "Hardened Runtime is off"
 [[ "$SIGNATURE" == *"Timestamp="* ]] || fail "Signature has no secure timestamp"
+ENTITLEMENTS="$(codesign -d --entitlements - "$APP" 2>&1)"
+[[ "$ENTITLEMENTS" != *"get-task-allow"* ]] || fail "Debug entitlement get-task-allow is set; notarization would reject it"
 /usr/bin/lipo -archs "$APP/Contents/MacOS/$APP_NAME"
 echo "ok"
 
