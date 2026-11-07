@@ -12,6 +12,10 @@
 
 > Kein Produkt von Silhouette America, Inc. „Silhouette“, „Cameo“ und „Portrait“ sind Marken ihrer Inhaber.
 
+<p align="center">
+  <img src="docs/screenshots/de-main.png" width="820" alt="Schnittwerk: Matte mit Text, Sternen und Prägefüllung, rechts der Objekt-Bereich">
+</p>
+
 ## Download
 
 Das aktuelle DMG gibt es unter [GitHub Releases](https://github.com/ManuelW77/Schnittwerk/releases). Öffnen und
@@ -60,8 +64,13 @@ gleichzeitig mit einer anderen App verbunden sein.
 ### Bearbeiten
 - Verschieben, skalieren, drehen, spiegeln; genaue Position und Größe im Inspektor
 - Mehrfachauswahl mit ⇧/⌘-Klick oder Auswahlrahmen
-- Verschmelzen, Abziehen, Schnittmenge
+- Verschmelzen, Abziehen, Schnittmenge, Alle subtrahieren, Teilen, Abschneiden, verknüpfte Pfade erstellen und lösen
+- Transformieren: skalieren in Prozent, verschieben und drehen um feste Werte
+- Replizieren: neben das Objekt kopieren, Reihen und Spalten, Matte füllen, gespiegelte Kopien, Kopien im Kreis drehen
+- Skizzen- und Prägefüllung (Linien, Kreuzschraffur, konzentrisch) und Punktierung entlang der Kontur oder in der Fläche
 - Kontur nach außen oder innen, runde oder spitze Ecken (z. B. für Sticker)
+- **Entgitterlinien**: Rahmen und Trennlinien durch die freien Flächen
+- **Punkte bearbeiten** (verschieben, löschen, einfügen, Linie auftrennen), **Messer** und **Radiergummi**
 - Ausrichten und Verteilen
 - Objekte **gruppieren**, damit sie sich gemeinsam bewegen, und **sperren**, damit sie nicht verändert werden
 - Kontextmenü (Rechtsklick) mit den Aktionen, die zur Auswahl passen
@@ -72,9 +81,21 @@ gleichzeitig mit einer anderen App verbunden sein.
 - Zoomen mit Pinch, ⌘ oder ⌥ + Scrollrad (um den Mauszeiger) oder über die Werkzeugleiste
 - Ansicht verschieben mit Leertaste + Ziehen oder mittlerer Maustaste
 
+### Einstellungen
+- Sprache (wie macOS, Deutsch, English), Erscheinungsbild hell/dunkel, Maßeinheit mm oder Zoll
+- Standard-Matte und Schnittprofile für Werkzeug 1 und 2 in neuen Projekten
+- Wahlweise vor jedem Schnitt die Vorschau zeigen
+
 ### Schneiden
-- Werkzeug, Klingentiefe, Kraft, Geschwindigkeit, Durchgänge
-- Material-Vorlagen und eigene Schnittprofile (Import / Export als `.schnittprofile`)
+
+<img src="docs/screenshots/de-cut.png" width="620" alt="Schneiden-Bereich mit Werkzeug 1 und 2, Schnittprofil und Schnittoptionen">
+
+- Zwei Werkzeuge in einem Auftrag: jedes Objekt wird mit Werkzeug 1 (rot) oder 2 (blau) bearbeitet, Stift und Prägen laufen vor dem Schneiden
+- Werkzeuge: AutoBlade, Ratschenklinge, Kraft-Klinge (Leder, Filz, Graupappe), Stift, Prägewerkzeug, Stanzwerkzeug
+- Klingentiefe, Kraft, Geschwindigkeit, Durchgänge, Beschleunigung, Klingen-Offset, Überschnitt, spitze Ecken (Smart Cut), Spurverstärkung
+- Über 30 Material-Vorlagen (u. a. nach [michamade.de](https://michamade.de/schnitteinstellungen/)) und eigene Schnittprofile (Import / Export als `.schnittprofile`)
+- **Schnittvorschau** mit Reihenfolge, Leerfahrten und geschätzter Dauer
+- **Print & Cut** mit Passkreuzen (A4/Letter, Cameo 3 und Cameo-4-Reihe): drucken oder als PDF sichern, der Plotter sucht die Passkreuze vor dem Schneiden
 - Testschnitt, Verbindung prüfen, Plotter-Befehle als Text exportieren
 - Objekte lassen sich vom Schneiden ausnehmen; Linien außerhalb des Schneidbereichs werden gemeldet
 

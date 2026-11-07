@@ -82,7 +82,22 @@ final class PlotterController: ObservableObject {
                 try Self.waitUntilReady(plotter, flag: flag, limit: 15)
                 Self.report(String(localized: "Cutting…"), progress: 0)
 
-                let chunks = build(model).chunks(maxBytes: plotter.preferredChunkSize)
+                var job = build(model)
+                if let n = job.replyAfter {
+                    // Print & Cut: let the plotter find the marks first
+                    Self.report(String(localized: "Looking for the registration marks…"), progress: 0)
+                    plotter.drain()
+                    let search = GPGLJob(commands: Array(job.commands.prefix(n)), pathCount: 0, cutLengthMM: 0)
+                    for chunk in search.chunks(maxBytes: plotter.preferredChunkSize) {
+                        try plotter.write(chunk, isCancelled: flag.isSet)
+                    }
+                    let reply = try plotter.readReply(timeout: 40).trimmingCharacters(in: .whitespacesAndNewlines)
+                    guard reply == "0" else { throw PlotterError.marksNotFound(reply) }
+                    job = GPGLJob(commands: Array(job.commands.dropFirst(n)), pathCount: job.pathCount,
+                                  cutLengthMM: job.cutLengthMM)
+                    Self.report(String(localized: "Cutting…"), progress: 0)
+                }
+                let chunks = job.chunks(maxBytes: plotter.preferredChunkSize)
                 for (i, chunk) in chunks.enumerated() {
                     try plotter.write(chunk, isCancelled: flag.isSet)
                     Self.report(nil, progress: Double(i + 1) / Double(chunks.count))

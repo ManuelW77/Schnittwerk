@@ -53,6 +53,22 @@ struct MatCanvasView: View {
     @State private var penDragging = false
     /// Mouse position over the mat (view coordinates).
     @State private var hover: CGPoint?
+    /// Point being dragged with the point tool.
+    @State private var pointDrag: PointDrag?
+    /// Straight line of the knife while dragging (mat coordinates).
+    @State private var knifeLine: (CGPoint, CGPoint)?
+    /// Stroke of the eraser while dragging (mat coordinates).
+    @State private var eraserStroke: [CGPoint] = []
+    @AppStorage("eraser.radius") private var eraserRadius = 2.0
+
+    private struct PointDrag {
+        let id: UUID
+        let ref: PointRef
+        let before: ProjectData
+    }
+
+    /// Most points shown for editing; more would cover the object.
+    private static let maxEditablePoints = 2000
 
     static let basePxPerMM: CGFloat = 2.6
     static let margin: CGFloat = 28
@@ -78,12 +94,18 @@ struct MatCanvasView: View {
                           height: matSize.height * vp.pxPerMM + 2 * vp.margin)
         Canvas { ctx, _ in
             drawMat(&ctx, vp)
+            if document.data.usesPrintAndCut { drawPrintAndCut(&ctx, vp) }
             for shape in document.data.shapes {
                 drawShape(shape, &ctx, vp)
             }
             let selected = document.data.shapes.filter { selection.contains($0.id) }
             for shape in selected {
                 drawSelection(shape, handles: selected.count == 1 && !shape.isLocked, &ctx, vp)
+            }
+            // Tool number at the selected objects; the colour shows it for all
+            for shape in selected where shape.cutEnabled { drawToolBadge(shape, &ctx, vp) }
+            if tool == .points, let target = pointTarget {
+                drawPoints(target, &ctx, vp)
             }
             drawToolPreview(&ctx, vp)
             if let marquee {
@@ -96,6 +118,10 @@ struct MatCanvasView: View {
         .contentShape(Rectangle())
         .gesture(dragGesture(vp))
         .simultaneousGesture(SpatialTapGesture(count: 2).onEnded { tap in
+            if tool == .points {
+                pointDoubleClick(at: vp.mat(tap.location), vp)
+                return
+            }
             guard tool == .select else { return }
             let p = vp.mat(tap.location)
             if let shape = topmostUnlocked(at: p, vp), shape.text != nil {
@@ -114,7 +140,7 @@ struct MatCanvasView: View {
             finishPen(closed: false)
             return .handled
         }
-        .onKeyPress(characters: CharacterSet(charactersIn: "vtfpVTFP"), phases: .down) { press in
+        .onKeyPress(characters: CharacterSet(charactersIn: "vtfpakeVTFPAKE"), phases: .down) { press in
             guard press.modifiers.isEmpty || press.modifiers == .shift,
                   let picked = DrawingTool.allCases.first(where: { String($0.key) == press.characters.lowercased() })
             else { return .ignored }
@@ -127,6 +153,8 @@ struct MatCanvasView: View {
         .onChange(of: tool) {
             if !pen.anchors.isEmpty { finishPen(closed: false) }
             freehand = []
+            knifeLine = nil
+            eraserStroke = []
             if hover != nil { updateCursor() }
         }
         .onContinuousHover { phase in
@@ -211,7 +239,7 @@ struct MatCanvasView: View {
     private func drawShape(_ shape: CutShape, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
         let p = path(for: shape, vp)
         let outside = !shape.fits(in: document.data.mat.size)
-        let color: Color = !shape.cutEnabled ? .gray : (outside ? .orange : .red)
+        let color: Color = !shape.cutEnabled ? .gray : (outside ? .orange : ToolSlotStyle.color(shape.toolSlot))
         let fill = shape.colorHex.flatMap(RGB.init(hex:)).map { Color(red: $0.r, green: $0.g, blue: $0.b).opacity(0.55) }
             ?? color.opacity(0.10)
         ctx.fill(path(for: shape, vp, closedOnly: true), with: .color(fill), style: FillStyle(eoFill: true))
@@ -222,8 +250,87 @@ struct MatCanvasView: View {
         }
     }
 
+    /// Number of the tool at the top left of a selected object.
+    private func drawToolBadge(_ shape: CutShape, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
+        let b = shape.matBounds
+        guard !b.isNull else { return }
+        let at = vp.view(CGPoint(x: b.minX, y: b.minY))
+        let r = CGRect(x: at.x - 7, y: at.y - 7, width: 14, height: 14)
+        ctx.fill(Path(ellipseIn: r), with: .color(ToolSlotStyle.color(shape.toolSlot)))
+        ctx.draw(Text(verbatim: "\(shape.toolSlot)").font(.system(size: 9, weight: .bold)).foregroundColor(.white),
+                 at: CGPoint(x: r.midX, y: r.midY))
+    }
+
+    /// Paper sheet with the registration marks at the top left of the mat.
+    private func drawPrintAndCut(_ ctx: inout GraphicsContext, _ vp: MatViewport) {
+        let pc = document.data.printCut
+        let paper = CGRect(origin: .zero, size: pc.paperSize).applying(vp.matToView)
+        ctx.fill(Path(paper), with: .color(colorScheme == .dark ? Color(white: 0.32) : .white))
+        ctx.stroke(Path(paper), with: .color(.secondary.opacity(0.6)), lineWidth: 0.8)
+        let area = pc.designArea.applying(vp.matToView)
+        ctx.stroke(Path(area), with: .color(.secondary.opacity(0.5)), style: StrokeStyle(lineWidth: 0.6, dash: [4, 3]))
+        var marks = Path()
+        for m in pc.marks {
+            marks.addLines(m.points.map(vp.view))
+            marks.closeSubpath()
+        }
+        ctx.fill(marks, with: .color(colorScheme == .dark ? .white : .black))
+    }
+
+    // MARK: - Point tool
+
+    /// The one selected, unlocked object whose points are edited.
+    private var pointTarget: CutShape? {
+        guard selection.count == 1, let id = selection.first,
+              let s = document.data.shapes.first(where: { $0.id == id }), !s.isLocked else { return nil }
+        return s
+    }
+
+    private func drawPoints(_ shape: CutShape, _ ctx: inout GraphicsContext, _ vp: MatViewport) {
+        let all = shape.matPoints
+        guard all.reduce(0, { $0 + $1.count }) <= Self.maxEditablePoints else { return }
+        let r: CGFloat = 3.5
+        for line in all {
+            for (j, p) in line.enumerated() {
+                let v = vp.view(p)
+                let box = Path(CGRect(x: v.x - r, y: v.y - r, width: 2 * r, height: 2 * r))
+                ctx.fill(box, with: .color(j == 0 ? .accentColor : .white))
+                ctx.stroke(box, with: .color(.accentColor), lineWidth: 1)
+            }
+        }
+    }
+
+    private func pointRadius(_ vp: MatViewport) -> CGFloat { (Self.handleRadius + 3) / vp.pxPerMM }
+
+    private func pointDoubleClick(at p: CGPoint, _ vp: MatViewport) {
+        guard let target = pointTarget, let i = document.data.shapes.firstIndex(where: { $0.id == target.id }) else { return }
+        if let ref = target.point(near: p, radius: pointRadius(vp)) {
+            document.update(String(localized: "Delete point"), undoManager: undoManager) { $0.shapes[i].deletePoint(ref) }
+        } else if let (seg, at) = target.segment(near: p, radius: pointRadius(vp)) {
+            document.update(String(localized: "Add point"), undoManager: undoManager) { $0.shapes[i].insertPoint(after: seg, atMat: at) }
+        }
+        // An object without lines left is removed
+        if document.data.shapes.indices.contains(i), document.data.shapes[i].paths.isEmpty {
+            let id = document.data.shapes[i].id
+            document.update(String(localized: "Delete point"), undoManager: undoManager) { $0.shapes.removeAll { $0.id == id } }
+            selection = []
+        }
+    }
+
     /// Freehand line and curve while they are being drawn.
     private func drawToolPreview(_ ctx: inout GraphicsContext, _ vp: MatViewport) {
+        if let (a, b) = knifeLine {
+            var line = Path()
+            line.move(to: vp.view(a))
+            line.addLine(to: vp.view(b))
+            ctx.stroke(line, with: .color(.orange), style: StrokeStyle(lineWidth: 1.5, dash: [6, 3]))
+        }
+        if !eraserStroke.isEmpty {
+            var stroke = Path()
+            stroke.addLines(eraserStroke.map(vp.view))
+            ctx.stroke(stroke, with: .color(.gray.opacity(0.35)),
+                       style: StrokeStyle(lineWidth: max(eraserRadius * 2 * vp.pxPerMM, 2), lineCap: .round, lineJoin: .round))
+        }
         let ink = Color.accentColor
         if freehand.count > 1 {
             var p = Path()
@@ -448,6 +555,29 @@ struct MatCanvasView: View {
         switch tool {
         case .select, .text:
             return
+        case .points:
+            focused = true
+            if pointDrag == nil, let target = pointTarget,
+               let ref = target.point(near: start, radius: pointRadius(vp)) {
+                pointDrag = PointDrag(id: target.id, ref: ref, before: document.data)
+            }
+            guard let d = pointDrag, let i = document.data.shapes.firstIndex(where: { $0.id == d.id }) else { return }
+            document.data.shapes[i].movePoint(d.ref, toMat: now)
+        case .knife:
+            focused = true
+            var end = now
+            if NSEvent.modifierFlags.contains(.shift) { // only horizontal or vertical
+                if abs(now.x - start.x) > abs(now.y - start.y) { end.y = start.y } else { end.x = start.x }
+            }
+            knifeLine = (start, end)
+        case .eraser:
+            if eraserStroke.isEmpty {
+                focused = true
+                eraserStroke = [start]
+            }
+            if let last = eraserStroke.last, last.distance(to: now) >= 1 / vp.pxPerMM {
+                eraserStroke.append(now)
+            }
         case .freehand:
             if freehand.isEmpty {
                 focused = true
@@ -475,6 +605,25 @@ struct MatCanvasView: View {
         switch tool {
         case .select:
             return
+        case .points:
+            if let d = pointDrag {
+                pointDrag = nil
+                document.commitChange(from: d.before, actionName: String(localized: "Move point"), undoManager: undoManager)
+            } else if vp.view(start).distance(to: value.location) < 4 {
+                // A click picks the object whose points are edited
+                if let shape = topmostUnlocked(at: start, vp) { selection = [shape.id] }
+            }
+        case .knife:
+            guard let (a, b) = knifeLine else { return }
+            knifeLine = nil
+            let pieces = document.knife(from: a, to: b, selection: document.data.unlocked(selection), undoManager: undoManager)
+            if !pieces.isEmpty { selection = pieces }
+        case .eraser:
+            let stroke = eraserStroke
+            eraserStroke = []
+            let changed = document.erase(along: stroke, radius: CGFloat(eraserRadius),
+                                         selection: document.data.unlocked(selection), undoManager: undoManager)
+            if !changed.isEmpty, !selection.isEmpty { selection = changed }
         case .text:
             focused = true
             guard let shape = CutShape.text(FontCatalog.defaultSpec(), at: start) else { return }
@@ -522,7 +671,8 @@ struct MatCanvasView: View {
         switch tool {
         case .select: NSCursor.arrow.set()
         case .text: NSCursor.iBeam.set()
-        case .freehand, .curve: NSCursor.crosshair.set()
+        case .freehand, .curve, .knife, .eraser: NSCursor.crosshair.set()
+        case .points: NSCursor.arrow.set()
         }
     }
 
@@ -547,6 +697,17 @@ struct MatCanvasView: View {
         let targets = data.shapes.filter { ids.contains($0.id) }
         let editable = data.unlocked(ids)
         let um = undoManager
+        if tool == .points, let target = pointTarget, let hover,
+           let ref = target.point(near: vp.mat(hover), radius: pointRadius(vp)),
+           let i = data.shapes.firstIndex(where: { $0.id == target.id }) {
+            Button("Split line here") {
+                document.update(String(localized: "Split line"), undoManager: um) { $0.shapes[i].splitLine(at: ref) }
+            }
+            Button("Delete point", role: .destructive) {
+                document.update(String(localized: "Delete point"), undoManager: um) { $0.shapes[i].deletePoint(ref) }
+            }
+            Divider()
+        }
         if targets.isEmpty {
             Button("Paste") { onPaste() }
                 .disabled(!PasteboardImport.canPaste())
@@ -572,6 +733,14 @@ struct MatCanvasView: View {
             }
             .disabled(editable.isEmpty)
             Divider()
+            Menu("Cut with") {
+                ForEach([1, 2], id: \.self) { slot in
+                    Button("\(ToolSlotStyle.title(slot)) · \(data.settings(slot: slot).tool.title)") {
+                        document.setToolSlot(slot, ids: ids, undoManager: um)
+                    }
+                }
+            }
+            .disabled(editable.isEmpty)
             if data.canGroup(editable) {
                 Button("Group") { document.group(ids, undoManager: um); selection = ids }
             }

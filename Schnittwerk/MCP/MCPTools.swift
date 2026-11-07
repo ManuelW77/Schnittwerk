@@ -128,6 +128,7 @@ enum MCPTools {
             "mirrored_horizontally": shape.scaleX < 0,
             "mirrored_vertically": shape.scaleY < 0,
             "cut": shape.cutEnabled,
+            "tool": shape.toolSlot,
             "inside_cutting_area": shape.fits(in: mat.size),
             "line_count": shape.paths.count,
             "locked": shape.isLocked,
@@ -348,6 +349,7 @@ enum MCPTools {
                     "rotation": num("Rotation in degrees, clockwise."),
                     "mirrored_horizontally": bool, "mirrored_vertically": bool,
                     "cut": ["type": "boolean", "description": "false keeps the object visible but it is not cut."],
+                    "tool": ["type": "integer", "description": "Tool holder that cuts the object: 1 (left) or 2 (right)."],
                     "text": str("Text objects: new text."), "font": str("Text objects: font."), "size_mm": num("Text objects: font size (mm)."),
                     "corner_radius": num("Rectangles: corner radius (mm)."), "sides": num("Polygons/stars: corners or points."),
                     "inner_ratio": num("Stars: inner ratio 0.1–0.95."),
@@ -358,6 +360,10 @@ enum MCPTools {
 
             if let name = try args.string("name") { s.name = name }
             if let cut = try args.bool("cut") { s.cutEnabled = cut }
+            if let tool = try args.int("tool") {
+                guard tool == 1 || tool == 2 else { throw ToolError("tool must be 1 or 2.") }
+                s.toolSlot = tool
+            }
             if args.has("text") || args.has("font") || args.has("size_mm") {
                 guard var spec = s.text else { throw ToolError("“text”, “font” and “size_mm” only work on text objects.") }
                 if let t = try args.string("text") { spec.text = t }

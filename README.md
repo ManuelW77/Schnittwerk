@@ -12,6 +12,10 @@
 
 > Not affiliated with Silhouette America, Inc. "Silhouette", "Cameo" and "Portrait" are trademarks of their owners.
 
+<p align="center">
+  <img src="docs/screenshots/en-main.png" width="820" alt="Schnittwerk: mat with text, stars and an emboss fill, object panel on the right">
+</p>
+
 ## Download
 
 Get the latest DMG from [GitHub Releases](https://github.com/ManuelW77/Schnittwerk/releases), open it and drag
@@ -58,8 +62,13 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 ### Editing
 - Move, scale, rotate, mirror; exact position and size in the inspector
 - Multiple selection with shift/⌘ click or rubber band
-- Weld, subtract, intersect
+- Weld, subtract, intersect, subtract all, divide, crop, make and release compound paths
+- Transform: scale by percent, move and rotate by set amounts
+- Replicate: copy next to the object, rows and columns, fill the mat, mirrored copies, rotated copies in a ring
+- Sketch and emboss fills (lines, cross-hatch, concentric) and stippling along the outline or inside the area
 - Offset outwards or inwards, round or sharp corners (e.g. sticker outlines)
+- **Weeding lines**: a box and lines through the free space
+- **Edit points** (move, delete, insert, split a line), **knife** and **eraser**
 - Align and distribute
 - **Group** objects so they move together, **lock** objects so they cannot be changed
 - Context menu (right click) with the actions that fit the selection
@@ -70,9 +79,21 @@ first, then Bluetooth. Over Bluetooth, the plotter must not be connected to anot
 - Zoom with pinch, ⌘ or ⌥ + scroll wheel (around the pointer), or the toolbar
 - Move the view with space + drag or the middle mouse button
 
+### Settings
+- Language (same as macOS, Deutsch, English), light or dark look, unit mm or inches
+- Default mat and cut profiles for tool 1 and 2 in new projects
+- Optionally show the preview before every cut
+
 ### Cutting
-- Tool, blade depth, force, speed, passes
-- Material presets and your own cut profiles (import / export as `.schnittprofile`)
+
+<img src="docs/screenshots/en-cut.png" width="620" alt="Cut panel with tool 1 and 2, cut profile and cut options">
+
+- Two tools in one job: each object is handled by tool 1 (red) or tool 2 (blue); pen and embossing run before cutting
+- Tools: AutoBlade, ratchet blade, Kraft Blade (leather, felt, chipboard), pen, embossing tool, punch tool
+- Blade depth, force, speed, passes, acceleration, blade offset, overcut, sharp corners (Smart Cut), track enhancing
+- More than 30 material presets (many from [michamade.de](https://michamade.de/schnitteinstellungen/)) and your own cut profiles (import / export as `.schnittprofile`)
+- **Cut preview** with order, travel moves and estimated time
+- **Print & Cut** with registration marks (A4/Letter, Cameo 3 and Cameo 4 line): print or save as PDF, the plotter finds the marks before cutting
 - Test cut, connection check, export of the plotter commands as text
 - Objects can be excluded from cutting; lines outside the cutting area are reported
 

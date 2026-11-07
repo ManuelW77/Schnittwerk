@@ -23,7 +23,7 @@ struct SchnittwerkApp: App {
     }
 
     var body: some Scene {
-        DocumentGroup(newDocument: { CutDocument() }) { file in
+        DocumentGroup(newDocument: { CutDocument.newProject() }) { file in
             ContentView(document: file.document)
                 .frame(minWidth: 900, minHeight: 600)
         }
@@ -36,6 +36,8 @@ struct SchnittwerkApp: App {
 
         Settings {
             TabView {
+                GeneralSettingsView()
+                    .tabItem { Label("General", systemImage: "gearshape") }
                 ProfilesSettingsView()
                     .tabItem { Label("Cut profiles", systemImage: "scissors") }
                 MCPSettingsView()
@@ -49,5 +51,9 @@ struct SchnittwerkApp: App {
 
 /// Opens a new, empty project when the app starts without a file.
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        AppAppearance.stored.apply()
+    }
+
     func applicationShouldOpenUntitledFile(_ sender: NSApplication) -> Bool { true }
 }

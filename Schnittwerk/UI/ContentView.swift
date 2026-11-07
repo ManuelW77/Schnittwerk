@@ -33,7 +33,34 @@ struct ContentView: View {
         var text: String
     }
 
-    enum InspectorTab: Hashable { case object, cut }
+    init(document: CutDocument, initialSelection: Set<UUID> = [], initialTab: Int = 0) {
+        self.document = document
+        _selection = State(initialValue: initialSelection)
+        _inspectorTab = State(initialValue: InspectorTab.allCases[min(max(initialTab, 0), InspectorTab.allCases.count - 1)])
+    }
+
+    enum InspectorTab: Hashable, CaseIterable {
+        case object, edit, cut
+
+        var title: String {
+            switch self {
+            case .object: String(localized: "Object")
+            case .edit: String(localized: "Edit")
+            case .cut: String(localized: "Cut")
+            }
+        }
+
+        var systemImage: String {
+            switch self {
+            case .object: "slider.horizontal.3"
+            case .edit: "wand.and.rays"
+            case .cut: "scissors"
+            }
+        }
+    }
+
+    /// Tool whose values the Cut panel shows.
+    @State private var cutSlot = 1
 
     private static let zoomSteps: [CGFloat] = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8]
 
@@ -72,10 +99,43 @@ struct ContentView: View {
                               onEditText: beginTextEdit,
                               onPaste: pasteFromClipboard)
                     .padding(8)
+                    .padding(.leading, 52) // room for the tool palette
                     .background(MatNavigator(zoom: $zoom, range: MatNavigator.zoomRange))
             }
             .background(Color(nsColor: .underPageBackgroundColor))
             .overlay(alignment: .top) { outsideNotice }
+            .overlay(alignment: .topLeading) {
+                VStack(alignment: .leading, spacing: 10) {
+                    ToolPalette(tool: $tool, addShape: addShape)
+                    if tool == .eraser { EraserSizeControl() }
+                }
+                .padding(12)
+            }
+            .overlay(alignment: .bottomLeading) {
+                // How the editing tools work, while one is active
+                if [.points, .knife, .eraser].contains(tool) {
+                    Text(tool.help)
+                        .font(.callout)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: 360, alignment: .leading)
+                        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .padding(12)
+                        .padding(.bottom, 44)
+                        .allowsHitTesting(false)
+                }
+            }
+            .overlay(alignment: .bottom) {
+                if !document.data.shapes.isEmpty {
+                    ToolLegend(data: document.data)
+                        .padding(.bottom, 12)
+                        .onTapGesture {
+                            inspectorTab = .cut
+                            showInspector = true
+                        }
+                        .help("Which colour is cut with which tool. Click for the cut settings.")
+                }
+            }
             // Files from Finder, or drawings dragged straight out of another app
             .onDrop(of: [.fileURL, .svg, .pdf], isTargeted: nil) { providers in
                 handleDrop(providers)
@@ -85,17 +145,25 @@ struct ContentView: View {
         .inspector(isPresented: $showInspector) {
             VStack(spacing: 0) {
                 Picker("Panel", selection: $inspectorTab) {
-                    Text("Object").tag(InspectorTab.object)
-                    Text("Cut").tag(InspectorTab.cut)
+                    ForEach(InspectorTab.allCases, id: \.self) { tab in
+                        Label(tab.title, systemImage: tab.systemImage).tag(tab)
+                    }
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
                 .padding(.horizontal, 12)
                 .padding(.top, 10)
-                switch inspectorTab {
-                case .object: InspectorView(document: document, selection: $selection)
-                case .cut: CutPanelView(document: document)
+                .padding(.bottom, 4)
+                Group {
+                    switch inspectorTab {
+                    case .object: InspectorView(document: document, selection: $selection)
+                    case .edit: EditPanelView(document: document, selection: $selection)
+                    case .cut: CutPanelView(document: document, slot: $cutSlot)
+                    }
                 }
+                // Room for a permanently shown scroll bar (mouse users),
+                // so it never covers buttons at the right edge
+                .contentMargins(.trailing, 12, for: .scrollContent)
             }
             .inspectorColumnWidth(min: 280, ideal: 320, max: 420)
         }
@@ -108,6 +176,10 @@ struct ContentView: View {
             case .failure(let error): message = AlertMessage(title: String(localized: "Import failed"), text: error.localizedDescription)
             }
         }
+        // Remember mat and tool values for "Last used" in new projects
+        .onChange(of: document.data.mat) { NewProjectDefaults.remember(document.data) }
+        .onChange(of: document.data.settings) { NewProjectDefaults.remember(document.data) }
+        .onChange(of: document.data.settings2) { NewProjectDefaults.remember(document.data) }
         .onAppear {
             // Notes from opening an SVG/DXF directly (File → Open, Finder)
             guard !document.openNotes.isEmpty else { return }
@@ -163,13 +235,6 @@ struct ContentView: View {
             } label: { Label("Trace image", systemImage: "photo.badge.plus") }
                 .keyboardShortcut("i", modifiers: [.command, .shift])
                 .help("Trace an image (PNG, JPG …) into cut lines (⇧⌘I)")
-            Picker("Tool", selection: $tool) {
-                ForEach(DrawingTool.allCases) { t in
-                    Label(t.title, systemImage: t.systemImage).tag(t).help(t.help)
-                }
-            }
-            .pickerStyle(.segmented)
-            .help("Tool: select, text, freehand or curve")
             .background {
                 // ⌘T picks the text tool
                 Button("Text") { tool = .text }
@@ -177,14 +242,6 @@ struct ContentView: View {
                     .opacity(0)
                     .accessibilityHidden(true)
             }
-            Menu {
-                ForEach(ShapeSpec.Kind.allCases) { kind in
-                    Button { addShape(kind) } label: { Label(kind.title, systemImage: kind.systemImage) }
-                }
-            } label: {
-                Label("Shape", systemImage: "square.on.circle")
-            }
-            .help("Add a basic shape")
         }
         ToolbarItemGroup {
             UndoRedoButtons(undoManager: undoManager)
@@ -430,6 +487,72 @@ struct ContentView: View {
 
     private func deleteSelection() {
         selection.subtract(document.delete(selection, undoManager: undoManager))
+    }
+}
+
+/// Floating tool palette at the left edge of the mat, like the tool
+/// bar of drawing apps: select, text, freehand, curve and basic shapes.
+struct ToolPalette: View {
+    @Binding var tool: DrawingTool
+    let addShape: (ShapeSpec.Kind) -> Void
+
+    var body: some View {
+        VStack(spacing: 2) {
+            ForEach(DrawingTool.allCases) { t in
+                Button { tool = t } label: {
+                    Image(systemName: t.systemImage)
+                        .font(.system(size: 15, weight: .medium))
+                        .frame(width: 34, height: 34)
+                        .foregroundStyle(tool == t ? Color.white : Color.primary)
+                        .background(tool == t ? Color.accentColor : Color.clear,
+                                    in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .help(t.help)
+                .accessibilityLabel(Text(t.title))
+                .accessibilityAddTraits(tool == t ? .isSelected : [])
+            }
+            Divider().frame(width: 26).padding(.vertical, 4)
+            Menu {
+                ForEach(ShapeSpec.Kind.allCases) { kind in
+                    Button { addShape(kind) } label: { Label(kind.title, systemImage: kind.systemImage) }
+                }
+            } label: {
+                Image(systemName: "square.on.circle")
+                    .font(.system(size: 15, weight: .medium))
+                    .frame(width: 34, height: 34)
+                    .contentShape(Rectangle())
+            }
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
+            .frame(width: 34, height: 34)
+            .help("Add a basic shape")
+            .accessibilityLabel(Text("Shape"))
+        }
+        .padding(5)
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+}
+
+/// Size of the eraser, shown under the tool palette.
+struct EraserSizeControl: View {
+    @AppStorage("eraser.radius") private var radius = 2.0
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Image(systemName: "circle.fill")
+                .font(.system(size: CGFloat(4 + radius * 2)))
+                .foregroundStyle(.secondary)
+                .frame(width: 34, height: 30)
+            Stepper("Eraser size", value: $radius, in: 0.5...10, step: 0.5)
+                .labelsHidden()
+            Text(verbatim: LengthUnit.current.text(radius))
+                .font(.caption2.monospacedDigit())
+        }
+        .padding(6)
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .help("Eraser size (radius)")
     }
 }
 

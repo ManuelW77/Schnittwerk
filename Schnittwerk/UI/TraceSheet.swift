@@ -176,12 +176,12 @@ struct TraceSheet: View {
                 Toggle("Show image", isOn: $showImage)
             }
             Section {
-                TextField("Width (mm)", value: Binding(
+                LengthField("Width", mm: Binding(
                     get: { settings.widthMM },
                     set: { v in if v.isFinite, v >= 1 { settings.widthMM = min(v, 3000) } }
-                ), format: .number.precision(.fractionLength(0...1)))
-                LabeledContent("Height (mm)") {
-                    Text(heightMM.formatted(.number.precision(.fractionLength(1))))
+                ))
+                LabeledContent("Height") {
+                    Text(verbatim: LengthUnit.current.text(heightMM))
                 }
             }
         }

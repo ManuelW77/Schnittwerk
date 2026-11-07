@@ -14,7 +14,39 @@ struct ProjectData: Codable, Equatable {
     var formatVersion = 1
     var shapes: [CutShape] = []
     var mat: MatType = .mat12x12
+    /// Settings of tool 1 (left holder).
     var settings = CutSettings()
+    /// Settings of tool 2 (right holder); nil until first changed.
+    var settings2: CutSettings?
+    /// Print & Cut with registration marks; nil = never switched on.
+    var printAndCut: PrintAndCut?
+
+    /// Settings of tool 1 or 2, with the matching holder.
+    func settings(slot: Int) -> CutSettings {
+        var s = slot == 2 ? (settings2 ?? .holder2Default) : settings
+        s.holder = slot == 2 ? 2 : 1
+        return s
+    }
+
+    mutating func setSettings(_ s: CutSettings, slot: Int) {
+        var s = s
+        s.holder = slot == 2 ? 2 : 1
+        if slot == 2 { settings2 = s } else { settings = s }
+    }
+
+    /// Tools that have objects to cut, in the order they run.
+    var usedSlots: [Int] {
+        [1, 2].filter { slot in shapes.contains { $0.cutEnabled && $0.toolSlot == slot } }
+    }
+
+    /// Projects before tool 1/2: one setting with a holder number. A
+    /// project set to holder 2 keeps cutting everything with holder 2.
+    mutating func migrateHolder() {
+        guard settings2 == nil, settings.holder == 2 else { return }
+        settings2 = settings
+        settings = CutSettings()
+        for i in shapes.indices { shapes[i].toolSlot = 2 }
+    }
 
     /// Gives objects with an id that is already taken a new id.
     /// A damaged or hand-edited file must not have two objects with the
@@ -56,6 +88,7 @@ final class CutDocument: ReferenceFileDocument, ObservableObject {
         if configuration.contentType.conforms(to: .schnittwerkProject) {
             data = try JSONDecoder().decode(ProjectData.self, from: raw)
             data.makeShapeIDsUnique()
+            data.migrateHolder()
             return
         }
         let fileName = configuration.file.filename ?? "Import"

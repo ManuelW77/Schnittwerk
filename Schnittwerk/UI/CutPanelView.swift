@@ -15,15 +15,23 @@ struct CutPanelView: View {
     @State private var askRename = false
     @State private var renameText = ""
     @State private var confirmDelete = false
+    @State private var showPreview = false
+    @AppStorage("printcut.outlines") private var printOutlines = false
+    @AppStorage(NewProjectDefaults.previewFirstKey) private var previewFirst = false
     @AppStorage(ConnectionKind.storageKey) private var connection: ConnectionKind = .automatic
+    /// Tool whose values are shown: 1 or 2.
+    @Binding var slot: Int
 
-    private var settings: CutSettings { document.data.settings }
+    private var settings: CutSettings { document.data.settings(slot: slot) }
 
     /// Changes the values; the chosen profile stays selected and is
     /// shown as "changed" until it is saved or reset.
     private func set(_ edit: @escaping (inout CutSettings) -> Void) {
+        let slot = slot
         document.update(String(localized: "Change cut settings"), undoManager: undoManager) { data in
-            edit(&data.settings)
+            var s = data.settings(slot: slot)
+            edit(&s)
+            data.setSettings(s, slot: slot)
         }
     }
 
@@ -67,6 +75,15 @@ struct CutPanelView: View {
         Binding(get: { settings[keyPath: keyPath] }, set: { v in set { $0[keyPath: keyPath] = v } })
     }
 
+    private func optionBinding<V>(_ keyPath: WritableKeyPath<CutOptions, V>) -> Binding<V> {
+        Binding(get: { settings.options[keyPath: keyPath] }, set: { v in set { $0.options[keyPath: keyPath] = v } })
+    }
+
+    private var offsetText: String {
+        let mm = Double(settings.options.offsetAdjust) * 0.05
+        return mm == 0 ? "0" : mm.formatted(.number.precision(.fractionLength(2)).sign(strategy: .always())) + " mm"
+    }
+
     private var outsideCount: Int {
         let area = document.data.mat.size
         return document.data.shapes.filter { $0.cutEnabled && !$0.fits(in: area) }.count
@@ -74,12 +91,47 @@ struct CutPanelView: View {
 
     private var cutCount: Int { document.data.shapes.filter(\.cutEnabled).count }
 
+    private func objectCount(_ slot: Int) -> Int {
+        document.data.shapes.filter { $0.cutEnabled && $0.toolSlot == slot }.count
+    }
+
+    /// Problems of the chosen tool in this holder, or nil.
+    private var holderWarning: String? {
+        guard let needed = settings.tool.requiredHolder, needed != slot else { return nil }
+        return String(localized: "\(settings.tool.title) only fits into holder \(needed) (Cameo 4 line). Choose it for tool \(needed) instead.")
+    }
+
     var body: some View {
         Form {
+            Section {
+                Picker("Tool", selection: $slot) {
+                    ForEach([1, 2], id: \.self) { n in
+                        Text(verbatim: "\(ToolSlotStyle.title(n)) (\(objectCount(n)))").tag(n)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                HStack(spacing: 8) {
+                    ToolSlotBadge(slot: slot)
+                    Text(slot == 1 ? "Left holder" : "Right holder")
+                    Spacer()
+                    Image(systemName: settings.tool.systemImage)
+                        .foregroundStyle(ToolSlotStyle.color(slot))
+                    Text(verbatim: settings.tool.title)
+                        .foregroundStyle(.secondary)
+                }
+                .font(.callout)
+                Text("Objects shown in this colour are cut with this tool. Choose the tool of an object in the Object panel or with a right click.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Cut profile") {
                 Picker("Profile", selection: Binding(get: { pickerValue }, set: select)) {
-                    Section("Built-in") {
-                        ForEach(MaterialPreset.all) { Text($0.title).tag($0.id) }
+                    ForEach(MaterialPreset.Category.allCases) { category in
+                        Section(category.title) {
+                            ForEach(MaterialPreset.all.filter { $0.category == category }) { Text($0.title).tag($0.id) }
+                        }
                     }
                     if !store.profiles.isEmpty {
                         Section("My profiles") {
@@ -155,15 +207,11 @@ struct CutPanelView: View {
                 Picker("Tool", selection: Binding(get: { settings.tool }, set: { t in set { $0.tool = t } })) {
                     ForEach(ToolKind.allCases) { Text($0.title).tag($0) }
                 }
-                Picker("Holder", selection: intBinding(\.holder)) {
-                    Text("1 (left)").tag(1)
-                    Text("2 (right)").tag(2)
-                }
-                if settings.tool == .autoBlade && settings.holder == 2 {
-                    Label("The AutoBlade only works in holder 1.", systemImage: "exclamationmark.triangle.fill")
+                if let holderWarning {
+                    Label(holderWarning, systemImage: "exclamationmark.triangle.fill")
                         .foregroundStyle(.orange)
                 }
-                if settings.tool == .autoBlade {
+                if settings.tool.setsDepth {
                     Stepper(value: intBinding(\.depth), in: CutSettings.depthRange) {
                         LabeledContent("Blade depth", value: "\(settings.depth)")
                     }
@@ -179,38 +227,37 @@ struct CutPanelView: View {
                 }
             }
 
+            Section("Cut options") {
+                Stepper(value: optionBinding(\.acceleration), in: CutOptions.accelerationRange) {
+                    LabeledContent("Acceleration", value: "\(settings.options.acceleration)")
+                }
+                .help("Lower values move the head more gently, e.g. for thick or delicate material. Cameo 4 line only.")
+                if settings.tool.isBlade {
+                    Stepper(value: optionBinding(\.offsetAdjust), in: CutOptions.offsetAdjustRange) {
+                        LabeledContent("Blade offset", value: offsetText)
+                    }
+                    .help("Correction of the blade tip offset in 0.05 mm steps. Raise it if corners come out round.")
+                    Toggle("Overcut", isOn: optionBinding(\.overcut))
+                        .help("Closed lines are cut 1 mm past their start, so the piece comes out cleanly")
+                    Toggle("Sharp corners (Smart Cut)", isOn: optionBinding(\.sharpCorners))
+                        .help("At sharp corners the blade runs a little past the corner and starts again, for crisp corners in thick material")
+                }
+                Toggle("Track enhancing", isOn: optionBinding(\.trackEnhancing))
+                    .help("The plotter rolls the mat in and out a few times first, so the rollers grip better (e.g. for long or thick material)")
+            }
+
+            printAndCutSection
+
             Section("Plotter") {
                 Picker("Connection", selection: $connection) {
                     ForEach(ConnectionKind.allCases) { Text($0.title).tag($0) }
                 }
                 .disabled(plotter.isBusy)
                 .help("Automatic tries USB first, then Bluetooth. Supported: \(PlotterModel.supportedNames). Bluetooth: Cameo 3, Cameo 4, 4 Plus and 4 Pro. Cameo 3 and older machines cut at speed 10 at most.")
-                statusView
-                if let p = plotter.progress {
-                    ProgressView(value: p)
-                }
-                if outsideCount > 0 {
-                    Label("Outside the cutting area: \(outsideCount). The parts outside are not cut, to protect the mat.",
-                          systemImage: "exclamationmark.triangle.fill")
-                        .foregroundStyle(.orange)
-                }
-                if plotter.isBusy {
-                    Button("Cancel", role: .cancel) { plotter.cancel() }
-                } else {
-                    Button {
-                        if outsideCount > 0 { confirmOutside = true } else { cut() }
-                    } label: {
-                        Label("Cut (\(cutCount))", systemImage: "scissors")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .disabled(cutCount == 0)
-                    .keyboardShortcut(.return, modifiers: .command)
-
+                if !plotter.isBusy {
                     HStack {
                         Button("Test cut") {
-                            let settings = settings, mat = document.data.mat
+                            let settings = settings, mat = document.data.mat // the tool shown
                             plotter.send { GPGLBuilder.testCut(settings: settings, mat: mat, model: $0) }
                         }
                         .help("Cuts a 10 mm square with a triangle at the top left of the mat")
@@ -222,6 +269,13 @@ struct CutPanelView: View {
             }
         }
         .formStyle(.grouped)
+        // The cut button stays in reach, whatever is scrolled above it
+        .safeAreaInset(edge: .bottom, spacing: 0) { cutBar }
+        .sheet(isPresented: $showPreview) {
+            CutPreviewSheet(data: document.data, model: plotter.lastModel) {
+                if outsideCount > 0 { confirmOutside = true } else { cut() }
+            }
+        }
         .confirmationDialog("Some objects lie outside the cutting area.", isPresented: $confirmOutside) {
             Button("Cut anyway") { cut() }
             Button("Cancel", role: .cancel) {}
@@ -233,7 +287,7 @@ struct CutPanelView: View {
             Button("Save", action: saveAsNewProfile)
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Saves tool, blade depth, force, speed and passes.")
+            Text("Saves tool, blade depth, force, speed, passes and cut options.")
         }
         .alert("Rename profile", isPresented: $askRename) {
             TextField("Name", text: $renameText)
@@ -255,6 +309,106 @@ struct CutPanelView: View {
         } message: {
             Text("Projects that use it keep their values.")
         }
+    }
+
+    // MARK: Print & Cut
+
+    private func setPrintCut(_ edit: @escaping (inout PrintAndCut) -> Void) {
+        document.update(String(localized: "Change Print & Cut"), undoManager: undoManager) { data in
+            var pc = data.printCut
+            edit(&pc)
+            data.printCut = pc
+        }
+    }
+
+    /// Objects to cut that lie outside the frame of the marks.
+    private var outsidePrintArea: Int {
+        let area = document.data.printCut.designArea
+        return document.data.shapes.filter { $0.cutEnabled && !area.contains($0.matBounds) }.count
+    }
+
+    private var printAndCutSection: some View {
+        let pc = document.data.printCut
+        return Section("Print & Cut") {
+            Toggle("Registration marks", isOn: Binding(get: { pc.enabled }, set: { on in setPrintCut { $0.enabled = on } }))
+                .help("Print the design with marks; the plotter finds them with its sensor and cuts exactly around the print")
+            if pc.enabled {
+                Picker("Paper", selection: Binding(get: { pc.paper }, set: { p in setPrintCut { $0.paper = p } })) {
+                    ForEach(PaperSize.allCases) { Text(verbatim: $0.title).tag($0) }
+                }
+                LengthField("Mark inset", mm: Binding(
+                    get: { pc.insetMM },
+                    set: { v in if v.isFinite { setPrintCut { $0.insetMM = min(max(v, PrintAndCut.insetRange.lowerBound), PrintAndCut.insetRange.upperBound) } } }
+                ))
+                Toggle("Print outlines", isOn: $printOutlines)
+                    .help("Also prints thin lines along the cut lines")
+                HStack {
+                    Button { PrintAndCutPrinter.print(document.data, outlines: printOutlines) } label: {
+                        Label("Print…", systemImage: "printer")
+                    }
+                    Button("Save as PDF…") { PrintAndCutPrinter.savePDF(for: document.data, outlines: printOutlines) }
+                }
+                if outsidePrintArea > 0 {
+                    Label("\(outsidePrintArea) object(s) lie outside the area between the marks.",
+                          systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                }
+                if plotter.lastModel.family == .classic {
+                    Label("This plotter cannot read registration marks.", systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                }
+                Text("Print at 100 % (no “fit to page”), lay the sheet straight at the top left of the mat, then cut. Cameo 3 and Cameo 4 line.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private var cutBar: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            statusView
+                .font(.callout)
+                .lineLimit(3)
+            if let p = plotter.progress {
+                ProgressView(value: p)
+            }
+            if outsideCount > 0 {
+                Label("Outside the cutting area: \(outsideCount). The parts outside are not cut, to protect the mat.",
+                      systemImage: "exclamationmark.triangle.fill")
+                    .font(.callout)
+                    .foregroundStyle(.orange)
+            }
+            if plotter.isBusy {
+                Button(role: .cancel) { plotter.cancel() } label: {
+                    Text("Cancel").frame(maxWidth: .infinity)
+                }
+                .controlSize(.large)
+            } else {
+                HStack(spacing: 8) {
+                    Button { showPreview = true } label: {
+                        Label("Preview", systemImage: "eye")
+                    }
+                    .controlSize(.large)
+                    .disabled(cutCount == 0)
+                    .help("Shows the order of the cut lines and the time, before cutting")
+                    Button {
+                        if previewFirst { showPreview = true }
+                        else if outsideCount > 0 { confirmOutside = true } else { cut() }
+                    } label: {
+                        Label("Cut (\(cutCount))", systemImage: "scissors")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .disabled(cutCount == 0)
+                    .keyboardShortcut(.return, modifiers: .command)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.bar)
+        .overlay(alignment: .top) { Divider() }
     }
 
     @ViewBuilder

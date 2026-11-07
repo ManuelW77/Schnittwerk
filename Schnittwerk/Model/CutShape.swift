@@ -36,6 +36,13 @@ struct CutShape: Identifiable, Codable, Equatable {
     var colorHex: String?
     /// Stored as optional so older project files still open.
     private var lock: Bool?
+    private var slot: Int?
+
+    /// Tool (holder) that cuts this object: 1 or 2.
+    var toolSlot: Int {
+        get { slot == 2 ? 2 : 1 }
+        set { slot = newValue == 2 ? 2 : nil }
+    }
 
     /// A locked object cannot be selected on the mat, moved or edited.
     var isLocked: Bool {
@@ -61,6 +68,13 @@ struct CutShape: Identifiable, Codable, Equatable {
         let b = newPaths.bounds
         let center = b.isNull ? .zero : CGPoint(x: b.midX, y: b.midY)
         paths = newPaths.applying(CGAffineTransform(translationX: -center.x, y: -center.y))
+        localBounds = paths.bounds.isNull ? .zero : paths.bounds
+    }
+
+    /// Sets the geometry in object coordinates; position, scale and
+    /// rotation stay, so the object does not move on the mat.
+    mutating func setLocalPaths(_ newPaths: [Polyline]) {
+        paths = newPaths
         localBounds = paths.bounds.isNull ? .zero : paths.bounds
     }
 
