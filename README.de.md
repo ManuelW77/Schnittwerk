@@ -18,14 +18,24 @@
 
 ## Download
 
+### DMG
+
 Das aktuelle DMG gibt es unter [GitHub Releases](https://github.com/ManuelW77/Schnittwerk/releases). Öffnen und
 Schnittwerk in den Programme-Ordner ziehen. Die App ist signiert und von Apple notarisiert.
 
-Oder mit [Homebrew](https://brew.sh):
+### Mit Homebrew
 
 ```sh
-brew install --cask manuelw77/tap/schnittwerk
+brew tap manuelw77/tap
+brew trust manuelw77/tap
+brew install --cask schnittwerk
 ```
+
+Homebrew lädt Casks aus fremden Taps nur, wenn du ihnen vertraust, deshalb `brew trust`. Aktualisieren mit
+`brew upgrade --cask schnittwerk`, entfernen mit `brew uninstall --cask schnittwerk` (mit `--zap` werden auch die
+Einstellungen gelöscht).
+
+### Voraussetzungen
 
 - macOS 26 oder neuer, Apple silicon (arm64)
 - Schnittwerk fragt einmal am Tag bei GitHub nach einer neuen Version und gibt Bescheid (abschaltbar unter
