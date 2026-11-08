@@ -18,14 +18,24 @@
 
 ## Download
 
+### DMG
+
 Get the latest DMG from [GitHub Releases](https://github.com/ManuelW77/Schnittwerk/releases), open it and drag
 Schnittwerk into Applications. The app is signed and notarized by Apple.
 
-Or with [Homebrew](https://brew.sh):
+### With Homebrew
 
 ```sh
-brew install --cask manuelw77/tap/schnittwerk
+brew tap manuelw77/tap
+brew trust manuelw77/tap
+brew install --cask schnittwerk
 ```
+
+Homebrew only loads casks from third-party taps you trust, hence `brew trust`. Update with
+`brew upgrade --cask schnittwerk`, remove with `brew uninstall --cask schnittwerk` (add `--zap` to also delete the
+settings).
+
+### Requirements
 
 - macOS 26 or newer, Apple silicon (arm64)
 - Schnittwerk checks GitHub once a day for a new version and tells you (can be turned off in Settings → Updates,
