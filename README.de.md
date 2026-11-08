@@ -21,6 +21,12 @@
 Das aktuelle DMG gibt es unter [GitHub Releases](https://github.com/ManuelW77/Schnittwerk/releases). Öffnen und
 Schnittwerk in den Programme-Ordner ziehen. Die App ist signiert und von Apple notarisiert.
 
+Oder mit [Homebrew](https://brew.sh):
+
+```sh
+brew install --cask manuelw77/tap/schnittwerk
+```
+
 - macOS 26 oder neuer, Apple silicon (arm64)
 - Schnittwerk fragt einmal am Tag bei GitHub nach einer neuen Version und gibt Bescheid (abschaltbar unter
   Einstellungen → Updates, oder von Hand: Schnittwerk → Nach Updates suchen …)
