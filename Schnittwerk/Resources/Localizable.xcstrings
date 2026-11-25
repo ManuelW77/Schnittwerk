@@ -1,6 +1,36 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "“Last used” takes the mat and the tool values (with your changes) of the project you worked on last. Open projects keep their own settings." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„Letzte Einstellung“ übernimmt Matte und Werkzeugwerte (mit deinen Änderungen) aus dem Projekt, an dem du zuletzt gearbeitet hast. Offene Projekte behalten ihre eigenen Einstellungen."
+          }
+        }
+      }
+    },
+    "“Same as macOS” follows System Settings → General → Language & Region." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„Wie macOS“ folgt Systemeinstellungen → Allgemein → Sprache & Region."
+          }
+        }
+      }
+    },
+    "%@ · %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · %@"
+          }
+        }
+      }
+    },
     "%@ fill" : {
       "localizations" : {
         "de" : {
@@ -41,16 +71,6 @@
         }
       }
     },
-    "%@ · %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ · %@"
-          }
-        }
-      }
-    },
     "%lld %%" : {
       "localizations" : {
         "de" : {
@@ -67,6 +87,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld Schnittlinien"
+          }
+        }
+      }
+    },
+    "%lld days of trial left" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Noch %lld Tag Testzeit"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Noch %lld Tage Testzeit"
+                }
+              }
+            }
+          }
+        },
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld day of trial left"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld days of trial left"
+                }
+              }
+            }
           }
         }
       }
@@ -161,7 +222,18 @@
         }
       }
     },
+    "−90°" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "−90°"
+          }
+        }
+      }
+    },
     "1 (left)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -172,6 +244,7 @@
       }
     },
     "2 (right)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -252,6 +325,7 @@
       }
     },
     "Add a basic shape" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -622,6 +696,7 @@
       }
     },
     "Automatic tries USB first, then Bluetooth. Supported: %@. Bluetooth: Cameo 4, 4 Plus and 4 Pro." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -752,6 +827,7 @@
       }
     },
     "Built-in" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1062,6 +1138,7 @@
       }
     },
     "Combine" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1192,6 +1269,7 @@
       }
     },
     "Corner radius (mm)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1412,6 +1490,7 @@
       }
     },
     "Cut settings and send to the plotter" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1532,6 +1611,7 @@
       }
     },
     "Delete (⌫)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1602,6 +1682,7 @@
       }
     },
     "Distance (mm)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1762,6 +1843,7 @@
       }
     },
     "Duplicate (⌘D)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2072,6 +2154,7 @@
       }
     },
     "Font size (mm)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2152,6 +2235,7 @@
       }
     },
     "Group objects so they move together (⌘G), or lock them (⌘L)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2192,6 +2276,7 @@
       }
     },
     "Height (mm)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2202,6 +2287,7 @@
       }
     },
     "Holder" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2282,6 +2368,7 @@
       }
     },
     "Import SVG, DXF or PDF (⌘I)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2622,6 +2709,7 @@
       }
     },
     "Lies outside the cutting area" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2672,6 +2760,7 @@
       }
     },
     "Lines outside the mat are moved to its edge." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2822,6 +2911,7 @@
       }
     },
     "Mat or roll in the plotter" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3051,6 +3141,16 @@
         }
       }
     },
+    "No earlier purchase was found." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es wurde kein früherer Kauf gefunden."
+          }
+        }
+      }
+    },
     "No mat or material loaded. Load it with the button on the plotter." : {
       "localizations" : {
         "de" : {
@@ -3122,6 +3222,7 @@
       }
     },
     "Nothing left" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3221,6 +3322,17 @@
         }
       }
     },
+    "One purchase unlocks cutting for good. No subscription." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit einem Kauf schaltest du das Schneiden dauerhaft frei. Kein Abo."
+          }
+        }
+      }
+    },
     "Only closed outlines can be filled." : {
       "localizations" : {
         "de" : {
@@ -3312,6 +3424,7 @@
       }
     },
     "Outside the cutting area: %lld. Lines there are cut off at the edge." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3522,6 +3635,7 @@
       }
     },
     "Position (mm, top left)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3542,6 +3656,7 @@
       }
     },
     "Positive values go outwards, negative values inwards" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3701,22 +3816,22 @@
         }
       }
     },
-    "Redo %@ (⇧⌘Z)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ wiederholen (⇧⌘Z)"
-          }
-        }
-      }
-    },
     "Redo (⇧⌘Z)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wiederholen (⇧⌘Z)"
+          }
+        }
+      }
+    },
+    "Redo %@ (⇧⌘Z)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ wiederholen (⇧⌘Z)"
           }
         }
       }
@@ -3822,6 +3937,7 @@
       }
     },
     "Reset zoom (⌘0)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3847,6 +3963,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jetzt neu starten"
+          }
+        }
+      }
+    },
+    "Restore purchase" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kauf wiederherstellen"
           }
         }
       }
@@ -4042,6 +4169,7 @@
       }
     },
     "Saves tool, blade depth, force, speed and passes." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4090,9 +4218,6 @@
           }
         }
       }
-    },
-    "Schnittwerk" : {
-      "shouldTranslate" : false
     },
     "Schnittwerk %@ is available" : {
       "localizations" : {
@@ -4265,6 +4390,7 @@
       }
     },
     "Show or hide settings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4325,6 +4451,7 @@
       }
     },
     "Size (mm)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4634,7 +4761,19 @@
         }
       }
     },
+    "The 7-day trial is over. You can still design, open and save projects. One purchase unlocks cutting for good." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die 7 Tage Testzeit sind vorbei. Entwerfen, Öffnen und Speichern geht weiterhin. Mit einem Kauf schaltest du das Schneiden dauerhaft frei."
+          }
+        }
+      }
+    },
     "The AutoBlade only works in holder 1." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4854,6 +4993,26 @@
         }
       }
     },
+    "The purchase could not be verified." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Kauf konnte nicht bestätigt werden."
+          }
+        }
+      }
+    },
+    "The purchase is waiting for approval." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Kauf wartet auf Freigabe."
+          }
+        }
+      }
+    },
     "The result would be empty. Check that the objects overlap." : {
       "localizations" : {
         "de" : {
@@ -4870,6 +5029,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Der Server ist nur von diesem Mac aus erreichbar. Ein Assistent kann das Projekt im vordersten Fenster lesen und ändern; jede Änderung lässt sich mit ⌘Z rückgängig machen. Schneiden startest nur du."
+          }
+        }
+      }
+    },
+    "The store is not available right now. Please try again later." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Store ist gerade nicht erreichbar. Bitte versuche es später noch einmal."
           }
         }
       }
@@ -4975,6 +5144,7 @@
       }
     },
     "Tool: select, text, freehand or curve" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4985,6 +5155,7 @@
       }
     },
     "Trace an image (PNG, JPG …) into cut lines (⇧⌘I)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5074,6 +5245,17 @@
         }
       }
     },
+    "Trial over. Unlock cutting" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testzeit vorbei. Schneiden freischalten"
+          }
+        }
+      }
+    },
     "Turn cutting off" : {
       "localizations" : {
         "de" : {
@@ -5124,22 +5306,22 @@
         }
       }
     },
-    "Undo %@ (⌘Z)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ widerrufen (⌘Z)"
-          }
-        }
-      }
-    },
     "Undo (⌘Z)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rückgängig (⌘Z)"
+          }
+        }
+      }
+    },
+    "Undo %@ (⌘Z)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ widerrufen (⌘Z)"
           }
         }
       }
@@ -5190,6 +5372,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle entsperren"
+          }
+        }
+      }
+    },
+    "Unlock for %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für %@ freischalten"
+          }
+        }
+      }
+    },
+    "Unlock Schnittwerk" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk freischalten"
+          }
+        }
+      }
+    },
+    "Unlock Schnittwerk …" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk freischalten …"
           }
         }
       }
@@ -5325,6 +5540,7 @@
       }
     },
     "Width (mm)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5420,186 +5636,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verkleinern"
-          }
-        }
-      }
-    },
-    "“Last used” takes the mat and the tool values (with your changes) of the project you worked on last. Open projects keep their own settings." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„Letzte Einstellung“ übernimmt Matte und Werkzeugwerte (mit deinen Änderungen) aus dem Projekt, an dem du zuletzt gearbeitet hast. Offene Projekte behalten ihre eigenen Einstellungen."
-          }
-        }
-      }
-    },
-    "“Same as macOS” follows System Settings → General → Language & Region." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„Wie macOS“ folgt Systemeinstellungen → Allgemein → Sprache & Region."
-          }
-        }
-      }
-    },
-    "−90°" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "−90°"
-          }
-        }
-      }
-    },
-    "Unlock Schnittwerk …" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schnittwerk freischalten …"
-          }
-        }
-      }
-    },
-    "Unlock Schnittwerk" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Schnittwerk freischalten"
-          }
-        }
-      }
-    },
-    "Unlock for %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Für %@ freischalten"
-          }
-        }
-      }
-    },
-    "Restore purchase" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kauf wiederherstellen"
-          }
-        }
-      }
-    },
-    "The 7-day trial is over. You can still design, open and save projects. One purchase unlocks cutting for good." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Die 7 Tage Testzeit sind vorbei. Entwerfen, Öffnen und Speichern geht weiterhin. Mit einem Kauf schaltest du das Schneiden dauerhaft frei."
-          }
-        }
-      }
-    },
-    "One purchase unlocks cutting for good. No subscription." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mit einem Kauf schaltest du das Schneiden dauerhaft frei. Kein Abo."
-          }
-        }
-      }
-    },
-    "Trial over. Unlock cutting" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Testzeit vorbei. Schneiden freischalten"
-          }
-        }
-      }
-    },
-    "The store is not available right now. Please try again later." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Der Store ist gerade nicht erreichbar. Bitte versuche es später noch einmal."
-          }
-        }
-      }
-    },
-    "The purchase could not be verified." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Der Kauf konnte nicht bestätigt werden."
-          }
-        }
-      }
-    },
-    "The purchase is waiting for approval." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Der Kauf wartet auf Freigabe."
-          }
-        }
-      }
-    },
-    "No earlier purchase was found." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Es wurde kein früherer Kauf gefunden."
-          }
-        }
-      }
-    },
-    "%lld days of trial left" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld day of trial left"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld days of trial left"
-                }
-              }
-            }
-          }
-        },
-        "de" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Noch %lld Tag Testzeit"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Noch %lld Tage Testzeit"
-                }
-              }
-            }
           }
         }
       }
