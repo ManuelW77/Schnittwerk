@@ -68,6 +68,10 @@ final class PlotterController: ObservableObject {
     /// Sends the job built for the connected model.
     func send(_ build: @escaping @Sendable (PlotterModel) -> GPGLJob) {
         guard !isBusy else { return }
+        #if APPSTORE
+        // Trial over and not purchased: show the purchase sheet instead of cutting
+        guard LicenseStore.shared.allowCut() else { return }
+        #endif
         let flag = CancelFlag()
         cancelFlag = flag
         phase = .working(String(localized: "Connecting…"))

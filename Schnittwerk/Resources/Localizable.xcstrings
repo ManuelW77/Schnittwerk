@@ -5179,7 +5179,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Entsperren"
+            "value" : "Freischalten"
           }
         }
       }
@@ -5450,6 +5450,156 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "−90°"
+          }
+        }
+      }
+    },
+    "Unlock Schnittwerk …" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk freischalten …"
+          }
+        }
+      }
+    },
+    "Unlock Schnittwerk" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnittwerk freischalten"
+          }
+        }
+      }
+    },
+    "Unlock for %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für %@ freischalten"
+          }
+        }
+      }
+    },
+    "Restore purchase" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kauf wiederherstellen"
+          }
+        }
+      }
+    },
+    "The 7-day trial is over. You can still design, open and save projects. One purchase unlocks cutting for good." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die 7 Tage Testzeit sind vorbei. Entwerfen, Öffnen und Speichern geht weiterhin. Mit einem Kauf schaltest du das Schneiden dauerhaft frei."
+          }
+        }
+      }
+    },
+    "One purchase unlocks cutting for good. No subscription." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit einem Kauf schaltest du das Schneiden dauerhaft frei. Kein Abo."
+          }
+        }
+      }
+    },
+    "Trial over. Unlock cutting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testzeit vorbei. Schneiden freischalten"
+          }
+        }
+      }
+    },
+    "The store is not available right now. Please try again later." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Store ist gerade nicht erreichbar. Bitte versuche es später noch einmal."
+          }
+        }
+      }
+    },
+    "The purchase could not be verified." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Kauf konnte nicht bestätigt werden."
+          }
+        }
+      }
+    },
+    "The purchase is waiting for approval." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Kauf wartet auf Freigabe."
+          }
+        }
+      }
+    },
+    "No earlier purchase was found." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es wurde kein früherer Kauf gefunden."
+          }
+        }
+      }
+    },
+    "%lld days of trial left" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld day of trial left"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld days of trial left"
+                }
+              }
+            }
+          }
+        },
+        "de" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Noch %lld Tag Testzeit"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Noch %lld Tage Testzeit"
+                }
+              }
+            }
           }
         }
       }

@@ -5,6 +5,11 @@ options:
   deploymentTarget:
     macOS: "26.0"
   createIntermediateGroups: true
+configs:
+  Debug: debug
+  Release: release
+  # Mac App Store build: sandbox, in-app purchase, no self-update
+  AppStore: release
 settings:
   base:
     SWIFT_VERSION: "5.0"
@@ -22,6 +27,9 @@ targets:
     platform: macOS
     sources:
       - path: Schnittwerk
+        excludes:
+          - "**/*.entitlements"
+          - "Support/Schnittwerk.storekit"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: de.manuelweiser.schnittwerk
@@ -53,6 +61,17 @@ targets:
           OTHER_CODE_SIGN_FLAGS: --timestamp
           # No debugger entitlement (get-task-allow): notarization rejects it
           CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
+        AppStore:
+          PRODUCT_BUNDLE_IDENTIFIER: org.fire-devils.schnittwerk
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) APPSTORE"
+          ENABLE_APP_SANDBOX: YES
+          ENABLE_HARDENED_RUNTIME: YES
+          CODE_SIGN_STYLE: Automatic
+          # Xcode picks Apple Distribution when archiving for the store
+          CODE_SIGN_IDENTITY: Apple Development
+          DEVELOPMENT_TEAM: LWWM5RV3D9
+          CODE_SIGN_ENTITLEMENTS: Schnittwerk/Support/Schnittwerk-AppStore.entitlements
+          CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
     info:
       path: Schnittwerk/Support/Info.plist
       properties:
@@ -60,6 +79,11 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSApplicationCategoryType: public.app-category.graphics-design
+        ITSAppUsesNonExemptEncryption: false
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations:
+          - en
+          - de
         LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
         NSHumanReadableCopyright: "© 2026 Manuel Weiser · GPL-3.0"
         NSBluetoothAlwaysUsageDescription: Schnittwerk connects to your Silhouette plotter over Bluetooth to send cut jobs.
@@ -124,3 +148,13 @@ targets:
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGN_STYLE: Manual
         GENERATE_INFOPLIST_FILE: YES
+schemes:
+  Schnittwerk AppStore:
+    build:
+      targets:
+        Schnittwerk: all
+    run:
+      config: AppStore
+      storeKitConfiguration: Schnittwerk/Support/Schnittwerk.storekit
+    archive:
+      config: AppStore
