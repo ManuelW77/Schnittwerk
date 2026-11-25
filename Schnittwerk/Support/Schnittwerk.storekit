@@ -1,0 +1,43 @@
+{
+  "identifier" : "7C1A2B3D",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "12.99",
+      "familyShareable" : false,
+      "internalID" : "6740000001",
+      "localizations" : [
+        {
+          "description" : "Unlocks cutting for good. No subscription.",
+          "displayName" : "Unlock Schnittwerk",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Schaltet das Schneiden dauerhaft frei. Kein Abo.",
+          "displayName" : "Schnittwerk freischalten",
+          "locale" : "de"
+        }
+      ],
+      "productID" : "org.fire-devils.schnittwerk.unlock",
+      "referenceName" : "Unlock",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "de_DE",
+    "_storefront" : "DEU",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
