@@ -8,5 +8,5 @@ xcuserdata/
 # macOS
 .DS_Store
 
-# Not public: own repo on Gitea (Schnittwerk-private)
+# Not public: own repo on Gitea (gitea.fire-devils.org/ManuelW/Schnittwerk)
 private/
