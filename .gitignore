@@ -7,3 +7,6 @@ xcuserdata/
 
 # macOS
 .DS_Store
+
+# Not public: own repo on Gitea (Schnittwerk-private)
+private/
