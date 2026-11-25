@@ -20,7 +20,7 @@
           "locale" : "de"
         }
       ],
-      "productID" : "org.fire-devils.schnittwerk.unlock",
+      "productID" : "org.fire_devils.schnittwerk.unlock",
       "referenceName" : "Unlock",
       "type" : "NonConsumable"
     }

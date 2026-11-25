@@ -81,7 +81,7 @@ struct StoreKitLicenseSource: LicenseSource {
 
 @MainActor @Observable
 final class LicenseStore {
-    nonisolated static let productID = "org.fire-devils.schnittwerk.unlock"
+    nonisolated static let productID = "org.fire_devils.schnittwerk.unlock"
     static let shared = LicenseStore()
 
     private(set) var status: LicenseStatus = .trial(daysLeft: TrialPolicy.days)

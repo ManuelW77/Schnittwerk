@@ -92,7 +92,6 @@
       }
     },
     "%lld days of trial left" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "variations" : {
@@ -1008,6 +1007,7 @@
       }
     },
     "Check for new versions automatically" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1018,6 +1018,7 @@
       }
     },
     "Check for Updates …" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1028,6 +1029,7 @@
       }
     },
     "Check now" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1310,6 +1312,7 @@
       }
     },
     "Could not check for updates" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -1753,6 +1756,7 @@
       }
     },
     "Download" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2449,6 +2453,7 @@
       }
     },
     "Installed version" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2589,6 +2594,7 @@
       }
     },
     "Last check" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -2609,6 +2615,7 @@
       }
     },
     "Later" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3082,6 +3089,7 @@
       }
     },
     "Never" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3323,7 +3331,6 @@
       }
     },
     "One purchase unlocks cutting for good. No subscription." : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -3968,7 +3975,6 @@
       }
     },
     "Restore purchase" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4220,6 +4226,7 @@
       }
     },
     "Schnittwerk %@ is available" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4230,6 +4237,7 @@
       }
     },
     "Schnittwerk asks GitHub once a day whether a newer release exists. Nothing about you is sent. New versions are downloaded and installed by you." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4250,6 +4258,7 @@
       }
     },
     "Schnittwerk is up to date" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4472,6 +4481,7 @@
       }
     },
     "Skip this version" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -4762,7 +4772,6 @@
       }
     },
     "The 7-day trial is over. You can still design, open and save projects. One purchase unlocks cutting for good." : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5246,7 +5255,6 @@
       }
     },
     "Trial over. Unlock cutting" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5377,7 +5385,6 @@
       }
     },
     "Unlock for %@" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5388,7 +5395,6 @@
       }
     },
     "Unlock Schnittwerk" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5399,7 +5405,6 @@
       }
     },
     "Unlock Schnittwerk …" : {
-      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5410,6 +5415,7 @@
       }
     },
     "Updates" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5460,6 +5466,7 @@
       }
     },
     "Version %@ is the newest version." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -5581,6 +5588,7 @@
       }
     },
     "You have version %@. Download the new version and drag it into Applications." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
