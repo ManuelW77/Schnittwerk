@@ -19,18 +19,29 @@ struct SchnittwerkApp: App {
         // Start with an empty mat instead of the "Open" panel
         UserDefaults.standard.register(defaults: ["NSShowAppCentricOpenPanelInsteadOfUntitledFile": false])
         MCPServerController.shared.apply()
+        #if APPSTORE
+        LicenseStore.shared.start()
+        #else
         UpdateChecker.shared.start()
+        #endif
     }
 
     var body: some Scene {
         DocumentGroup(newDocument: { CutDocument.newProject() }) { file in
             ContentView(document: file.document)
                 .frame(minWidth: 900, minHeight: 600)
+                #if APPSTORE
+                .licensePaywall()
+                #endif
         }
         .defaultSize(width: 1280, height: 820)
         .commands {
             CommandGroup(after: .appInfo) {
+                #if APPSTORE
+                Button("Unlock Schnittwerk …") { LicenseStore.shared.showPaywall = true }
+                #else
                 Button("Check for Updates …") { UpdateChecker.shared.check(userInitiated: true) }
+                #endif
             }
         }
 
@@ -42,8 +53,10 @@ struct SchnittwerkApp: App {
                     .tabItem { Label("Cut profiles", systemImage: "scissors") }
                 MCPSettingsView()
                     .tabItem { Label("AI (MCP)", systemImage: "sparkles") }
+                #if !APPSTORE
                 UpdateSettingsView()
                     .tabItem { Label("Updates", systemImage: "arrow.down.circle") }
+                #endif
             }
         }
     }

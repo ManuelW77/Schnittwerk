@@ -353,6 +353,9 @@ struct CutPanelView: View {
 
     private var cutBar: some View {
         VStack(alignment: .leading, spacing: 8) {
+            #if APPSTORE
+            TrialNote()
+            #endif
             statusView
                 .font(.callout)
                 .lineLimit(3)

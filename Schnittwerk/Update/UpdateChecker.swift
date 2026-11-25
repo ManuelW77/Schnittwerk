@@ -4,6 +4,8 @@
 // It only reads the public "latest release" of the repository; nothing
 // about the user is sent. Installing stays with the user (download DMG).
 
+#if !APPSTORE  // the Mac App Store updates the app itself
+
 import AppKit
 import Foundation
 
@@ -182,3 +184,4 @@ final class UpdateChecker: ObservableObject {
         alert.runModal()
     }
 }
+#endif

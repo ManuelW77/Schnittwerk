@@ -155,10 +155,13 @@ final class SampleProject: XCTestCase {
         doc.rotateCopies([star.id], count: 6, undoManager: nil)
         doc.addFill(ids: [circle.id], pattern: .crossHatch, spacing: 3, angle: 45, undoManager: nil)
         if let fill = doc.data.shapes.last { doc.setToolSlot(2, ids: [fill.id, circle.id], undoManager: nil) }
+        // Generated names follow the test process language, not SW_SAMPLE_LANG
+        if let i = doc.data.shapes.indices.last { doc.data.shapes[i].name = english ? "Circle fill" : "Kreis Füllung" }
         var emboss = CutSettings.holder2Default
         emboss.tool = .emboss
         doc.data.setSettings(emboss, slot: 2)
         doc.addWeedingLines(ids: [title.id], margin: 4, horizontal: 1, vertical: 3, undoManager: nil)
+        if let i = doc.data.shapes.indices.last { doc.data.shapes[i].name = english ? "Weeding lines" : "Entgitterlinien" }
         let enc = JSONEncoder()
         enc.outputFormatting = [.prettyPrinted, .sortedKeys]
         try enc.encode(doc.data).write(to: URL(fileURLWithPath: dir).appendingPathComponent("Beispiel.schnittwerk"))

@@ -1,5 +1,7 @@
 // Schnittwerk – SPDX-License-Identifier: GPL-3.0-or-later
 
+#if !APPSTORE  // the Mac App Store updates the app itself
+
 import SwiftUI
 
 /// Settings tab: automatic update check on or off, check now.
@@ -34,3 +36,4 @@ struct UpdateSettingsView: View {
         .frame(width: 460)
     }
 }
+#endif

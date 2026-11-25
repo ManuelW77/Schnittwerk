@@ -68,6 +68,33 @@ jobs:
           NOTARY_ISSUER: ${{ secrets.NOTARY_API_ISSUER_ID }}
         run: tools/release/release.sh
 
+      - name: Update the Homebrew cask
+        env:
+          TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
+        run: |
+          if [ -z "$TAP_TOKEN" ]; then
+            echo "::warning::TAP_TOKEN not set, Homebrew cask not updated"
+            exit 0
+          fi
+          VERSION="${GITHUB_REF_NAME#v}"
+          DMG="build/release/Schnittwerk-$VERSION.dmg"
+          SHA="$(shasum -a 256 "$DMG" | cut -d' ' -f1)"
+          TAP="$RUNNER_TEMP/homebrew-tap"
+          git clone --depth 1 "https://x-access-token:$TAP_TOKEN@github.com/ManuelW77/homebrew-tap.git" "$TAP"
+          CASK="$TAP/Casks/schnittwerk.rb"
+          sed -i '' -E "s/^  version \".*\"/  version \"$VERSION\"/; s/^  sha256 \".*\"/  sha256 \"$SHA\"/" "$CASK"
+          grep -q "version \"$VERSION\"" "$CASK"
+          grep -q "sha256 \"$SHA\"" "$CASK"
+          cd "$TAP"
+          if git diff --quiet; then
+            echo "Cask already at $VERSION"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "schnittwerk $VERSION"
+          git push
+
       - name: Keep the notarization log on failure
         if: failure()
         uses: actions/upload-artifact@v4

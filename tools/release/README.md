@@ -28,7 +28,7 @@ die Tests (`.github/workflows/tests.yml`).
 
 ## Secrets für GitHub Actions (einmalig)
 
-Unter *Settings → Secrets and variables → Actions* fünf Secrets anlegen
+Unter *Settings → Secrets and variables → Actions* fünf Secrets anlegen (dazu optional `TAP_TOKEN` für den Homebrew-Cask)
 (oder mit `gh secret set`, siehe unten). Passwörter und Schlüssel nie ins Repository.
 
 | Secret | Inhalt |
@@ -38,6 +38,7 @@ Unter *Settings → Secrets and variables → Actions* fünf Secrets anlegen
 | `NOTARY_API_KEY_P8` | App-Store-Connect-API-Schlüssel (`AuthKey_….p8`), Base64 |
 | `NOTARY_API_KEY_ID` | Schlüssel-ID dieses API-Schlüssels (10 Zeichen) |
 | `NOTARY_API_ISSUER_ID` | Issuer-ID (UUID, steht über der Schlüsselliste) |
+| `TAP_TOKEN` | optional: Fine-grained PAT nur für `ManuelW77/homebrew-tap`, Recht *Contents: Read and write*. Damit aktualisiert der Release-Lauf den Cask. Fehlt er, gibt es nur eine Warnung. |
 
 ### 1. Zertifikat exportieren
 
@@ -108,4 +109,5 @@ Teile im Bundle.
 
 ## Später
 
-- Updates mit Sparkle, optional ein Homebrew-Cask.
+- Updates mit Sparkle.
+- Homebrew-Cask ins offizielle `homebrew/cask`, sobald das Repo bekannt genug ist (75 Stars oder 30 Forks/Watcher). Bis dahin: eigener Tap [ManuelW77/homebrew-tap](https://github.com/ManuelW77/homebrew-tap).
