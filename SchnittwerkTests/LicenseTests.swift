@@ -57,4 +57,15 @@ final class LicenseTests: XCTestCase {
         XCTAssertEqual(bought.status, .purchased)
         XCTAssertTrue(bought.allowCut())
     }
+
+    /// Closing the sheet frees the window slot, so the next opening goes to the then active window.
+    @MainActor
+    func testClosingPaywallReleasesHostWindow() {
+        let now = day(8)
+        let store = LicenseStore(source: FakeSource(start: start, purchased: false), now: { now })
+        store.showPaywall = true
+        store.paywallHost = UUID()
+        store.showPaywall = false
+        XCTAssertNil(store.paywallHost)
+    }
 }

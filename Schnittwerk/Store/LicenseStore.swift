@@ -89,7 +89,12 @@ final class LicenseStore {
     private(set) var busy = false
     private(set) var message: String?
     /// Shows the purchase sheet.
-    var showPaywall = false
+    var showPaywall = false {
+        didSet { if !showPaywall { paywallHost = nil } }
+    }
+    /// The one window that shows the purchase sheet (with several documents open,
+    /// only this window presents it). Claimed by `PaywallModifier`.
+    var paywallHost: UUID?
 
     @ObservationIgnored private let source: LicenseSource
     @ObservationIgnored private let now: @Sendable () -> Date
