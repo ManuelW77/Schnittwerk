@@ -66,9 +66,31 @@ extension View {
 
 private struct PaywallModifier: ViewModifier {
     @Bindable private var license = LicenseStore.shared
+    @State private var id = UUID()
+    @Environment(\.appearsActive) private var appearsActive
 
     func body(content: Content) -> some View {
-        content.sheet(isPresented: $license.showPaywall) { PaywallView(license: license) }
+        content
+            .sheet(isPresented: isPresented) { PaywallView(license: license) }
+            .onChange(of: license.showPaywall, initial: true) { _, show in
+                guard show, license.paywallHost == nil else { return }
+                if appearsActive {
+                    // The active window takes the sheet right away
+                    license.paywallHost = id
+                } else {
+                    // No active window (e.g. all minimized): the first one to get here takes it
+                    DispatchQueue.main.async {
+                        if license.showPaywall, license.paywallHost == nil { license.paywallHost = id }
+                    }
+                }
+            }
+    }
+
+    private var isPresented: Binding<Bool> {
+        Binding(
+            get: { license.showPaywall && license.paywallHost == id },
+            set: { if !$0, license.paywallHost == id { license.showPaywall = false } }
+        )
     }
 }
 
